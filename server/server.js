@@ -1,11 +1,10 @@
 import { dirname } from "./lib/pathHelpers.js";
 import path from "path";
 import express from "express";
-import cors from "cors";
 
 const server = express();
-
-server.use(cors());
+server.use(express.static(path.join(__dirname, "../client/dist")));
+// server.use(cors());
 
 const port = process.env.PORT || 4000;
 
