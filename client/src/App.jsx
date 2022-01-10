@@ -2,19 +2,35 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [myHeadline, setMyHeadline] = useState("");
+  const [bookingDataFromMonday, setBookingDataFromMonday] = useState("");
+
+  // const api_monday = import.meta.env.VITE_API_KEY_MONDAY;
 
   useEffect(() => {
-    const fetchMyHeadline = async () => {
-      const response = await fetch("http://localhost:4000/api");
+    const fetchBookingDataFromMonday = async () => {
+      const query =
+        "{ boards (ids: 1096884858) { name state board_folder_id items {id name column_values {title text}}}}";
+      const response = await fetch("https://api.monday.com/v2", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: import.meta.env.VITE_API_KEY_MONDAY,
+        },
+        body: JSON.stringify({
+          query: query,
+        }),
+      });
       const data = await response.json();
-      setMyHeadline(data.message);
+      console.log(JSON.stringify(data, null, 2));
+      setBookingDataFromMonday(JSON.stringify(data, null, 2));
     };
-    fetchMyHeadline();
+    fetchBookingDataFromMonday();
   }, []);
+
   return (
     <div className="App">
-      <h1>{myHeadline}</h1>
+      <h1>Raw Booking Data</h1>
+      <p>{bookingDataFromMonday}</p>
     </div>
   );
 }
