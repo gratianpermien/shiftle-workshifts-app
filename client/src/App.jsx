@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [bookingDataFromMonday, setBookingDataFromMonday] = useState("");
-
+  const [bookingDataFromMonday, setBookingDataFromMonday] = useState([]);
+  // const monday_api = import.meta.env.VITE_API_KEY_MONDAY;
   //Prepare asynchronous fetch from Monday GraphQL API and store in "data"
   useEffect(() => {
     const fetchBookingDataFromMonday = async () => {
@@ -25,8 +25,9 @@ function App() {
       //Flatten and reconstruct API Result and store in state
       //Important info for client: do not change column titles
       const flatten = (obj) => Object.values(obj).flat();
-      const flattened_data = flatten(data)[0].boards[0].items;
-      const key_properties = [
+      const flattenedData = flatten(data)[0].boards[0].items;
+
+      const keyProperties = [
         "Name",
         "Kennzeichen",
         "Datum Start",
@@ -45,17 +46,18 @@ function App() {
         "Zusatz 9",
         "Zusatz 10",
       ];
-      const restructured_data = flattened_data.map((booking) => {
-        const booking_data = { id: booking.id };
+
+      const restructuredData = flattenedData.map((booking) => {
+        const bookingData = { id: booking.id };
         booking.column_values.forEach((column) => {
-          if (key_properties.includes(column.title)) {
-            booking_data[column.title.toLowerCase().replace(" ", "_")] =
+          if (keyProperties.includes(column.title)) {
+            bookingData[column.title.toLowerCase().replace(" ", "_")] =
               column.text;
           }
         });
-        return booking_data;
+        return bookingData;
       });
-      setBookingDataFromMonday(JSON.stringify(restructured_data, null, 2));
+      setBookingDataFromMonday(restructuredData);
     };
     //Invoke Fetch
     fetchBookingDataFromMonday();
@@ -63,8 +65,15 @@ function App() {
 
   return (
     <div>
-      <h1>Raw Booking Data</h1>
-      <pre>{bookingDataFromMonday}</pre>
+      <h1>Booking Data</h1>
+      {bookingDataFromMonday.map((booking) => (
+        <article>
+          <h3>{booking.name}</h3>
+          <p>
+            {booking.kennzeichen} // {booking.zeit_ende}
+          </p>
+        </article>
+      ))}
     </div>
   );
 }
