@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styled from "styled-components";
 import "./App.css";
 
 function App() {
@@ -7,9 +8,8 @@ function App() {
   //Prepare asynchronous fetch from Monday GraphQL API and store in "data"
   useEffect(() => {
     const fetchBookingDataFromMonday = async () => {
-      const query = `{ boards (ids: 1096884858) {items (limit: 20) {id column_values {title text}}}}`; //import.meta.env.VITE_BOOKINGS_BOARD_ID_MONDAY;
-      const monday_api =
-        "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjEzOTgwOTU0NCwidWlkIjoxODQ1NzI4OCwiaWFkIjoiMjAyMi0wMS0wN1QxNzowMjo0OC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6Nzk5ODY1NywicmduIjoidXNlMSJ9.gSFPbRKfcDcuEa-r355sBAVAQS_vDhwNvTP3IIFOhL4"; //import.meta.env.VITE_API_KEY_MONDAY;
+      const query = `{ boards (ids: 1096884858) {items (limit: 20) {id column_values {title text}}}}`;
+      const monday_api = import.meta.env.VITE_API_KEY_MONDAY; //import.meta.env.VITE_API_KEY_MONDAY;
       const response = await fetch("https://api.monday.com/v2", {
         method: "post",
         headers: {
@@ -23,13 +23,15 @@ function App() {
       const data = await response.json();
 
       //Flatten and reconstruct API Result and store in state
-      //Important info for client: do not change column titles
+
       const flatten = (obj) => Object.values(obj).flat();
       const flattenedData = flatten(data)[0].boards[0].items;
 
+      //Important info for client: do not change column titles
       const keyProperties = [
         "Name",
         "Kennzeichen",
+        "Fahrzeug",
         "Datum Start",
         "Zeit Start",
         "Datum Ende",
@@ -64,18 +66,38 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h1>Booking Data</h1>
+    <Container>
+      <h1>Alle Buchungen</h1>
       {bookingDataFromMonday.map((booking) => (
-        <article>
-          <h3>{booking.name}</h3>
+        <Card key={booking.id}>
+          <h2>{booking.name}</h2>
+          <h3>
+            {booking.fahrzeug}, {booking.kennzeichen}
+          </h3>
           <p>
-            {booking.kennzeichen} // {booking.zeit_ende}
+            Aufbereitung startet: {booking.datum_ende}, {booking.zeit_ende}
           </p>
-        </article>
+        </Card>
       ))}
-    </div>
+    </Container>
   );
 }
 
 export default App;
+
+const Container = styled.div`
+  width: 90vw;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const Card = styled.article`
+  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  border-radius: 3px;
+  width: 100%;
+  padding: 1rem;
+`;
