@@ -4,12 +4,12 @@ import "./App.css";
 
 function App() {
   const [bookingDataFromMonday, setBookingDataFromMonday] = useState([]);
-  // const monday_api = import.meta.env.VITE_API_KEY_MONDAY;
   //Prepare asynchronous fetch from Monday GraphQL API and store in "data"
   useEffect(() => {
     const fetchBookingDataFromMonday = async () => {
-      const query = `{ boards (ids: 1096884858) {items (limit: 20) {id column_values {title text}}}}`;
-      const monday_api = import.meta.env.VITE_API_KEY_MONDAY; //import.meta.env.VITE_API_KEY_MONDAY;
+      const query = `{ boards (ids: 1096884858) {items (limit: 50) {id column_values {title text}}}}`;
+      const monday_api =
+        "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjEzOTgwOTU0NCwidWlkIjoxODQ1NzI4OCwiaWFkIjoiMjAyMi0wMS0wN1QxNzowMjo0OC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6Nzk5ODY1NywicmduIjoidXNlMSJ9.gSFPbRKfcDcuEa-r355sBAVAQS_vDhwNvTP3IIFOhL4"; //import.meta.env.VITE_API_KEY_MONDAY;
       const response = await fetch("https://api.monday.com/v2", {
         method: "post",
         headers: {
@@ -32,10 +32,8 @@ function App() {
         "Name",
         "Kennzeichen",
         "Fahrzeug",
-        "Datum Start",
-        "Zeit Start",
-        "Datum Ende",
-        "Zeit Ende",
+        "Kombidatum Start",
+        "Kombidatum Ende",
         "Bemerkung",
         "Zusatz 1",
         "Zusatz 2",
@@ -50,7 +48,14 @@ function App() {
       ];
 
       const restructuredData = flattenedData.map((booking) => {
-        const bookingData = { id: booking.id };
+        const bookingData = {
+          id: booking.id,
+          timestamp_start: "",
+          timestamp_ende: "",
+          presence_slices: [],
+          rk: "",
+          uek: "",
+        };
         booking.column_values.forEach((column) => {
           if (keyProperties.includes(column.title)) {
             bookingData[column.title.toLowerCase().replace(" ", "_")] =
@@ -59,7 +64,7 @@ function App() {
         });
         return bookingData;
       });
-      setBookingDataFromMonday(restructuredData);
+      setBookingDataFromMonday(JSON.stringify(restructuredData, null, 4));
     };
     //Invoke Fetch
     fetchBookingDataFromMonday();
@@ -67,7 +72,8 @@ function App() {
 
   return (
     <Container>
-      <h1>Alle Buchungen</h1>
+      <pre>{bookingDataFromMonday}</pre>
+      {/* <h1>Alle Buchungen</h1>
       {bookingDataFromMonday.map((booking) => (
         <Card key={booking.id}>
           <h2>{booking.name}</h2>
@@ -78,7 +84,7 @@ function App() {
             Aufbereitung startet: {booking.datum_ende}, {booking.zeit_ende}
           </p>
         </Card>
-      ))}
+      ))} */}
     </Container>
   );
 }
