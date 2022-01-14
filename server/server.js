@@ -3,6 +3,10 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import {
+  getAdminData,
+  updateAdminData,
+} from "./controllers/admin.controller.js";
+import {
   getShifts,
   findShift,
   postShift,
@@ -34,6 +38,10 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 server.use(express.static(path.join(__dirname, "./client/dist")));
+
+//Routes: Admin Interactions
+server.get("/admin", getAdminData);
+server.put("/admin/:adminDataId", updateAdminData);
 
 //Routes: Shift Interactions
 server.get("/shifts", getShifts);
