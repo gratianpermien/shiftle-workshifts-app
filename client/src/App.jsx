@@ -5,10 +5,7 @@ import styled from "styled-components";
 import AppHeader from "./components/Header";
 import BookingCard from "./components/BookingCard";
 
-//import fetchBookingDataFromMonday from "./lib/mondayFetch"
-//import fetch, components (admin form, shift create and edit form, cards, buttons) and local storage
-
-function App() {
+function App({ onChange }) {
   const [allBookings, setAllBookings] = useState([]);
   const [filterDateArrivalEarliest, setFilterDateArrivalEarliest] = useState(
     new Date()
@@ -16,8 +13,6 @@ function App() {
   const [filterDateArrivalLatest, setFilterDateArrivalLatest] = useState(
     new Date().setDate(new Date().getDate() + 30)
   );
-  //First & most important step: Prepare asynchronous fetch from Monday GraphQL API (fetchBookingDataFromMonday();) and update / post shift information to server / database (mondayFetch.js)
-  //definierte Route auf dem Server anwerfen
 
   //Get shift information from server / database on opening the app
   async function fetchShifts() {
@@ -27,6 +22,7 @@ function App() {
   }
   useEffect(() => {
     fetchShifts();
+    //update Data with Monday Data
   }, []);
 
   return (
@@ -34,6 +30,8 @@ function App() {
       <AppHeader
         filterDateArrivalEarliest={filterDateArrivalEarliest}
         filterDateArrivalLatest={filterDateArrivalLatest}
+        setFilterDateArrivalEarliest={setFilterDateArrivalEarliest}
+        setFilterDateArrivalLatest={setFilterDateArrivalLatest}
       />
       <Routes>
         <Route

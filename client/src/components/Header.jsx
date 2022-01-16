@@ -10,6 +10,8 @@ import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
 export default function AppHeader({
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
+  setFilterDateArrivalEarliest,
+  setFilterDateArrivalLatest,
 }) {
   return (
     <Header>
@@ -57,6 +59,7 @@ const Header = styled.header`
   background: var(--tertiary-bg);
   margin-bottom: 1em;
   padding: 5vw;
+  z-index: 10;
   img {
     width: 10vw;
     filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.2));

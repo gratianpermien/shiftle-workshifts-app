@@ -103,13 +103,17 @@ const AddInformation = styled.div`
   flex-direction: column;
   gap: 0.2em;
   background: var(--secondary-bg);
-  padding: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
   border-bottom-left-radius: 1em;
   border-bottom-right-radius: 1em;
-  display: ${(props) => (props.visible ? "block" : "none")};
-  /* visibility: ${(props) => (props.visible ? "visible" : "hidden")};
+  padding-bottom: ${(props) => (props.visible ? "1em" : "0")};
+  padding-top: ${(props) => (props.visible ? "1em" : "0")};
+  height: ${(props) => (props.visible ? "1" : "0")};
   opacity: ${(props) => (props.visible ? "1" : "0")};
-  transition: visibility 1000ms, opacity 1000ms; */
+  visibility: ${(props) => (props.visible ? "visible" : "hidden")};
+  transition: padding-bottom 800ms, padding-top 800ms, height 800ms,
+    opacity 1000ms;
 `;
 const BookmarkButton = styled.a`
   font-size: var(--icon-size);
