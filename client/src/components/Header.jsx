@@ -7,43 +7,46 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
 
-export default function Header({
+export default function AppHeader({
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
 }) {
-  <HeadSection>
-    <img src={shiftle_logo} alt="icon shiftle" />
-    <Nav>
-      <NavItem to="/">Alle</NavItem>
-      <NavItem to="myshifts">Meine</NavItem>
-      <NavItem to="admin">Admin</NavItem>
-    </Nav>
-    <HeaderInteraction>
-      <p>Ankunft zwischen</p>
-      <FilterSection>
-        <div>
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            wrapperClassName="date_picker--adjustedwidth"
-            selected={filterDateArrivalEarliest}
-            onChange={(date) => setFilterDateArrivalEarliest(date)}
-          />
-        </div>
-        <div>
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            wrapperClassName="date_picker--adjustedwidth"
-            selected={filterDateArrivalLatest}
-            onChange={(date) => setFilterDateArrivalLatest(date)}
-          />
-          <DatePickerWrapperStyles />
-        </div>
-      </FilterSection>
-      <h1>Alle Buchungen</h1>
-    </HeaderInteraction>
-  </HeadSection>;
+  return (
+    <Header>
+      <img src={shiftle_logo} alt="icon shiftle" />
+      <Nav>
+        <NavItem to="/">Alle</NavItem>
+        <NavItem to="myshifts">Meine</NavItem>
+        <NavItem to="admin">Admin</NavItem>
+      </Nav>
+      <HeaderInteraction>
+        <p>Ankunft zwischen</p>
+        <FilterSection>
+          <div>
+            <DatePicker
+              dateFormat="dd/MM/yyyy"
+              wrapperClassName="date_picker--adjustedwidth"
+              selected={filterDateArrivalEarliest}
+              onChange={(date) => setFilterDateArrivalEarliest(date)}
+            />
+          </div>
+          <div>
+            <DatePicker
+              dateFormat="dd/MM/yyyy"
+              wrapperClassName="date_picker--adjustedwidth"
+              selected={filterDateArrivalLatest}
+              onChange={(date) => setFilterDateArrivalLatest(date)}
+            />
+            <DatePickerWrapperStyles />
+          </div>
+        </FilterSection>
+        <h1>Alle Buchungen</h1>
+      </HeaderInteraction>
+    </Header>
+  );
 }
-const HeadSection = styled.header`
+//DatePicker lives in GlobalStyles
+const Header = styled.header`
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
   display: flex;
   gap: 3vw;

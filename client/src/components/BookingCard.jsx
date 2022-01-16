@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
-export default function BookingCard({ booking }) {
+export default function BookingCard({ booking, id }) {
   const [toggle, setToggle] = useState(false);
   function handleToggle() {
     setToggle(!toggle);
@@ -99,6 +99,9 @@ const Interaction = styled.div`
   justify-content: space-evenly;
 `;
 const AddInformation = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
   background: var(--secondary-bg);
   padding: 1em;
   border-bottom-left-radius: 1em;

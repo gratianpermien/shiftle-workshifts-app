@@ -51,12 +51,14 @@ const updateShift = async (req, res) => {
 };
 
 const updateShifts = async (req, res) => {
-  const shiftId = req.params.shiftId;
-  const data = req.body;
-  const updatedShift = await shift.findByIdAndUpdate(shiftId, data, {
-    returnDocument: "after",
-  });
-  res.json(updatedShifts);
+  fetchBookingDataFromMonday()
+  // const shiftId = req.params.shiftId;
+  // // const fetchedArray = fetchBookingDataFromMonday();
+  // const data = req.body;
+  // const updatedShift = await shift.findByIdAndUpdate(shiftId, data, {
+  //   returnDocument: "after",
+  // });
+  // res.json(updatedShifts);
 };
 
 const deleteShift = async (req, res) => {

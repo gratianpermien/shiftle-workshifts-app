@@ -44,7 +44,7 @@ h3 {
 
 const DatePickerWrapperStyles = createGlobalStyle`
     .date_picker--adjustedwidth {
-        width: 20vw;
+        width: 25vw;
         margin-right: 0.2em;
     }
     .date_picker--adjustedwidth .react-datepicker__input-container > *{
