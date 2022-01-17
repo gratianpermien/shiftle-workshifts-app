@@ -1,4 +1,5 @@
 import { shift } from "../models/shifts.js";
+import fetchBookingDataFromMonday from "../lib/mondayFetch.js";
 
 const getShifts = async (req, res) => {
   const allShifts = await shift.find();
@@ -40,7 +41,6 @@ const postShift = async (req, res) => {
   res.json(result);
 };
 
-//funzt nicht - stimmt try catch?
 const updateShift = async (req, res) => {
   const shiftId = req.params.shiftId;
   const data = req.body;
@@ -48,6 +48,17 @@ const updateShift = async (req, res) => {
     returnDocument: "after",
   });
   res.json(updatedShift);
+};
+
+const updateShifts = async (req, res) => {
+  fetchBookingDataFromMonday()
+  // const shiftId = req.params.shiftId;
+  // // const fetchedArray = fetchBookingDataFromMonday();
+  // const data = req.body;
+  // const updatedShift = await shift.findByIdAndUpdate(shiftId, data, {
+  //   returnDocument: "after",
+  // });
+  // res.json(updatedShifts);
 };
 
 const deleteShift = async (req, res) => {
@@ -68,4 +79,11 @@ const deleteShift = async (req, res) => {
   }
 };
 
-export { getShifts, findShift, postShift, updateShift, deleteShift };
+export {
+  getShifts,
+  findShift,
+  postShift,
+  updateShift,
+  updateShifts,
+  deleteShift,
+};

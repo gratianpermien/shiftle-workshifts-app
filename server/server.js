@@ -2,20 +2,10 @@ import path from "path";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import {
-  getShifts,
-  findShift,
-  postShift,
-  updateShift,
-  deleteShift,
-} from "./controllers/shifts.controller.js";
-import {
-  getUsers,
-  findUser,
-  postUser,
-  updateUser,
-  deleteUser,
-} from "./controllers/users.controller.js";
+import adminRoutes from "./routes/admin.routes.js";
+import shiftsRoutes from "./routes/shifts.routes.js";
+import usersRoutes from "./routes/users.routes.js";
+import fetchBookingDataFromMonday from "./lib/mondayFetch.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -33,23 +23,10 @@ mongoose.connect(connectionString);
 const server = express();
 server.use(cors());
 server.use(express.json());
+server.use("/api", [adminRoutes, shiftsRoutes, usersRoutes]);
 server.use(express.static(path.join(__dirname, "./client/dist")));
 
-//Routes: Shift Interactions
-server.get("/shifts", getShifts);
-server.get("/shifts/:shiftId", findShift);
-server.post("/shifts", postShift);
-server.put("/shifts/:shiftId", updateShift);
-server.delete("/shifts/:shiftId", deleteShift);
-
-//Routes: User Interactions
-server.get("/users", getUsers);
-server.get("/users/:userId", findUser);
-server.post("/users", postUser);
-server.put("/users/:userId", updateUser);
-server.delete("/users/:userId", deleteUser);
-
-//Routes: Test und Auslieferung dist
+//Additional Routes for test and dist delivery
 server.get("/test", (req, res) => {
   res.json({ message: "Hi, express server is present" });
 });
