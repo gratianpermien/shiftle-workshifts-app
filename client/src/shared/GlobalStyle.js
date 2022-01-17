@@ -28,9 +28,10 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: clamp(1.2rem, -0.875rem + 8.333vw, 3rem);
+  font-size: clamp(1.2rem, -0.875rem + 8.333vw, 2.5rem);
   color: var(--headings-color);
   margin:0;
+  text-transform: uppercase;
 }
 h2 {
   font-size: clamp(1.1rem, -0.875rem + 8.333vw, 2rem);
@@ -44,7 +45,7 @@ h3 {
 
 const DatePickerWrapperStyles = createGlobalStyle`
     .date_picker--adjustedwidth {
-        width: 25vw;
+        width: min(23vw, 120px);
         margin-right: 0.2em;
     }
     .date_picker--adjustedwidth .react-datepicker__input-container > *{

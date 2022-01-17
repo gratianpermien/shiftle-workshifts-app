@@ -6,6 +6,9 @@ const adminDataSchema = new mongoose.Schema({
   shiftBufferHandoverMins: Number,
   shiftBufferReturnMins: Number,
   shiftReminderHrs: Number,
+  durationDreamerMins: Number,
+  durationAdventurerMins: Number,
+  durationTravelerMins: Number,
   adminEmail: String,
   versionKey: false,
 });

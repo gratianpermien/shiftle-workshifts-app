@@ -7,7 +7,7 @@ dotenv.config();
 export default async function fetchBookingDataFromMonday() {
   const monday_api = process.env.API_KEY_MONDAY;
   const board_id = process.env.BOOKINGS_BOARD_ID_MONDAY;
-  const query = `boards (ids: ${board_id}) {groups (ids:topics) { items (newest_first:true) {id name column_values {title text}}}}`;
+  const query = `query { boards (ids: ${board_id}) {groups (ids: topics) {items (newest_first:true) {id column_values {title text}}}}},`;
 
   const response = await fetch("https://api.monday.com/v2", {
     method: "post",
@@ -21,7 +21,6 @@ export default async function fetchBookingDataFromMonday() {
   });
 
   const data = await response.json();
-
   //Flatten and reconstruct API Result and store in state
 
   const flatten = (obj) => Object.values(obj).flat();
@@ -50,8 +49,10 @@ export default async function fetchBookingDataFromMonday() {
   const restructuredData = flattenedData.map((booking) => {
     const bookingData = {
       id: booking.id,
-      timestamp_start: "",
-      timestamp_ende: "",
+      timestamp_start_rk: "",
+      timestamp_ende_rk: "",
+      timestamp_start_uek: "",
+      timestamp_ende_uek: "",
       presence_slices: [],
       rk: "",
       uek: "",
@@ -63,5 +64,5 @@ export default async function fetchBookingDataFromMonday() {
     });
     return bookingData;
   });
-  return restructuredData;
+  console.log(restructuredData);
 }

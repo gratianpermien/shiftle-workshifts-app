@@ -39,6 +39,8 @@ export default function BookingCard({ booking, id }) {
                 minute: "numeric",
               }).format(Date.parse(booking.kombidatum_ende))}
           </p>
+          <p>Übergabe: {booking.uek != "" ? booking.uek : " John"}</p>
+          <p>Rücknahme: {booking.rk != "" ? booking.rk : " Judy"}</p>
         </BasicInfo>
         <Interaction>
           <BookmarkButton href="#">

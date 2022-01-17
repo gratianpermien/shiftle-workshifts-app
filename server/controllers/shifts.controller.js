@@ -15,8 +15,10 @@ const findShift = async (req, res) => {
 const postShift = async (req, res) => {
   const newShift = new shift({
     monday_id: req.body.id,
-    timestamp_start: req.body.timestamp_start,
-    timestamp_ende: req.body.timestamp_ende,
+    timestamp_start_rk: req.body.timestamp_start_rk,
+    timestamp_ende_rk: req.body.timestamp_ende_rk,
+    timestamp_start_uek: req.body.timestamp_start_uek,
+    timestamp_ende_uek: req.body.timestamp_ende_uek,
     presence_slices: req.body.presence_slices,
     client: req.body.client,
     kennzeichen: req.body.kennzeichen,
@@ -51,7 +53,8 @@ const updateShift = async (req, res) => {
 };
 
 const updateShifts = async (req, res) => {
-  fetchBookingDataFromMonday()
+  const data = await fetchBookingDataFromMonday();
+  res.json(data);
   // const shiftId = req.params.shiftId;
   // // const fetchedArray = fetchBookingDataFromMonday();
   // const data = req.body;

@@ -3,8 +3,10 @@ import mongoose from "mongoose";
 const shiftSchema = new mongoose.Schema({
   monday_id: Number,
   timestamp_creation: { type: Date, default: Date.now },
-  timestamp_start: Number,
-  timestamp_ende: Number,
+  timestamp_start_rk: Number,
+  timestamp_ende_rk: Number,
+  timestamp_start_uek: Number,
+  timestamp_ende_uek: Number,
   presence_slices: { type: Array, default: undefined }, //primitive array
   rk: String,
   uek: String,
