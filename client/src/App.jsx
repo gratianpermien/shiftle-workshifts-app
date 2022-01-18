@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
-import shiftle_logo from "./assets/shiftle_logo.svg";
+import shiftle_watermark from "./assets/shiftle_watermark.svg";
 
 import AppHeader from "./components/Header";
 import BookingCard from "./components/BookingCard";
@@ -61,7 +61,7 @@ function App() {
 export default App;
 
 const View = styled.div`
-  background: var(--primary-bg);
+  background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   background-attachment: fixed;
   min-height: 100vh;
   padding-bottom: 20vh;
