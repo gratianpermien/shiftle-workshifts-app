@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { Route, Routes, NavLink, Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import shiftle_logo from "../assets/shiftle_logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 
@@ -10,6 +9,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
 
 export default function AppHeader({
+  user,
+  title,
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
   setFilterDateArrivalEarliest,
@@ -28,16 +29,37 @@ export default function AppHeader({
     location.reload();
     alert("Sync successful", syncData);
   }
+
   return (
     <HeaderWrapper>
       <Header>
         <Nav>
-          <NavItem to="/">Buchungen</NavItem>
-          <NavItem to="myshifts">Schichten</NavItem>
-          <NavItem to="admin">Admin</NavItem>
+          <NavItem
+            to="/"
+            className={(isActive) =>
+              "dateFilter" + (!isActive ? "--off" : "--on")
+            }
+          >
+            Start
+          </NavItem>
+          <NavItem to="/buchungen">Buchungen</NavItem>
+          <NavItem to="/schichten">Schichten</NavItem>
+          <NavItem
+            to="/admin"
+            className={(isActive) =>
+              "dateFilter" + (!isActive ? "--off" : "--on")
+            }
+          >
+            Admin
+          </NavItem>
         </Nav>
         <HeaderInteraction>
+          <h3>Moin, {user}!</h3>
+          <h1>{title}</h1>
           <FilterSection>
+            <TemporarySyncButton href="#">
+              <FontAwesomeIcon icon={faSyncAlt} onClick={updateShifts} />
+            </TemporarySyncButton>
             <div>
               <DatePicker
                 dateFormat="dd/MM/yyyy"
@@ -55,13 +77,7 @@ export default function AppHeader({
               />
               <DatePickerWrapperStyles />
             </div>
-            <div>
-              <TemporarySyncButton href="#">
-                <FontAwesomeIcon icon={faSyncAlt} onClick={updateShifts} />
-              </TemporarySyncButton>
-            </div>
           </FilterSection>
-          <h1>Alle Buchungen</h1>
         </HeaderInteraction>
       </Header>
     </HeaderWrapper>
@@ -73,7 +89,6 @@ const HeaderWrapper = styled.div`
   position: sticky;
   top: 0;
   width: 100%;
-  /* height: min(24vw, 200px); */
   background: var(--tertiary-bg);
   margin-bottom: 1em;
   padding: 5vw;
@@ -82,12 +97,9 @@ const HeaderWrapper = styled.div`
 const Header = styled.header`
   display: flex;
   gap: min(3vw, 1em);
+  justify-content: space-between;
   max-width: 600px;
   margin: 0 auto;
-  img {
-    width: 6vw;
-    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.2));
-  }
 `;
 const Nav = styled.div`
   width: min(27vw, 140px);
@@ -118,6 +130,7 @@ const NavItem = styled(NavLink)`
 `;
 const FilterSection = styled.div`
   display: flex;
+  justify-content: flex-end;
   gap: 0.2em;
   max-width: 100%;
 `;
@@ -127,7 +140,9 @@ const HeaderInteraction = styled.div`
   justify-content: space-between;
 `;
 const TemporarySyncButton = styled.a`
-  font-size: 2em;
+  font-size: 1em;
+  padding: 0.4em;
+  align-self: end;
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
   color: #707070;
   display: block;

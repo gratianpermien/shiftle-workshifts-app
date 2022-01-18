@@ -3,58 +3,42 @@ import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import shiftle_watermark from "./assets/shiftle_watermark.svg";
 
+import Start from "./pages/Start";
+import Admin from "./pages/Admin";
+import Schichten from "./pages/Shifts";
+import Buchungen from "./pages/Bookings";
+
 import AppHeader from "./components/Header";
-import BookingCard from "./components/BookingCard";
 
 function App() {
-  const [allBookings, setAllBookings] = useState([]);
   const [filterDateArrivalEarliest, setFilterDateArrivalEarliest] = useState(
     new Date()
   );
   const [filterDateArrivalLatest, setFilterDateArrivalLatest] = useState(
     new Date().setDate(new Date().getDate() + 30)
   );
-
-  //Get shift information from server / database on opening the app
-  async function fetchShifts() {
-    const res = await fetch("api/shifts");
-    const fetchedData = await res.json();
-    setAllBookings(fetchedData);
-  }
-  useEffect(() => {
-    fetchShifts();
-    //update Data with Monday Data
-  }, []);
-
+  const [pageTitle, setPageTitle] = useState("Test title from state");
+  const [currentUser, setCurrentUser] = useState("Natalie Portman");
+  console.log(filterDateArrivalEarliest);
   return (
-    <View>
-      <AppHeader
-        filterDateArrivalEarliest={filterDateArrivalEarliest}
-        filterDateArrivalLatest={filterDateArrivalLatest}
-        setFilterDateArrivalEarliest={setFilterDateArrivalEarliest}
-        setFilterDateArrivalLatest={setFilterDateArrivalLatest}
-      />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Container>
-              {allBookings
-                .filter(
-                  (booking) =>
-                    new Date(booking.kombidatum_ende) >=
-                      new Date(filterDateArrivalEarliest) &&
-                    new Date(booking.kombidatum_ende) <=
-                      new Date(filterDateArrivalLatest)
-                )
-                .map((booking) => (
-                  <BookingCard id={booking._id} booking={booking} />
-                ))}
-            </Container>
-          }
+    <>
+      <View>
+        <AppHeader
+          user={currentUser} //aus dem Login
+          title={pageTitle} //hier mit useParams arbeiten?
+          filterDateArrivalEarliest={filterDateArrivalEarliest}
+          filterDateArrivalLatest={filterDateArrivalLatest}
+          setFilterDateArrivalEarliest={setFilterDateArrivalEarliest}
+          setFilterDateArrivalLatest={setFilterDateArrivalLatest}
         />
-      </Routes>
-    </View>
+        <Routes>
+          <Route path="/" element={<Start />} />
+          <Route path="buchungen" element={<Buchungen />} />
+          <Route path="schichten" element={<Schichten />} />
+          <Route path="admin" element={<Admin />} />
+        </Routes>
+      </View>
+    </>
   );
 }
 

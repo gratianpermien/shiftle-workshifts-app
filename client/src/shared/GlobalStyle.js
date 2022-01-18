@@ -28,13 +28,14 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: clamp(1.2rem, -0.875rem + 8.333vw, 2.2rem);
+  font-size: clamp(1.1rem,-0.875rem + 8.333vw,2.5rem);
   color: var(--headings-color);
   margin:0;
   text-transform: uppercase;
+  font-weight: 900;
 }
 h2 {
-  font-size: clamp(1.1rem, -0.875rem + 8.333vw, 2rem);
+  font-size: clamp(1.05rem, -0.875rem + 8.333vw, 2rem);
   margin:0;
 }
 h3 {
