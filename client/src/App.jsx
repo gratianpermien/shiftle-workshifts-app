@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
+import shiftle_logo from "./assets/shiftle_logo.svg";
 
 import AppHeader from "./components/Header";
 import BookingCard from "./components/BookingCard";
 
-function App({ onChange }) {
+function App() {
   const [allBookings, setAllBookings] = useState([]);
   const [filterDateArrivalEarliest, setFilterDateArrivalEarliest] = useState(
     new Date()
@@ -62,14 +63,18 @@ export default App;
 const View = styled.div`
   background: var(--primary-bg);
   background-attachment: fixed;
+  min-height: 100vh;
+  padding-bottom: 20vh;
+  position: relative;
+  bottom: 0;
 `;
 
 const Container = styled.div`
   width: 90vw;
-  height: 100vh;
-  max-width: 1100px;
+  max-width: 600px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  z-index: 99;
 `;

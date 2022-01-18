@@ -39,6 +39,8 @@ export default function BookingCard({ booking, id }) {
                 minute: "numeric",
               }).format(Date.parse(booking.kombidatum_ende))}
           </p>
+          <p>Übergabe: {booking.uek != "" ? booking.uek : " John"}</p>
+          <p>Rücknahme: {booking.rk != "" ? booking.rk : " Judy"}</p>
         </BasicInfo>
         <Interaction>
           <BookmarkButton href="#">
@@ -120,7 +122,7 @@ const BookmarkButton = styled.a`
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
   color: #4ef1a0;
   display: block;
-  box-shadow: 1px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 1px rgba(0, 0, 0, 0.2); */
   cursor: pointer;
   transition: all 0.2s;
   &:hover,
