@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 import adminRoutes from "./routes/admin.routes.js";
 import shiftsRoutes from "./routes/shifts.routes.js";
 import usersRoutes from "./routes/users.routes.js";
-import fetchBookingDataFromMonday from "./lib/mondayFetch.js";
 import dotenv from "dotenv";
 dotenv.config();
 

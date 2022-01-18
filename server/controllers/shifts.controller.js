@@ -36,8 +36,8 @@ const postShift = async (req, res) => {
     zusatz_8: req.body.zusatz_8,
     zusatz_9: req.body.zusatz_9,
     zusatz_10: req.body.zusatz_10,
-    rk: "",
-    uek: "",
+    rk: req.body.rk,
+    uek: req.body.uek,
   });
   const result = await newShift.save();
   res.json(result);
@@ -50,18 +50,6 @@ const updateShift = async (req, res) => {
     returnDocument: "after",
   });
   res.json(updatedShift);
-};
-
-const updateShifts = async (req, res) => {
-  const data = await fetchBookingDataFromMonday();
-  res.json(data);
-  // const shiftId = req.params.shiftId;
-  // // const fetchedArray = fetchBookingDataFromMonday();
-  // const data = req.body;
-  // const updatedShift = await shift.findByIdAndUpdate(shiftId, data, {
-  //   returnDocument: "after",
-  // });
-  // res.json(updatedShifts);
 };
 
 const deleteShift = async (req, res) => {
@@ -80,6 +68,60 @@ const deleteShift = async (req, res) => {
       message: "Delete shift didn't work",
     });
   }
+};
+
+const updateShifts = async (req, res) => {
+  const data = await fetchBookingDataFromMonday();
+  const allUpdatedShifts = data.forEach(async (booking) => {
+    const filter = { monday_id: booking.id };
+    const update = {
+      monday_id: booking.id,
+      timestamp_start_rk: booking.timestamp_start_rk,
+      timestamp_ende_rk: booking.timestamp_ende_rk,
+      timestamp_start_uek: booking.timestamp_start_uek,
+      timestamp_ende_uek: booking.timestamp_ende_uek,
+      presence_slices: booking.presence_slices,
+      client: booking.name,
+      kennzeichen: booking.kennzeichen,
+      fahrzeug: booking.fahrzeug,
+      kombidatum_start: booking.kombidatum_start,
+      kombidatum_ende: booking.kombidatum_ende,
+      bemerkung: booking.bemerkung,
+      zusatz_1: booking.zusatz_1,
+      zusatz_2: booking.zusatz_2,
+      zusatz_3: booking.zusatz_3,
+      zusatz_4: booking.zusatz_4,
+      zusatz_5: booking.zusatz_5,
+      zusatz_6: booking.zusatz_6,
+      zusatz_7: booking.zusatz_7,
+      zusatz_8: booking.zusatz_8,
+      zusatz_9: booking.zusatz_9,
+      zusatz_10: booking.zusatz_10,
+      rk: "",
+      uek: "",
+    };
+    const options = {
+      upsert: true,
+      returnOriginal: false,
+      setDefaultsOnInsert: true,
+    };
+    try {
+      const updatedShift = await shift.findOneAndUpdate(
+        filter,
+        update,
+        options
+      );
+      console.log("Successful DB func");
+    } catch {
+      console.log("Error des Todes");
+      res.json({
+        success: false,
+        message: "Error des Todes",
+        error: error.message,
+      });
+    }
+  });
+  res.json(allUpdatedShifts);
 };
 
 export {

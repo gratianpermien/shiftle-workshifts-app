@@ -122,7 +122,7 @@ const BookmarkButton = styled.a`
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
   color: #4ef1a0;
   display: block;
-  box-shadow: 1px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 1px rgba(0, 0, 0, 0.2); */
   cursor: pointer;
   transition: all 0.2s;
   &:hover,

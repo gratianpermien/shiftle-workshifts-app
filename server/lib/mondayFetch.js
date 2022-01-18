@@ -1,4 +1,4 @@
-//gets called on /api/mondaystate
+// import { shift } from "../models/shifts.js";
 
 import fetch from "node-fetch";
 import dotenv from "dotenv";
@@ -64,5 +64,5 @@ export default async function fetchBookingDataFromMonday() {
     });
     return bookingData;
   });
-  console.log(restructuredData);
+  return restructuredData;
 }
