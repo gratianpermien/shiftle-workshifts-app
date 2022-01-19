@@ -9,8 +9,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
 
 export default function AppHeader({
-  user,
-  title,
+  currentUser,
+  currentPage,
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
   setFilterDateArrivalEarliest,
@@ -26,36 +26,43 @@ export default function AppHeader({
       },
     });
     const syncData = await response;
-    location.reload();
+    location.reload(); //brauche ich das?
     alert("Sync successful", syncData);
   }
+
+  // switch (case) {
+  //   case "1":
+  //       // some code
+  //       break;
+  //   case "two":
+  //       // some code
+  //       break;
+  //   case "III":
+  //       if (!shouldProceed) {
+  //         return false;
+  //       }
+  //       // tasks to be done for case III
+  //       break;
+  //   case "4":
+  //       // case 4 code
+  //       break;
+  //   default:
+  //       // default tasks
+  //       break;
+  //   }
 
   return (
     <HeaderWrapper>
       <Header>
         <Nav>
-          <NavItem
-            to="/"
-            className={(isActive) =>
-              "dateFilter" + (!isActive ? "--off" : "--on")
-            }
-          >
-            Start
-          </NavItem>
+          <NavItem to="/">Start</NavItem>
           <NavItem to="/buchungen">Buchungen</NavItem>
           <NavItem to="/schichten">Schichten</NavItem>
-          <NavItem
-            to="/admin"
-            className={(isActive) =>
-              "dateFilter" + (!isActive ? "--off" : "--on")
-            }
-          >
-            Admin
-          </NavItem>
+          <NavItem to="/admin">Admin</NavItem>
         </Nav>
-        <HeaderInteraction>
-          <h3>Moin, {user}!</h3>
-          <h1>{title}</h1>
+        <HeaderInteraction headerTheming={headerTheming}>
+          <h3>Moin, {currentUser}!</h3>
+          <h1>{currentPage}</h1>
           <FilterSection>
             <TemporarySyncButton href="#">
               <FontAwesomeIcon icon={faSyncAlt} onClick={updateShifts} />
@@ -90,14 +97,12 @@ const HeaderWrapper = styled.div`
   top: 0;
   width: 100%;
   background: var(--tertiary-bg);
-  margin-bottom: 1em;
   padding: 5vw;
   z-index: 999;
 `;
 const Header = styled.header`
   display: flex;
   gap: min(3vw, 1em);
-  justify-content: space-between;
   max-width: 600px;
   margin: 0 auto;
 `;
@@ -135,9 +140,11 @@ const FilterSection = styled.div`
   max-width: 100%;
 `;
 const HeaderInteraction = styled.div`
-  display: flex;
+  display: ${(props) => (props.headerTheming ? `none` : `flex`)};
+  /* display: flex; */
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
 `;
 const TemporarySyncButton = styled.a`
   font-size: 1em;

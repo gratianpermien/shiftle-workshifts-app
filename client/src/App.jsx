@@ -18,23 +18,28 @@ function App() {
     new Date().setDate(new Date().getDate() + 30)
   );
   const [currentUser, setCurrentUser] = useState("Natalie");
-  const [simpleSite, setSimpleSite] = useState(true);
-  const pageTitle = useLocation().pathname.replace("/", "")
-    ? useLocation().pathname.replace("/", "")
-    : "start";
-  console.log(simpleSite);
+  const [currentPage, setCurrentPage] = useState("")(
+    (function () {
+      setCurrentPage(
+        useLocation().pathname.replace("/", "")
+          ? useLocation().pathname.replace("/", "")
+          : "start"
+      );
+    })()
+  );
+
   return (
     <View>
       <AppHeader
-        user={currentUser} //aus dem Login?
-        title={pageTitle}
+        currentUser={currentUser} //aus dem Login?
+        currentPage={currentPage}
         filterDateArrivalEarliest={filterDateArrivalEarliest}
         filterDateArrivalLatest={filterDateArrivalLatest}
         setFilterDateArrivalEarliest={setFilterDateArrivalEarliest}
         setFilterDateArrivalLatest={setFilterDateArrivalLatest}
       />
       <Routes>
-        <Route exact path="/" element={<Start />} />
+        <Route exact path="/" element={<Start simpleSite={true} />} />
         <Route
           exact
           path="buchungen"
@@ -42,16 +47,16 @@ function App() {
             <Buchungen
               filterDateArrivalEarliest={filterDateArrivalEarliest}
               filterDateArrivalLatest={filterDateArrivalLatest}
+              simpleSite={false}
             />
           }
         />
         <Route
           exact
           path="schichten"
-          type={simpleSite}
-          element={<Schichten />}
+          element={<Schichten simpleSite={false} />}
         />
-        <Route exact path="admin" element={<Admin />} />
+        <Route exact path="admin" element={<Admin simpleSite={true} />} />
       </Routes>
     </View>
   );
@@ -59,22 +64,8 @@ function App() {
 
 export default App;
 
+//Fallback, wenn keine Route was rendert --> brauche ich das?
 const View = styled.div`
-  display: block;
-  background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
-  background-attachment: fixed;
   min-height: 100vh;
-  padding-bottom: 20vh;
-  position: relative;
   bottom: 0;
-`;
-
-const Container = styled.div`
-  width: 90vw;
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  z-index: 99;
 `;

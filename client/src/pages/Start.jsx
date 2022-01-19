@@ -5,14 +5,14 @@ import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import shiftle_watermark from "../assets/shiftle_watermark.svg";
 
-function Start({ headerStrip }) {
+function Start() {
   const [user, setUser] = useState([]);
 
   return (
     <View>
-      <Container>
+      <StartContainer>
         <p>DAS IST DIE STARTSEITE</p>
-      </Container>
+      </StartContainer>
     </View>
   );
 }
@@ -21,15 +21,14 @@ export default Start;
 
 const View = styled.div`
   background: 50% 95% no-repeat url(${shiftle_watermark}),
-    url("https://www.hamburg-startups.net/wp-content/uploads/2021/06/Produkt_Aussen_Dreamer_0035-1030x687.jpg");
+    top left / cover no-repeat
+      url("https://www.hamburg-startups.net/wp-content/uploads/2021/06/Produkt_Aussen_Dreamer_0035-1030x687.jpg");
   background-attachment: fixed;
   min-height: 100vh;
-  padding-bottom: 20vh;
-  position: relative;
-  bottom: 0;
+  padding: 1rem 5vw 25vh;
 `;
 
-const Container = styled.div`
+const StartContainer = styled.div`
   width: 90vw;
   max-width: 600px;
   margin: 0 auto;
