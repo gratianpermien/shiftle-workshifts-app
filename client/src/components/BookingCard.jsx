@@ -7,13 +7,13 @@ import {
   faPlusCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function BookingCard({ booking, key }) {
+export default function BookingCard({ booking, id }) {
   const [toggle, setToggle] = useState(false);
   function handleToggle() {
     setToggle(!toggle);
   }
   return (
-    <Card key={key}>
+    <Card key={id}>
       <CardRow>
         <BasicInfo>
           <h2>{booking.client}</h2>

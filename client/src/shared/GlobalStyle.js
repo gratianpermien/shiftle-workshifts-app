@@ -28,18 +28,18 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: clamp(1.1rem,-0.875rem + 8.333vw,2.5rem);
+  font-size: clamp(1.7rem,-0.875rem + 8.333vw,3.5rem);
   color: var(--headings-color);
   margin:0;
   text-transform: uppercase;
   font-weight: 900;
 }
 h2 {
-  font-size: clamp(1.05rem, -0.875rem + 8.333vw, 2rem);
+  font-size: clamp(1.3rem, -0.875rem + 8.333vw, 2rem);
   margin:0;
 }
 h3 {
-  font-size: clamp(1rem, -0.875rem + 8.333vw, 1.5rem);
+  font-size: clamp(1.2rem, -0.875rem + 8.333vw, 1.5rem);
   margin:0;
 }
 `;

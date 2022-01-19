@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import shiftle_watermark from "../assets/shiftle_watermark.svg";
 
-function Start() {
+function Start({ headerStrip }) {
   const [user, setUser] = useState([]);
 
   return (
