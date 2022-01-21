@@ -24,8 +24,6 @@ export default function AppHeader({
       },
     });
     const syncData = await response;
-    // location.reload(); //brauche ich das? Ist die Antwort vom Server korrekt?
-    alert("Sync successful", syncData);
   }
   useEffect(async () => {
     await updateShifts();
