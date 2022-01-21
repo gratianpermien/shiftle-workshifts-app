@@ -9,7 +9,7 @@ function Admin() {
   return (
     <View>
       <AdminContainer>
-        <p>Das ist die Adminseite, hier ist noch Baustelle</p>
+        <p>Das ist die Adminseite, hier ist noch Baustelle 🚧</p>
       </AdminContainer>
       <FooterWrapper>
         <Footer>

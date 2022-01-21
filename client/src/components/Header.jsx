@@ -116,8 +116,8 @@ const UserRibbon = styled.div`
   -o-transform: rotate(45deg);
   position: relative;
   padding: min(1vw, 7px);
-  top: 20px;
-  right: 10px;
+  top: 11px;
+  right: 11px;
   width: 120px;
   background-color: var(--primary-color);
   color: #fff;
