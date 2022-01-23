@@ -1,22 +1,88 @@
-//https://www.npmjs.com/package/react-form
-
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import shiftle_watermark from "../assets/shiftle_watermark.svg";
+import { NavItem } from "../components/Buttons";
+import NewUserAdminForm from "../components/NewUserAdminForm";
+import { CenteredButton, SingleRouteButton } from "../components/Buttons";
 
 function Admin() {
+  const [parameters, setParameters] = useState([]);
+  const [error, setError] = useState("");
+  const [newUser, setNewUser] = useState("");
+  const [toggle, setToggle] = useState(false);
+
+  function handleToggle() {
+    setToggle(!toggle);
+  }
+  //Get Admin-Parameters from DB
+  async function fetchAdminParameters() {
+    const res = await fetch("api/admin");
+    const fetchedData = await res.json();
+    setParameters(fetchedData);
+  }
+  useEffect(() => {
+    fetchAdminParameters();
+  }, []);
+
+  //Update Admin-Parameters in DB
+  async function updateParameters(parameters) {
+    const result = await fetch("api/admin", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(parameters),
+    });
+    return await result.json();
+  }
+
+  //User: check form data and submit
+  const SubmitUser = (userDetails) => {
+    if (
+      userDetails.email.length > 0 &&
+      userDetails.email.split("@")[1].includes(".") &&
+      userDetails.password.length > 0
+    ) {
+      setNewUser({
+        role: userDetails.role,
+        email: userDetails.email,
+        password: userDetails.password,
+      });
+      createUser(newUser);
+    } else {
+      setError("Eingabe ist ungültig.");
+    }
+  };
+  //Post new user to DB
+  async function createUser(newUser) {
+    console.log(newUser);
+    const result = await fetch("api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    });
+    return await result.json();
+  }
   return (
     <View>
-      <AdminContainer>
-        <p>Das ist die Adminseite, hier ist noch Baustelle 🚧</p>
-      </AdminContainer>
-      <FooterWrapper>
-        <Footer>
-          <NavItem to="/buchungen">Zurück</NavItem>
-          <NavItem to="/buchungen">Speichern</NavItem>
-        </Footer>
-      </FooterWrapper>
+      <BaseContainer>
+        <ButtonSection>
+          <CenteredButton onClick={handleToggle}>Switch</CenteredButton>
+          <SingleRouteButton to="/buchungen">Zurück</SingleRouteButton>
+        </ButtonSection>
+        <FormContainer>
+          <NewUserAdminForm
+            visible={toggle}
+            parameters={parameters}
+            SubmitUser={SubmitUser}
+            newUser={newUser}
+            error={error}
+          />
+          //HIER KOMMT MORGEN DAS NÄCHSTE FORM
+        </FormContainer>
+      </BaseContainer>
     </View>
   );
 }
@@ -26,49 +92,29 @@ const View = styled.div`
   background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   background-attachment: fixed;
   min-height: 100vh;
-  padding: 1rem 5vw 25vh;
+  /* padding: 1rem 5vw 25vh; */
 `;
 
-const AdminContainer = styled.div`
-  width: 90vw;
-  max-width: 600px;
+const BaseContainer = styled.div`
+  width: min(38vw, 600px);
   margin: 0 auto;
-  z-index: 99;
-`;
-
-const FooterWrapper = styled.footer`
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 3vw;
-  z-index: 999;
-`;
-const Footer = styled.div`
   display: flex;
-  justify-content: center;
-  gap: min(3vw, 1em);
-  max-width: 600px;
-  margin: 0 auto;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
-const NavItem = styled(Link)`
-  display: block;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  padding: 0.4em 1em;
-  border-radius: 2em;
-  box-sizing: border-box;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #ffffff;
-  background-color: var(--primary-color);
-  opacity: 0.7;
-  text-align: left;
-  transition: all 0.2s;
-  &:hover {
-    opacity: 1;
-  }
-  &.active {
-    opacity: 1;
-  }
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: space-between;
+  margin: 0 auto;
+  width: 100%;
+`;
+const ButtonSection = styled.div`
+  display: flex;
+  gap: min(3vw, 1em);
+  flex-direction: column;
+  align-items: center;
+  margin: 3em auto;
 `;

@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-
+import { NavLink } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
+// import { NavItem } from "./Buttons";
+import { functions } from "lodash";
 
 export default function AppHeader({
   authenticated,
-  currentUser,
+  admin,
+  currentUserName,
   currentPage,
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
@@ -36,10 +38,11 @@ export default function AppHeader({
     admin: false,
   };
   const headerTheme = authenticated && headerTheming[currentPage];
+  console.log(admin);
   return (
     <>
       <UserRibbonWrapper headerTheme={headerTheme}>
-        <UserRibbon>{currentUser}</UserRibbon>
+        <UserRibbon>{currentUserName}</UserRibbon>
       </UserRibbonWrapper>
       <HeaderWrapper headerTheme={headerTheme}>
         <Header>
@@ -47,15 +50,11 @@ export default function AppHeader({
             <NavItem to="/">Logout</NavItem>
             <NavItem to="/buchungen">Buchungen</NavItem>
             <NavItem to="/schichten">Schichten</NavItem>
-            <NavItem to="/admin">Admin</NavItem>
+            {admin ? <NavItem to="/admin">Admin</NavItem> : null}
           </Nav>
-
           <HeaderInteraction>
             <h1>{currentPage}</h1>
             <FilterSection>
-              {/* <TemporarySyncButton href="#">
-              <FontAwesomeIcon icon={faSyncAlt} onClick={updateShifts} />
-            </TemporarySyncButton> */}
               <div>
                 <DatePicker
                   dateFormat="dd/MM/yyyy"
@@ -102,7 +101,7 @@ const UserRibbonWrapper = styled.div`
   width: 80px;
   height: 88px;
   overflow: hidden;
-  position: absolute;
+  position: fixed;
   right: 0;
   z-index: 300;
 `;
@@ -120,12 +119,12 @@ const UserRibbon = styled.div`
   right: 11px;
   width: 120px;
   background-color: var(--primary-color);
-  color: #fff;
+  color: var(--secondary-bg);
   font-size: var(--basic-font-size);
   font-weight: 600;
 `;
 const Nav = styled.div`
-  width: min(27vw, 140px);
+  width: min(25vw, 150px);
   display: flex;
   flex-direction: column;
   gap: min(3vw, 0.4em);
@@ -139,21 +138,21 @@ const NavItem = styled(NavLink)`
   text-decoration: none;
   text-transform: uppercase;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--secondary-bg);
   background-color: var(--primary-color);
-  opacity: 0.7;
+  opacity: 1;
   text-align: left;
   transition: all 0.2s;
   &:hover {
-    opacity: 1;
+    color: var(--headings-color);
   }
   &.active {
-    opacity: 1;
+    color: var(--headings-color);
   }
 `;
 const FilterSection = styled.div`
   display: flex;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   gap: 0.2em;
   max-width: 100%;
 `;
@@ -164,18 +163,4 @@ const HeaderInteraction = styled.div`
   width: 100%;
   justify-content: flex-end;
   align-items: flex-end;
-`;
-const TemporarySyncButton = styled.a`
-  font-size: 1em;
-  padding: 0.4em;
-  align-self: end;
-  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
-  color: #707070;
-  display: block;
-  cursor: pointer;
-  transition: all 0.2s;
-  &:hover,
-  &:active {
-    color: #ca6e44;
-  }
 `;

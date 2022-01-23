@@ -8,11 +8,11 @@ const GlobalStyle = createGlobalStyle`
 }
 :root {
 --primary-bg: linear-gradient(225deg, rgba(245,111,168,1) 0%, rgba(98,2,2,1) 100%);
---secondary-bg: #FFEEEE;
+--secondary-bg: #FFFDFD; //in Admin
 --tertiary-bg: linear-gradient(245deg, rgba(255,238,238,1) 0%, rgba(255,255,255,1) 100%);
---headings-color: #6B1525;
---primary-color: #F56FA8;
---icon-size: clamp(3rem, -0.875rem + 8.333vw, 5rem);
+--headings-color: #6B1525; //in Admin
+--primary-color: #F56FA8; //in Admin
+--icon-size: clamp(2rem, -0.875rem + 8.333vw, 3rem);
 --basic-font-size: clamp(0.7rem, 0.4137rem + 1.2214vw, 1rem);;
 }
 body {
