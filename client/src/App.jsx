@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import shiftle_logo from "./assets/shiftle_logo.svg";
 
+import Log from "./pages/Log";
+import Admin from "./pages/Admin";
+import Schichten from "./pages/Shifts";
+import Buchungen from "./pages/Bookings";
+
+// import { UnauthenticatedRoute } from "./lib/Authentication";
 import AppHeader from "./components/Header";
-import BookingCard from "./components/BookingCard";
 
 function App() {
-  const [allBookings, setAllBookings] = useState([]);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+  });
   const [filterDateArrivalEarliest, setFilterDateArrivalEarliest] = useState(
     new Date()
   );
@@ -15,20 +23,15 @@ function App() {
     new Date().setDate(new Date().getDate() + 30)
   );
 
-  //Get shift information from server / database on opening the app
-  async function fetchShifts() {
-    const res = await fetch("api/shifts");
-    const fetchedData = await res.json();
-    setAllBookings(fetchedData);
-  }
-  useEffect(() => {
-    fetchShifts();
-    //update Data with Monday Data
-  }, []);
-
+  //Read path for path-dependant theming of header (log is for "/" route)
+  const pageSlug = useLocation().pathname.replace("/", "");
+  const currentPage = pageSlug ? pageSlug : "log";
   return (
     <View>
       <AppHeader
+        authenticated={authenticated}
+        currentUser={user.name}
+        currentPage={currentPage}
         filterDateArrivalEarliest={filterDateArrivalEarliest}
         filterDateArrivalLatest={filterDateArrivalLatest}
         setFilterDateArrivalEarliest={setFilterDateArrivalEarliest}
@@ -36,23 +39,73 @@ function App() {
       />
       <Routes>
         <Route
+          exact
           path="/"
           element={
-            <Container>
-              {allBookings
-                .filter(
-                  (booking) =>
-                    new Date(booking.kombidatum_ende) >=
-                      new Date(filterDateArrivalEarliest) &&
-                    new Date(booking.kombidatum_ende) <=
-                      new Date(filterDateArrivalLatest)
-                )
-                .map((booking) => (
-                  <BookingCard id={booking._id} booking={booking} />
-                ))}
-            </Container>
+            <Log
+              currentUser={user}
+              setUser={setUser}
+              authenticated={authenticated}
+              setAuthenticated={setAuthenticated}
+              simpleSite={true}
+            />
           }
         />
+        {
+          //Check if authenticated and activate other routes
+          authenticated ? (
+            <>
+              <Route
+                exact
+                path="buchungen"
+                element={
+                  <Buchungen
+                    filterDateArrivalEarliest={filterDateArrivalEarliest}
+                    filterDateArrivalLatest={filterDateArrivalLatest}
+                    simpleSite={false}
+                  />
+                }
+              />
+              <Route
+                exact
+                path="schichten"
+                element={<Schichten simpleSite={false} />}
+              />
+              <Route exact path="admin" element={<Admin simpleSite={true} />} />
+            </>
+          ) : (
+            <Route
+              exact
+              path="/"
+              element={
+                <Log
+                  currentUser={user}
+                  setUser={setUser}
+                  authenticated={authenticated}
+                  setAuthenticated={setAuthenticated}
+                  simpleSite={true}
+                />
+              }
+            />
+          )
+        }
+        {/* <Route
+          exact
+          path="buchungen"
+          element={
+            <Buchungen
+              filterDateArrivalEarliest={filterDateArrivalEarliest}
+              filterDateArrivalLatest={filterDateArrivalLatest}
+              simpleSite={false}
+            />
+          }
+        />
+        <Route
+          exact
+          path="schichten"
+          element={<Schichten simpleSite={false} />}
+        />
+        <Route exact path="admin" element={<Admin simpleSite={true} />} /> */}
       </Routes>
     </View>
   );
@@ -60,21 +113,7 @@ function App() {
 
 export default App;
 
+//Fallback, wenn keine Route was rendert --> brauche ich das?
 const View = styled.div`
-  background: var(--primary-bg);
-  background-attachment: fixed;
   min-height: 100vh;
-  padding-bottom: 20vh;
-  position: relative;
-  bottom: 0;
-`;
-
-const Container = styled.div`
-  width: 90vw;
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  z-index: 99;
 `;

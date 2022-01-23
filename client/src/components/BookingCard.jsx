@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronCircleDown,
+  faPlusCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function BookingCard({ booking, id }) {
   const [toggle, setToggle] = useState(false);
@@ -47,7 +50,7 @@ export default function BookingCard({ booking, id }) {
             <FontAwesomeIcon icon={faPlusCircle} />
           </BookmarkButton>
           <InfoButton href="#" onClick={handleToggle}>
-            <FontAwesomeIcon icon={faInfoCircle} />
+            <FontAwesomeIcon icon={faChevronCircleDown} />
           </InfoButton>
         </Interaction>
       </CardRow>
@@ -120,14 +123,14 @@ const AddInformation = styled.div`
 const BookmarkButton = styled.a`
   font-size: var(--icon-size);
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
-  color: #4ef1a0;
+  color: #44d68d;
   display: block;
   /* box-shadow: 1px rgba(0, 0, 0, 0.2); */
   cursor: pointer;
   transition: all 0.2s;
   &:hover,
   &:active {
-    color: #44ca66;
+    color: #2a8658;
   }
 `;
 const InfoButton = styled(BookmarkButton)`
