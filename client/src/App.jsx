@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -12,6 +12,8 @@ import AppHeader from "./components/Header";
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [admin, setAdmin] = useState(false);
+  const [newParameters, setNewParameters] = useState("");
+
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -27,13 +29,14 @@ function App() {
   //Read path for path-dependant theming of header (log is for "/" route)
   const pageSlug = useLocation().pathname.replace("/", "");
   const currentPage = pageSlug ? pageSlug : "log";
-
   return (
     <View>
       <AppHeader
         authenticated={authenticated}
         currentUserName={user.name}
         admin={admin}
+        setNewParameters={setNewParameters}
+        newParameters={newParameters}
         currentPage={currentPage}
         filterDateArrivalEarliest={filterDateArrivalEarliest}
         filterDateArrivalLatest={filterDateArrivalLatest}
@@ -78,7 +81,17 @@ function App() {
                 element={<Schichten simpleSite={false} />}
               />
               user.role == "ADMIN" ? (
-              <Route exact path="admin" element={<Admin simpleSite={true} />} />
+              <Route
+                exact
+                path="admin"
+                element={
+                  <Admin
+                    simpleSite={true}
+                    newParameters={newParameters}
+                    setNewParameters={setNewParameters}
+                  />
+                }
+              />
               ) : (
               <Route
                 exact
@@ -95,19 +108,41 @@ function App() {
               )
             </>
           ) : (
-            <Route
-              exact
-              path="/"
-              element={
-                <Log
-                  currentUser={user}
-                  setUser={setUser}
-                  authenticated={authenticated}
-                  setAuthenticated={setAuthenticated}
-                  simpleSite={true}
-                />
-              }
-            />
+            <>
+              <Route
+                exact
+                path="buchungen"
+                element={<Navigate to="/" replace={true} />}
+              />
+              <Route
+                exact
+                path="schichten"
+                element={<Navigate to="/" replace={true} />}
+              />
+              <Route
+                exact
+                path="buchungen"
+                element={<Navigate to="/" replace={true} />}
+              />
+              <Route
+                exact
+                path="admin"
+                element={<Navigate to="/" replace={true} />}
+              />
+              <Route
+                exact
+                path="/"
+                element={
+                  <Log
+                    currentUser={user}
+                    setUser={setUser}
+                    authenticated={authenticated}
+                    setAuthenticated={setAuthenticated}
+                    simpleSite={true}
+                  />
+                }
+              />
+            </>
           )
         }
       </Routes>

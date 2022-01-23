@@ -1,61 +1,80 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import shiftle_watermark from "../assets/shiftle_watermark.svg";
-import { NavItem } from "../components/Buttons";
 import NewUserAdminForm from "../components/NewUserAdminForm";
+import ParametersAdminForm from "../components/ParametersAdminForm";
 import { CenteredButton, SingleRouteButton } from "../components/Buttons";
 
-function Admin() {
-  const [parameters, setParameters] = useState([]);
-  const [error, setError] = useState("");
+function Admin({ newParameters, setNewParameters }) {
+  const [userError, setUserError] = useState("");
+  const [parameterError, setParameterError] = useState("");
+  const [parameterConf, setParameterConf] = useState("");
   const [newUser, setNewUser] = useState("");
   const [toggle, setToggle] = useState(false);
 
   function handleToggle() {
     setToggle(!toggle);
   }
-  //Get Admin-Parameters from DB
-  async function fetchAdminParameters() {
-    const res = await fetch("api/admin");
-    const fetchedData = await res.json();
-    setParameters(fetchedData);
-  }
-  useEffect(() => {
-    fetchAdminParameters();
-  }, []);
 
+  //Admin: submit form data (no validation needed)
+  const SubmitParameters = (parameterDetails) => {
+    try {
+      setNewParameters({
+        presenceWindowMins: newParameters.presenceWindowMins,
+        presenceParallel: parameterDetails.presenceParallel,
+        shiftBufferHandoverMins: parameterDetails.shiftBufferHandoverMins,
+        shiftBufferReturnMins: parameterDetails.shiftBufferReturnMins,
+        shiftReminderHrs: parameterDetails.shiftReminderHrs,
+        adminEmail: parameterDetails.adminEmail,
+        durationAdventurerHrs: parameterDetails.durationAdventurerHrs,
+        durationDreamerHrs: parameterDetails.durationDreamerHrs,
+        durationTravelerHrs: parameterDetails.durationTravelerHrs,
+      });
+      updateParameters(newParameters);
+      setParameterError("");
+      setParameterConf("Parameter geändert.");
+    } catch (error) {
+      setParameterError("Eingabe ist ungültig." + { error });
+      setParameterConf("");
+    }
+  };
   //Update Admin-Parameters in DB
-  async function updateParameters(parameters) {
-    const result = await fetch("api/admin", {
+  async function updateParameters(newParameters) {
+    console.log(newParameters);
+    const result = await fetch("api/admin/61e146a9fbc9e947b9f19496", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(parameters),
+      body: JSON.stringify(newParameters),
     });
     return await result.json();
   }
 
   //User: check form data and submit
   const SubmitUser = (userDetails) => {
-    if (
-      userDetails.email.length > 0 &&
-      userDetails.email.split("@")[1].includes(".") &&
-      userDetails.password.length > 0
-    ) {
-      setNewUser({
-        role: userDetails.role,
-        email: userDetails.email,
-        password: userDetails.password,
-      });
-      createUser(newUser);
-    } else {
-      setError("Eingabe ist ungültig.");
+    try {
+      if (
+        userDetails.email.length > 0 &&
+        userDetails.email.split("@")[1].includes(".") &&
+        userDetails.password.length > 0
+      ) {
+        setNewUser({
+          role: userDetails.role,
+          email: userDetails.email,
+          password: userDetails.password,
+        });
+        createUser(newUser);
+        setUserError("");
+      } else {
+        setUserError("Eingabe ist ungültig.");
+      }
+    } catch (error) {
+      setParameterError("Eingabe ist ungültig." + { error });
     }
   };
   //Post new user to DB
   async function createUser(newUser) {
-    console.log(newUser);
     const result = await fetch("api/users", {
       method: "POST",
       headers: {
@@ -75,12 +94,17 @@ function Admin() {
         <FormContainer>
           <NewUserAdminForm
             visible={toggle}
-            parameters={parameters}
             SubmitUser={SubmitUser}
             newUser={newUser}
-            error={error}
+            error={userError}
           />
-          //HIER KOMMT MORGEN DAS NÄCHSTE FORM
+          <ParametersAdminForm
+            visible={toggle}
+            newParameters={newParameters}
+            SubmitParameters={SubmitParameters}
+            parameterError={parameterError}
+            parameterConf={parameterConf}
+          />
         </FormContainer>
       </BaseContainer>
     </View>
@@ -94,7 +118,6 @@ const View = styled.div`
   min-height: 100vh;
   /* padding: 1rem 5vw 25vh; */
 `;
-
 const BaseContainer = styled.div`
   width: min(38vw, 600px);
   margin: 0 auto;
@@ -102,7 +125,6 @@ const BaseContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
 `;
-
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;

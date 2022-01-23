@@ -4,20 +4,20 @@ import { NavLink } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
-// import { NavItem } from "./Buttons";
-import { functions } from "lodash";
 
 export default function AppHeader({
   authenticated,
   admin,
   currentUserName,
   currentPage,
+  setNewParameters,
+  newParameters,
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
   setFilterDateArrivalEarliest,
   setFilterDateArrivalLatest,
 }) {
-  //Refresh shift information from Monday
+  //Refresh shift information from Monday and get admin data if admin
   async function updateShifts() {
     const response = await fetch("api/shifts", {
       method: "PUT",
@@ -27,8 +27,14 @@ export default function AppHeader({
     });
     const syncData = await response;
   }
+  async function fetchAdminParameters() {
+    const response = await fetch("api/admin");
+    const fetchedData = await response.json();
+    setNewParameters(fetchedData[0]);
+  }
   useEffect(async () => {
     await updateShifts();
+    await fetchAdminParameters();
   }, []);
 
   const headerTheming = {
@@ -38,7 +44,7 @@ export default function AppHeader({
     admin: false,
   };
   const headerTheme = authenticated && headerTheming[currentPage];
-  console.log(admin);
+
   return (
     <>
       <UserRibbonWrapper headerTheme={headerTheme}>
@@ -152,7 +158,6 @@ const NavItem = styled(NavLink)`
 `;
 const FilterSection = styled.div`
   display: flex;
-  /* justify-content: flex-end; */
   gap: 0.2em;
   max-width: 100%;
 `;

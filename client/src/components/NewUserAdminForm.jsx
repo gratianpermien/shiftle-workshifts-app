@@ -7,7 +7,6 @@ export default function NewUserAdminForm({
   newUser,
   error,
   visible,
-  parameters,
 }) {
   const [userDetails, setUserDetails] = useState({
     role: "",
@@ -19,11 +18,10 @@ export default function NewUserAdminForm({
     event.preventDefault();
     SubmitUser(userDetails);
   }
-
   return (
     <>
       <UserForm onSubmit={submitHandler} visible={visible}>
-        <h1>Neuer User.</h1>
+        <h1>User.</h1>
         <Confirm>{newUser ? <div>User ist angelegt.</div> : ""}</Confirm>
         <Error>{error ? <div>{error}</div> : ""}</Error>
         <InputGroup>
@@ -48,6 +46,7 @@ export default function NewUserAdminForm({
             }
             value={userDetails.role}
           >
+            <option>Auswählen</option>
             <option value="ADMIN">Admin</option>
             <option value="RK">RK</option>
             <option value="UEK">ÜK</option>
