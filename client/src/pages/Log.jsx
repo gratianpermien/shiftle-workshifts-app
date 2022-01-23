@@ -76,7 +76,7 @@ export default function Log({
               </ButtonSection>
             </Welcome>
           ) : (
-            <LoginForm Login={Login} error={error} />
+            <LoginForm Login={Login} loginError={error} />
           )}
         </LoginContainer>
       </BaseContainer>

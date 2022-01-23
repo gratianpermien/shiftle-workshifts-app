@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { InputButton } from "./Buttons";
 
-export default function LoginForm({ Login, error }) {
+export default function LoginForm({ Login, loginError }) {
   const [details, setDetails] = useState({ name: "", email: "", password: "" });
 
   function submitHandler(event) {
@@ -13,7 +13,7 @@ export default function LoginForm({ Login, error }) {
   return (
     <>
       <Form onSubmit={submitHandler}>
-        <Error>{error != "" ? <div>{error}</div> : ""}</Error>
+        <Error>{loginError != "" ? <div>{loginError}</div> : ""}</Error>
         <InputGroup>
           <label htmlFor="name">Name</label>
           <input
