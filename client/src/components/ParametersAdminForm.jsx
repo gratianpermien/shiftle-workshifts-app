@@ -29,7 +29,7 @@ export default function ParametersAdminForm({
 
   return (
     <>
-      <UserForm onSubmit={submitHandler} visible={visible}>
+      <ParameterForm onSubmit={submitHandler} visible={visible}>
         <h1>Parameter.</h1>
         <Confirm>{parameterConf ? <div>{parameterConf}</div> : ""}</Confirm>
         <Error>{parameterError ? <div>{parameterError}</div> : ""}</Error>
@@ -39,7 +39,7 @@ export default function ParametersAdminForm({
             type="email"
             name="adminEmail"
             id="adminEmail"
-            onChange={(event) =>
+            onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 adminEmail: event.target.value,
@@ -54,7 +54,7 @@ export default function ParametersAdminForm({
             type="number"
             name="shiftReminderHrs"
             id="shiftReminderHrs"
-            onChange={(event) =>
+            onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 shiftReminderHrs: event.target.value,
@@ -64,15 +64,13 @@ export default function ParametersAdminForm({
           />
         </InputGroup>
         <InputGroup>
-          <label htmlFor="presenceWindowMins">
-            Granularität Aufbereitung (min)
-          </label>
+          <label htmlFor="presenceWindowMins">Analysegranularität (min)</label>
           <input
             disabled //First off, only hour windows will be possible
             type="number"
             name="presenceWindowMins"
             id="presenceWindowMins"
-            onChange={(event) =>
+            onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 presenceWindowMins: event.target.value,
@@ -86,7 +84,7 @@ export default function ParametersAdminForm({
           <select
             name="shiftBufferHandoverMins"
             id="shiftBufferHandoverMins"
-            onChange={(event) =>
+            onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 shiftBufferHandoverMins: event.target.value,
@@ -104,7 +102,7 @@ export default function ParametersAdminForm({
           <select
             name="shiftBufferReturnMins"
             id="shiftBufferReturnMins"
-            onChange={(event) =>
+            onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 shiftBufferReturnMins: event.target.value,
@@ -118,112 +116,144 @@ export default function ParametersAdminForm({
           </select>
         </InputGroup>
         <InputGroup>
-          <label htmlFor="presenceParallel">
-            Parallele Fahrzeuge Aufbereitung (1-4)
-          </label>
-          <Slider
-            type="range"
-            id="presenceParallel"
-            name="presenceParallel"
-            min="1"
-            max="4"
-            step="1"
-            onChange={(event) =>
-              setParameterDetails({
-                ...parameterDetails,
-                presenceParallel: event.target.value,
-              })
-            }
-            value={parameterDetails.presenceParallel}
-          />
+          <label htmlFor="presenceParallel">Parallele Fahrzeuge</label>
+          <SliderGroup>
+            <Slider
+              type="range"
+              id="presenceParallel"
+              name="presenceParallel"
+              min="1"
+              max="4"
+              step="1"
+              onInput={(event) =>
+                setParameterDetails({
+                  ...parameterDetails,
+                  presenceParallel: event.target.value,
+                })
+              }
+              value={parameterDetails.presenceParallel}
+            />
+            <output className="output" id="presenceParallel">
+              {parameterDetails.presenceParallel}
+            </output>
+          </SliderGroup>
         </InputGroup>
         <InputGroup>
-          <label htmlFor="durationAdventurerHrs">
-            Aufbereitung Adventurer (3-6Std)
-          </label>
-          <Slider
-            type="range"
-            id="durationAdventurerHrs"
-            name="durationAdventurerHrs"
-            min="3"
-            max="6"
-            step="1"
-            onChange={(event) =>
-              setParameterDetails({
-                ...parameterDetails,
-                durationAdventurerHrs: event.target.value,
-              })
-            }
-            value={parameterDetails.durationAdventurerHrs}
-          />
+          <label htmlFor="durationAdventurerHrs">Dauer RK Adventurer (h)</label>
+          <SliderGroup>
+            <Slider
+              type="range"
+              id="durationAdventurerHrs"
+              name="durationAdventurerHrs"
+              min="3"
+              max="6"
+              step="1"
+              onInput={(event) =>
+                setParameterDetails({
+                  ...parameterDetails,
+                  durationAdventurerHrs: event.target.value,
+                })
+              }
+              value={parameterDetails.durationAdventurerHrs}
+            />
+            <output className="output" id="durationAdventurerHrs">
+              {parameterDetails.durationAdventurerHrs}
+            </output>
+          </SliderGroup>
         </InputGroup>
         <InputGroup>
-          <label htmlFor="durationDreamerHrs">
-            Aufbereitung Dreamer (3-6Std)
-          </label>
-          <Slider
-            type="range"
-            id="durationDreamerHrs"
-            name="durationDreamerHrs"
-            min="3"
-            max="6"
-            step="1"
-            onChange={(event) =>
-              setParameterDetails({
-                ...parameterDetails,
-                durationDreamerHrs: event.target.value,
-              })
-            }
-            value={parameterDetails.durationDreamerHrs}
-          />
+          <label htmlFor="durationDreamerHrs">Dauer RK Dreamer (h) </label>
+          <SliderGroup>
+            <Slider
+              type="range"
+              id="durationDreamerHrs"
+              name="durationDreamerHrs"
+              min="3"
+              max="6"
+              step="1"
+              onInput={(event) =>
+                setParameterDetails({
+                  ...parameterDetails,
+                  durationDreamerHrs: event.target.value,
+                })
+              }
+              value={parameterDetails.durationDreamerHrs}
+            />
+            <output className="output" id="durationDreamerHrs">
+              {parameterDetails.durationDreamerHrs}
+            </output>
+          </SliderGroup>
         </InputGroup>
         <InputGroup>
-          <label htmlFor="durationTravelerHrs">
-            Aufbereitung Traveler (3-6Std)
-          </label>
-          <Slider
-            type="range"
-            id="durationTravelerHrs"
-            name="durationTravelerHrs"
-            min="3"
-            max="6"
-            step="1"
-            onChange={(event) =>
-              setParameterDetails({
-                ...parameterDetails,
-                durationTravelerHrs: event.target.value,
-              })
-            }
-            value={parameterDetails.durationTravelerHrs}
-          />
+          <label htmlFor="durationTravelerHrs">Dauer RK Traveler (h)</label>
+          <SliderGroup>
+            <Slider
+              type="range"
+              id="durationTravelerHrs"
+              name="durationTravelerHrs"
+              min="3"
+              max="6"
+              step="1"
+              onInput={(event) =>
+                setParameterDetails({
+                  ...parameterDetails,
+                  durationTravelerHrs: event.target.value,
+                })
+              }
+              value={parameterDetails.durationTravelerHrs}
+            />
+            <output className="output" id="durationTravelerHrs">
+              {parameterDetails.durationTravelerHrs}
+            </output>
+          </SliderGroup>
         </InputGroup>
         <InputButton type="submit" value="Anpassen" />
-      </UserForm>
+      </ParameterForm>
     </>
   );
 }
 
 const Confirm = styled.h3`
-  color: var(--secondary-bg);
+  color: rgba(42, 42, 42, 1);
 `;
 const Error = styled.h3`
   color: var(--primary-color);
 `;
-const UserForm = styled.form`
+const ParameterForm = styled.form`
   display: ${(props) => (props.visible ? "none" : "flex")};
-  padding: 1em;
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);
 `;
 const Slider = styled.input`
-  background: var(--primary-color);
+  color: var(--primary-color);
+  overflow: hidden;
+  -webkit-appearance: none;
+  background-color: var(--secondary-bg);
+  ::-webkit-slider-thumb {
+    width: 10px;
+    -webkit-appearance: none;
+    height: 10px;
+    cursor: ew-resize;
+    background: var(--primary-color);
+  }
+`;
+
+const SliderGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
   width: 200px;
-  outline: none;
+  align-items: center;
+  .output {
+    font-weight: 600;
+    color: var(--primary-color);
+  }
 `;
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   label {
     display: block;
     padding: 0.4em 1em;

@@ -101,6 +101,7 @@ const Header = styled.div`
   gap: min(3vw, 1em);
   max-width: 600px;
   margin: 0 auto;
+  justify-content: space-between;
 `;
 const UserRibbonWrapper = styled.div`
   display: ${(props) => (props.headerTheme ? `block` : `none`)};
@@ -140,6 +141,7 @@ const NavItem = styled(NavLink)`
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   padding: 0.4em 1em;
   border-radius: 2em;
+  border: 2px solid var(--headings-color);
   box-sizing: border-box;
   text-decoration: none;
   text-transform: uppercase;
@@ -167,5 +169,9 @@ const HeaderInteraction = styled.div`
   justify-content: space-between;
   width: 100%;
   justify-content: flex-end;
-  align-items: flex-end;
+  align-items: flex-start;
+  gap: 0.2em;
+  h1 {
+    margin-left: 0.2em;
+  }
 `;

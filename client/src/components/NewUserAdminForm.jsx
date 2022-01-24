@@ -87,6 +87,7 @@ const UserForm = styled.form`
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   label {
     display: block;
     padding: 0.4em 1em;

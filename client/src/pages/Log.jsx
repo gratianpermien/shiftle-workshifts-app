@@ -103,7 +103,7 @@ const BaseContainer = styled.div`
 
 const Logo = styled.img`
   width: min(256px, 10vw);
-  filter: drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2));
+  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.2));
   margin: 3em auto;
 `;
 
@@ -119,12 +119,13 @@ const LoginContainer = styled.div`
 const ButtonSection = styled.div`
   display: flex;
   gap: min(3vw, 1em);
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+   justify-content: center;
+  margin: 2em auto;
 `;
 
 const Welcome = styled.div`
-  padding: 1em;
   display: flex;
   flex-direction: column;
   align-items: center;

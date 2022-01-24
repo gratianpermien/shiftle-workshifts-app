@@ -88,8 +88,8 @@ function Admin({ newParameters, setNewParameters }) {
     <View>
       <BaseContainer>
         <ButtonSection>
-          <CenteredButton onClick={handleToggle}>Switch</CenteredButton>
           <SingleRouteButton to="/buchungen">Zurück</SingleRouteButton>
+          <CenteredButton onClick={handleToggle}>Switch</CenteredButton>
         </ButtonSection>
         <FormContainer>
           <NewUserAdminForm
@@ -130,13 +130,13 @@ const FormContainer = styled.div`
   flex-direction: column;
   gap: 1em;
   justify-content: space-between;
-  margin: 0 auto;
   width: 100%;
+  margin: 2em 0;
 `;
 const ButtonSection = styled.div`
   display: flex;
   gap: min(3vw, 1em);
-  flex-direction: column;
-  align-items: center;
-  margin: 3em auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 `;

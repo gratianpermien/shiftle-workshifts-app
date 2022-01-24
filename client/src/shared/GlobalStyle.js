@@ -7,13 +7,13 @@ const GlobalStyle = createGlobalStyle`
   box-sizing: border-box;
 }
 :root {
---primary-bg: linear-gradient(225deg, rgba(245,111,168,1) 0%, rgba(98,2,2,1) 100%);
---secondary-bg: #FFFDFD; //in Admin
---tertiary-bg: linear-gradient(245deg, rgba(255,238,238,1) 0%, rgba(255,255,255,1) 100%);
---headings-color: #6B1525; //in Admin
+--primary-bg: linear-gradient(245deg, rgba(255,255,255,1) 0%, rgba(238,238,238,1) 100%); //hell
+--secondary-bg: #FFfdfd; //in Admin
+--tertiary-bg: linear-gradient(245deg, rgba(42,42,42,1) 0%, rgba(120,51,80,1)100%); //dunkel
+--headings-color: #eeeeee; //in Admin
 --primary-color: #F56FA8; //in Admin
 --icon-size: clamp(2rem, -0.875rem + 8.333vw, 3rem);
---basic-font-size: clamp(0.7rem, 0.4137rem + 1.2214vw, 1rem);;
+--basic-font-size: clamp(0.7rem, 0.4137rem + 1.2214vw, 1rem);
 }
 body {
   font-size: var(--basic-font-size);
@@ -46,7 +46,7 @@ h3 {
 
 const DatePickerWrapperStyles = createGlobalStyle`
     .date_picker--adjustedwidth {
-        width: min(27vw,140px);
+        width: min(22vw,120px);
         margin-right: 0.2em;
     }
     .date_picker--adjustedwidth .react-datepicker__input-container > *{

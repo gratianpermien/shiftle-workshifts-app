@@ -71,6 +71,7 @@ const Form = styled.form`
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   label {
     display: block;
     padding: 0.4em 1em;

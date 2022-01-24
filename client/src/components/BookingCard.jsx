@@ -97,10 +97,6 @@ const BasicInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.2em;
-  border-left: 3px;
-  border-left-style: solid;
-  border-left-color: var(--primary-color);
-  padding-left: 1em;
 `;
 const Interaction = styled.div`
   display: flex;
@@ -111,7 +107,7 @@ const AddInformation = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.2em;
-  background: var(--secondary-bg);
+  background: var(--headings-color);
   padding-left: 1em;
   padding-right: 1em;
   border-bottom-left-radius: 1em;
