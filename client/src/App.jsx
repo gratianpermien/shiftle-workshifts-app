@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -7,14 +7,17 @@ import Admin from "./pages/Admin";
 import Schichten from "./pages/Shifts";
 import Buchungen from "./pages/Bookings";
 
-// import { UnauthenticatedRoute } from "./lib/Authentication";
 import AppHeader from "./components/Header";
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
+  const [admin, setAdmin] = useState(false);
+  const [newParameters, setNewParameters] = useState("");
+
   const [user, setUser] = useState({
     name: "",
     email: "",
+    role: "",
   });
   const [filterDateArrivalEarliest, setFilterDateArrivalEarliest] = useState(
     new Date()
@@ -30,7 +33,10 @@ function App() {
     <View>
       <AppHeader
         authenticated={authenticated}
-        currentUser={user.name}
+        currentUserName={user.name}
+        admin={admin}
+        setNewParameters={setNewParameters}
+        newParameters={newParameters}
         currentPage={currentPage}
         filterDateArrivalEarliest={filterDateArrivalEarliest}
         filterDateArrivalLatest={filterDateArrivalLatest}
@@ -45,6 +51,8 @@ function App() {
             <Log
               currentUser={user}
               setUser={setUser}
+              admin={admin}
+              setAdmin={setAdmin}
               authenticated={authenticated}
               setAuthenticated={setAuthenticated}
               simpleSite={true}
@@ -52,7 +60,7 @@ function App() {
           }
         />
         {
-          //Check if authenticated and activate other routes
+          //Check if authenticated and activate all routes
           authenticated ? (
             <>
               <Route
@@ -63,6 +71,7 @@ function App() {
                     filterDateArrivalEarliest={filterDateArrivalEarliest}
                     filterDateArrivalLatest={filterDateArrivalLatest}
                     simpleSite={false}
+                    currentUser={user}
                   />
                 }
               />
@@ -71,41 +80,71 @@ function App() {
                 path="schichten"
                 element={<Schichten simpleSite={false} />}
               />
-              <Route exact path="admin" element={<Admin simpleSite={true} />} />
+              user.role == "ADMIN" ? (
+              <Route
+                exact
+                path="admin"
+                element={
+                  <Admin
+                    simpleSite={true}
+                    newParameters={newParameters}
+                    setNewParameters={setNewParameters}
+                  />
+                }
+              />
+              ) : (
+              <Route
+                exact
+                path="buchungen"
+                element={
+                  <Buchungen
+                    filterDateArrivalEarliest={filterDateArrivalEarliest}
+                    filterDateArrivalLatest={filterDateArrivalLatest}
+                    simpleSite={false}
+                    currentUser={user}
+                  />
+                }
+              />
+              )
             </>
           ) : (
-            <Route
-              exact
-              path="/"
-              element={
-                <Log
-                  currentUser={user}
-                  setUser={setUser}
-                  authenticated={authenticated}
-                  setAuthenticated={setAuthenticated}
-                  simpleSite={true}
-                />
-              }
-            />
+            <>
+              <Route
+                exact
+                path="buchungen"
+                element={<Navigate to="/" replace={true} />}
+              />
+              <Route
+                exact
+                path="schichten"
+                element={<Navigate to="/" replace={true} />}
+              />
+              <Route
+                exact
+                path="buchungen"
+                element={<Navigate to="/" replace={true} />}
+              />
+              <Route
+                exact
+                path="admin"
+                element={<Navigate to="/" replace={true} />}
+              />
+              <Route
+                exact
+                path="/"
+                element={
+                  <Log
+                    currentUser={user}
+                    setUser={setUser}
+                    authenticated={authenticated}
+                    setAuthenticated={setAuthenticated}
+                    simpleSite={true}
+                  />
+                }
+              />
+            </>
           )
         }
-        {/* <Route
-          exact
-          path="buchungen"
-          element={
-            <Buchungen
-              filterDateArrivalEarliest={filterDateArrivalEarliest}
-              filterDateArrivalLatest={filterDateArrivalLatest}
-              simpleSite={false}
-            />
-          }
-        />
-        <Route
-          exact
-          path="schichten"
-          element={<Schichten simpleSite={false} />}
-        />
-        <Route exact path="admin" element={<Admin simpleSite={true} />} /> */}
       </Routes>
     </View>
   );

@@ -5,9 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronCircleDown,
   faPlusCircle,
+  faCog,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function BookingCard({ booking, id }) {
+export default function BookingCard({ booking, id, currentUserRole }) {
   const [toggle, setToggle] = useState(false);
   function handleToggle() {
     setToggle(!toggle);
@@ -46,6 +47,9 @@ export default function BookingCard({ booking, id }) {
           <p>Rücknahme: {booking.rk != "" ? booking.rk : " Judy"}</p>
         </BasicInfo>
         <Interaction>
+          <EditButton href="#" currentUserRole={currentUserRole}>
+            <FontAwesomeIcon icon={faCog} />
+          </EditButton>
           <BookmarkButton href="#">
             <FontAwesomeIcon icon={faPlusCircle} />
           </BookmarkButton>
@@ -77,7 +81,7 @@ export default function BookingCard({ booking, id }) {
 
 const Card = styled.article`
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
-  background-color: #fff;
+  background-color: var(--secondary-bg);
   border-radius: 1em;
   display: flex;
   flex-direction: column;
@@ -117,15 +121,14 @@ const AddInformation = styled.div`
   height: ${(props) => (props.visible ? "1" : "0")};
   opacity: ${(props) => (props.visible ? "1" : "0")};
   visibility: ${(props) => (props.visible ? "visible" : "hidden")};
-  transition: padding-bottom 800ms, padding-top 800ms, height 800ms,
-    opacity 1000ms;
+  transition: padding-bottom 600ms, padding-top 600ms, height 600ms,
+    opacity 600ms;
 `;
 const BookmarkButton = styled.a`
   font-size: var(--icon-size);
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
   color: #44d68d;
   display: block;
-  /* box-shadow: 1px rgba(0, 0, 0, 0.2); */
   cursor: pointer;
   transition: all 0.2s;
   &:hover,
@@ -138,5 +141,13 @@ const InfoButton = styled(BookmarkButton)`
   &:hover,
   &:active {
     color: #3c74bd;
+  }
+`;
+const EditButton = styled(BookmarkButton)`
+  display: ${(props) => (props.currentUserRole == "ADMIN" ? `block` : `none`)};
+  color: #f1bd4e;
+  &:hover,
+  &:active {
+    color: #d4a744;
   }
 `;

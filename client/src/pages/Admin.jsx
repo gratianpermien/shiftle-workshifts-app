@@ -1,22 +1,112 @@
-//https://www.npmjs.com/package/react-form
-
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import shiftle_watermark from "../assets/shiftle_watermark.svg";
+import NewUserAdminForm from "../components/NewUserAdminForm";
+import ParametersAdminForm from "../components/ParametersAdminForm";
+import { CenteredButton, SingleRouteButton } from "../components/Buttons";
 
-function Admin() {
+function Admin({ newParameters, setNewParameters }) {
+  const [userError, setUserError] = useState("");
+  const [parameterError, setParameterError] = useState("");
+  const [parameterConf, setParameterConf] = useState("");
+  const [newUser, setNewUser] = useState("");
+  const [toggle, setToggle] = useState(false);
+
+  function handleToggle() {
+    setToggle(!toggle);
+  }
+
+  //Admin: submit form data (no validation needed)
+  const SubmitParameters = (parameterDetails) => {
+    try {
+      setNewParameters({
+        presenceWindowMins: newParameters.presenceWindowMins,
+        presenceParallel: parameterDetails.presenceParallel,
+        shiftBufferHandoverMins: parameterDetails.shiftBufferHandoverMins,
+        shiftBufferReturnMins: parameterDetails.shiftBufferReturnMins,
+        shiftReminderHrs: parameterDetails.shiftReminderHrs,
+        adminEmail: parameterDetails.adminEmail,
+        durationAdventurerHrs: parameterDetails.durationAdventurerHrs,
+        durationDreamerHrs: parameterDetails.durationDreamerHrs,
+        durationTravelerHrs: parameterDetails.durationTravelerHrs,
+      });
+      updateParameters(newParameters);
+      setParameterError("");
+      setParameterConf("Parameter geändert.");
+    } catch (error) {
+      setParameterError("Eingabe ist ungültig." + { error });
+      setParameterConf("");
+    }
+  };
+  //Update Admin-Parameters in DB
+  async function updateParameters(newParameters) {
+    console.log(newParameters);
+    const result = await fetch("api/admin/61e146a9fbc9e947b9f19496", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newParameters),
+    });
+    return await result.json();
+  }
+
+  //User: check form data and submit
+  const SubmitUser = (userDetails) => {
+    try {
+      if (
+        userDetails.email.length > 0 &&
+        userDetails.email.split("@")[1].includes(".") &&
+        userDetails.password.length > 0
+      ) {
+        setNewUser({
+          role: userDetails.role,
+          email: userDetails.email,
+          password: userDetails.password,
+        });
+        createUser(newUser);
+        setUserError("");
+      } else {
+        setUserError("Eingabe ist ungültig.");
+      }
+    } catch (error) {
+      setParameterError("Eingabe ist ungültig." + { error });
+    }
+  };
+  //Post new user to DB
+  async function createUser(newUser) {
+    const result = await fetch("api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    });
+    return await result.json();
+  }
   return (
     <View>
-      <AdminContainer>
-        <p>Das ist die Adminseite, hier ist noch Baustelle 🚧</p>
-      </AdminContainer>
-      <FooterWrapper>
-        <Footer>
-          <NavItem to="/buchungen">Zurück</NavItem>
-          <NavItem to="/buchungen">Speichern</NavItem>
-        </Footer>
-      </FooterWrapper>
+      <BaseContainer>
+        <ButtonSection>
+          <CenteredButton onClick={handleToggle}>Switch</CenteredButton>
+          <SingleRouteButton to="/buchungen">Zurück</SingleRouteButton>
+        </ButtonSection>
+        <FormContainer>
+          <NewUserAdminForm
+            visible={toggle}
+            SubmitUser={SubmitUser}
+            newUser={newUser}
+            error={userError}
+          />
+          <ParametersAdminForm
+            visible={toggle}
+            newParameters={newParameters}
+            SubmitParameters={SubmitParameters}
+            parameterError={parameterError}
+            parameterConf={parameterConf}
+          />
+        </FormContainer>
+      </BaseContainer>
     </View>
   );
 }
@@ -26,49 +116,27 @@ const View = styled.div`
   background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   background-attachment: fixed;
   min-height: 100vh;
-  padding: 1rem 5vw 25vh;
+  /* padding: 1rem 5vw 25vh; */
 `;
-
-const AdminContainer = styled.div`
-  width: 90vw;
-  max-width: 600px;
+const BaseContainer = styled.div`
+  width: min(38vw, 600px);
   margin: 0 auto;
-  z-index: 99;
-`;
-
-const FooterWrapper = styled.footer`
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 3vw;
-  z-index: 999;
-`;
-const Footer = styled.div`
   display: flex;
-  justify-content: center;
-  gap: min(3vw, 1em);
-  max-width: 600px;
-  margin: 0 auto;
+  flex-direction: column;
+  gap: 1rem;
 `;
-
-const NavItem = styled(Link)`
-  display: block;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  padding: 0.4em 1em;
-  border-radius: 2em;
-  box-sizing: border-box;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #ffffff;
-  background-color: var(--primary-color);
-  opacity: 0.7;
-  text-align: left;
-  transition: all 0.2s;
-  &:hover {
-    opacity: 1;
-  }
-  &.active {
-    opacity: 1;
-  }
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: space-between;
+  margin: 0 auto;
+  width: 100%;
+`;
+const ButtonSection = styled.div`
+  display: flex;
+  gap: min(3vw, 1em);
+  flex-direction: column;
+  align-items: center;
+  margin: 3em auto;
 `;

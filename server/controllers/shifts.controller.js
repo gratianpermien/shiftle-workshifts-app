@@ -57,15 +57,15 @@ const deleteShift = async (req, res) => {
   try {
     const deletedShift = await shift.findByIdAndDelete(shiftId);
     if (deletedShift) {
-      res.json({ success: true, message: "Shift was deleted" });
+      res.json({ success: true, message: "Schicht gelöscht" });
     } else {
-      res.json({ success: false, message: "No shift with this ID" });
+      res.json({ success: false, message: "Keine Schicht gefunden" });
     }
   } catch (error) {
     res.json({
       success: false,
       error: error.message,
-      message: "Delete shift didn't work",
+      message: "Fehler",
     });
   }
 };

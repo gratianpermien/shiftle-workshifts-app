@@ -4,16 +4,22 @@ import shiftle_watermark from "../assets/shiftle_watermark.svg";
 import BookingCard from "../components/BookingCard";
 
 export default function Buchungen({
+  currentUser,
   simpleSite,
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
 }) {
   const [allBookings, setAllBookings] = useState([]);
-  
+
   //Get booking information from server / database (updates itself in backend) on opening the app / reloading
   async function fetchShifts() {
     const res = await fetch("api/shifts");
     const fetchedData = await res.json();
+    // fetchedData.forEach((shift)=>{
+    //   const startHour
+    //   shift.kombidatum_ende.getHours()
+
+    // }) -- nope das packen wir in den Übergang zu Shifts
     setAllBookings(fetchedData);
   }
   useEffect(() => {
@@ -31,7 +37,12 @@ export default function Buchungen({
                 new Date(filterDateArrivalLatest)
           )
           .map((booking) => (
-            <BookingCard id={booking.monday_id.toString()} booking={booking} />
+            //hier prop "admin" durchreichen und edit knopf anzeigen - nur bei Schichten, nicht bei Buchungen
+            <BookingCard
+              id={booking.monday_id.toString()}
+              booking={booking}
+              currentUserRole={currentUser.role}
+            />
           ))}
       </BookingContainer>
     </View>
