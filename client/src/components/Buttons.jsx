@@ -8,7 +8,7 @@ const CenteredButton = styled.button`
   border: none;
   display: block;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  padding: 0.4em 1em;
+  padding: 0.4em 0.5em;
   border-radius: 2em;
   box-sizing: border-box;
   text-decoration: none;
@@ -16,7 +16,6 @@ const CenteredButton = styled.button`
   font-weight: 600;
   color: var(--secondary-bg);
   background-color: var(--primary-color);
-  opacity: 1;
   transition: all 0.2s;
   &:hover {
     color: var(--headings-color);
@@ -31,7 +30,7 @@ const SingleRouteButton = styled(Link)`
   text-align: center;
   display: block;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  padding: 0.4em 1em;
+  padding: 0.4em 0.5em;
   border-radius: 2em;
   box-sizing: border-box;
   text-decoration: none;
@@ -39,7 +38,6 @@ const SingleRouteButton = styled(Link)`
   font-weight: 600;
   color: var(--secondary-bg);
   background-color: var(--primary-color);
-  opacity: 1;
   transition: all 0.2s;
   &:hover {
     color: var(--headings-color);
@@ -55,7 +53,7 @@ const InputButton = styled.input`
   display: block;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   text-align: center;
-  padding: 0.4em 1em;
+  padding: 0.4em 0.5em;
   border-radius: 2em;
   border: none;
   box-sizing: border-box;
@@ -64,7 +62,6 @@ const InputButton = styled.input`
   font-weight: 600;
   color: var(--secondary-bg);
   background-color: var(--primary-color);
-  opacity: 1;
   transition: all 0.2s;
   &:hover {
     color: var(--headings-color);
@@ -75,23 +72,28 @@ const InputButton = styled.input`
 `;
 const NavItem = styled(NavLink)`
   display: block;
+  width: min(25vw, 150px);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  padding: 0.4em 1em;
+  padding: 0.4em 0.5em;
   border-radius: 2em;
+  border: 2px solid var(--primary-color);
   box-sizing: border-box;
   text-decoration: none;
   text-transform: uppercase;
   font-weight: 600;
   color: var(--secondary-bg);
   background-color: var(--primary-color);
-  opacity: 1;
-  text-align: left;
+  text-align: center;
   transition: all 0.2s;
   &:hover {
     color: var(--headings-color);
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--headings-color);
   }
   &.active {
     color: var(--headings-color);
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--headings-color);
   }
 `;
 export { CenteredButton, SingleRouteButton, InputButton, NavItem };

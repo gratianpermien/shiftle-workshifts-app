@@ -61,7 +61,6 @@ const Error = styled.h3`
 `;
 
 const Form = styled.form`
-  padding: 1em;
   display: flex;
   flex-direction: column;
   align-items: center;

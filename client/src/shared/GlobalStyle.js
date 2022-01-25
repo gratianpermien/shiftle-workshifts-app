@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
 --tertiary-bg: linear-gradient(245deg, rgba(42,42,42,1) 0%, rgba(120,51,80,1)100%); //dunkel
 --headings-color: #eeeeee; //in Admin
 --primary-color: #F56FA8; //in Admin
---icon-size: clamp(2rem, -0.875rem + 8.333vw, 3rem);
+--icon-size: clamp(1.5rem, -0.875rem + 8.333vw, 2.3rem);
 --basic-font-size: clamp(0.7rem, 0.4137rem + 1.2214vw, 1rem);
 }
 body {
@@ -46,7 +46,7 @@ h3 {
 
 const DatePickerWrapperStyles = createGlobalStyle`
     .date_picker--adjustedwidth {
-        width: min(22vw,120px);
+        width: min(26vw,120px);
         margin-right: 0.2em;
     }
     .date_picker--adjustedwidth .react-datepicker__input-container > *{

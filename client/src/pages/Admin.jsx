@@ -89,6 +89,7 @@ function Admin({ newParameters, setNewParameters }) {
       <BaseContainer>
         <ButtonSection>
           <SingleRouteButton to="/buchungen">Zurück</SingleRouteButton>
+          <CenteredButton onClick={handleToggle}>CSV per Mail</CenteredButton>
           <CenteredButton onClick={handleToggle}>Switch</CenteredButton>
         </ButtonSection>
         <FormContainer>
@@ -116,7 +117,7 @@ const View = styled.div`
   background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   background-attachment: fixed;
   min-height: 100vh;
-  /* padding: 1rem 5vw 25vh; */
+  padding: 1rem 5vw 25vh;
 `;
 const BaseContainer = styled.div`
   width: min(38vw, 600px);
@@ -131,7 +132,6 @@ const FormContainer = styled.div`
   gap: 1em;
   justify-content: space-between;
   width: 100%;
-  margin: 2em 0;
 `;
 const ButtonSection = styled.div`
   display: flex;

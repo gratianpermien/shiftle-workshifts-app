@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,8 +13,24 @@ export default function BookingCard({ booking, id, currentUserRole }) {
   function handleToggle() {
     setToggle(!toggle);
   }
+
+  const bookingRK = booking.rk;
+  const bookingUEK = booking.uek;
+  const isAdmin = currentUserRole == "ADMIN";
+  const isStaffedRK = currentUserRole == "RK" && bookingRK !== "";
+  const isStaffedUEK = currentUserRole == "UE" && bookingUEK !== "";
+
   return (
     <Card key={id}>
+      <UserRibbonWrapper
+        isAdmin={isAdmin}
+        isStaffedRK={isStaffedRK}
+        isStaffedUEK={isStaffedUEK}
+      >
+        <UserRibbon>
+          {currentUserRole == "RK" ? booking.rk : booking.uek}
+        </UserRibbon>
+      </UserRibbonWrapper>
       <CardRow>
         <BasicInfo>
           <h2>{booking.client}</h2>
@@ -43,14 +59,27 @@ export default function BookingCard({ booking, id, currentUserRole }) {
                 minute: "numeric",
               }).format(Date.parse(booking.kombidatum_ende))}
           </p>
-          <p>Übergabe: {booking.uek != "" ? booking.uek : " John"}</p>
-          <p>Rücknahme: {booking.rk != "" ? booking.rk : " Judy"}</p>
+          <AdminInfo isAdmin={isAdmin}>
+            <p>
+              Übergabe:{" "}
+              {booking.uek != "" ? booking.uek : " noch nicht vergeben"}
+            </p>
+            <p>
+              Rücknahme:{" "}
+              {booking.rk != "" ? booking.rk : " noch nicht vergeben"}
+            </p>
+          </AdminInfo>
         </BasicInfo>
         <Interaction>
-          <EditButton href="#" currentUserRole={currentUserRole}>
+          <EditButton href="#" isAdmin={isAdmin}>
             <FontAwesomeIcon icon={faCog} />
           </EditButton>
-          <BookmarkButton href="#">
+          <BookmarkButton
+            href="#"
+            isStaffedUEK={isStaffedUEK}
+            isStaffedRK={isStaffedRK}
+            isAdmin={isAdmin}
+          >
             <FontAwesomeIcon icon={faPlusCircle} />
           </BookmarkButton>
           <InfoButton href="#" onClick={handleToggle}>
@@ -103,6 +132,9 @@ const Interaction = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
 `;
+const AdminInfo = styled.div`
+  display: ${(props) => (props.isAdmin ? `block` : `none`)};
+`;
 const AddInformation = styled.div`
   display: flex;
   flex-direction: column;
@@ -123,7 +155,13 @@ const AddInformation = styled.div`
 const BookmarkButton = styled.a`
   font-size: var(--icon-size);
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
-  color: #44d68d;
+  display: block;
+  color: ${(props) =>
+    props.isStaffedRK || props.isStaffedUEK || props.isAdmin
+      ? `#8f8f8f;`
+      : `#44d68d;`};
+  pointer-events: ${(props) =>
+    props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `none` : `auto`};
   display: block;
   cursor: pointer;
   transition: all 0.2s;
@@ -140,10 +178,39 @@ const InfoButton = styled(BookmarkButton)`
   }
 `;
 const EditButton = styled(BookmarkButton)`
-  display: ${(props) => (props.currentUserRole == "ADMIN" ? `block` : `none`)};
+  display: ${(props) => (props.isAdmin ? `block` : `none`)};
+  pointer-events: ${(props) => (props.isAdmin ? `auto` : `none`)};
   color: #f1bd4e;
   &:hover,
   &:active {
     color: #d4a744;
   }
+`;
+const UserRibbonWrapper = styled.div`
+  display: ${(props) =>
+    props.isStaffedRK || props.isStaffedUEK ? `block` : `none`};
+  width: 80px;
+  height: 88px;
+  overflow: hidden;
+  position: absolute;
+  z-index: 300;
+`;
+const UserRibbon = styled.div`
+  display: block;
+  color: #333;
+  text-align: center;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  position: relative;
+  padding: min(1vw, 7px);
+  top: 11px;
+  right: 35px;
+  width: 120px;
+  background-color: var(--primary-color);
+  color: var(--secondary-bg);
+  font-size: var(--basic-font-size);
+  font-weight: 600;
 `;

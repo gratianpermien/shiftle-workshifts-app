@@ -21,7 +21,7 @@ export default function NewUserAdminForm({
   return (
     <>
       <UserForm onSubmit={submitHandler} visible={visible}>
-        <h1>User.</h1>
+        <Title>User.</Title>
         <Confirm>{newUser ? <div>User ist angelegt.</div> : ""}</Confirm>
         <Error>{error ? <div>{error}</div> : ""}</Error>
         <InputGroup>
@@ -70,15 +70,17 @@ export default function NewUserAdminForm({
   );
 }
 
+const Title = styled.h1`
+  color: rgba(42, 42, 42, 1);
+`;
 const Confirm = styled.h3`
-  color: var(--secondary-bg);
+  color: rgba(42, 42, 42, 1);
 `;
 const Error = styled.h3`
   color: var(--primary-color);
 `;
 const UserForm = styled.form`
   display: ${(props) => (props.visible ? "flex" : "none")};
-  padding: 1em;
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);

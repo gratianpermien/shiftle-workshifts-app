@@ -30,7 +30,7 @@ export default function ParametersAdminForm({
   return (
     <>
       <ParameterForm onSubmit={submitHandler} visible={visible}>
-        <h1>Parameter.</h1>
+        <Title>Parameter.</Title>
         <Confirm>{parameterConf ? <div>{parameterConf}</div> : ""}</Confirm>
         <Error>{parameterError ? <div>{parameterError}</div> : ""}</Error>
         <InputGroup>
@@ -133,7 +133,7 @@ export default function ParametersAdminForm({
               }
               value={parameterDetails.presenceParallel}
             />
-            <output className="output" id="presenceParallel">
+            <output className="output">
               {parameterDetails.presenceParallel}
             </output>
           </SliderGroup>
@@ -156,7 +156,7 @@ export default function ParametersAdminForm({
               }
               value={parameterDetails.durationAdventurerHrs}
             />
-            <output className="output" id="durationAdventurerHrs">
+            <output className="output">
               {parameterDetails.durationAdventurerHrs}
             </output>
           </SliderGroup>
@@ -179,7 +179,7 @@ export default function ParametersAdminForm({
               }
               value={parameterDetails.durationDreamerHrs}
             />
-            <output className="output" id="durationDreamerHrs">
+            <output className="output">
               {parameterDetails.durationDreamerHrs}
             </output>
           </SliderGroup>
@@ -202,7 +202,7 @@ export default function ParametersAdminForm({
               }
               value={parameterDetails.durationTravelerHrs}
             />
-            <output className="output" id="durationTravelerHrs">
+            <output className="output">
               {parameterDetails.durationTravelerHrs}
             </output>
           </SliderGroup>
@@ -213,6 +213,9 @@ export default function ParametersAdminForm({
   );
 }
 
+const Title = styled.h1`
+  color: rgba(42, 42, 42, 1);
+`;
 const Confirm = styled.h3`
   color: rgba(42, 42, 42, 1);
 `;
