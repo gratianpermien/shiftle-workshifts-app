@@ -70,21 +70,15 @@ export default function BookingCard({
           <AdminInfo isAdmin={isAdmin}>
             <p>
               Übergabe:{" "}
-              {booking.uek != ""
-                ? booking.uek +
-                  ", Start: " +
-                  Intl.DateTimeFormat("de-DE", {
-                    year: "2-digit",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "numeric",
-                    minute: "numeric",
-                  }).format(Date.parse(booking.timestamp_start_uek))
-                : " noch nicht vergeben"}
+              {booking.uek != "" ? booking.uek : " noch nicht vergeben"}
             </p>
             <p>
               Rücknahme:{" "}
-              {booking.rk != ""
+              {booking.rk != "" ? booking.rk : " noch nicht vergeben"}
+            </p>
+            {/* <p>
+              Rücknahme:{" "}
+              {booking.rk && booking.timestamp_start_rk != ""
                 ? booking.rk +
                   ", Start: " +
                   Intl.DateTimeFormat("de-DE", {
@@ -95,7 +89,7 @@ export default function BookingCard({
                     minute: "numeric",
                   }).format(Date.parse(booking.timestamp_start_rk))
                 : " noch nicht vergeben"}
-            </p>
+            </p> */}
           </AdminInfo>
         </BasicInfo>
         <Interaction>
