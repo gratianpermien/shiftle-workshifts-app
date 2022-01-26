@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import BookingToShiftModal from "./BookingToShiftModal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,13 +9,36 @@ import {
   faCog,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function BookingCard({ booking, id, currentUserRole }) {
+export default function BookingCard({
+  booking,
+  id,
+  currentUserRole,
+  setNewParameters,
+  newParameters,
+}) {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
   function handleToggle() {
     setToggle(!toggle);
   }
+
+  const bookingRK = booking.rk;
+  const bookingUEK = booking.uek;
+  const isAdmin = currentUserRole == "ADMIN";
+  const isStaffedRK = currentUserRole == "RK" && bookingRK !== "";
+  const isStaffedUEK = currentUserRole == "UE" && bookingUEK !== "";
+
   return (
     <Card key={id}>
+      <UserRibbonWrapper
+        isAdmin={isAdmin}
+        isStaffedRK={isStaffedRK}
+        isStaffedUEK={isStaffedUEK}
+      >
+        <UserRibbon>
+          {currentUserRole == "RK" ? booking.rk : booking.uek}
+        </UserRibbon>
+      </UserRibbonWrapper>
       <CardRow>
         <BasicInfo>
           <h2>{booking.client}</h2>
@@ -43,17 +67,44 @@ export default function BookingCard({ booking, id, currentUserRole }) {
                 minute: "numeric",
               }).format(Date.parse(booking.kombidatum_ende))}
           </p>
-          <p>Übergabe: {booking.uek != "" ? booking.uek : " John"}</p>
-          <p>Rücknahme: {booking.rk != "" ? booking.rk : " Judy"}</p>
+          <AdminInfo isAdmin={isAdmin}>
+            <p>
+              Übergabe:{" "}
+              {booking.uek != "" ? booking.uek : " noch nicht vergeben"}
+            </p>
+            <p>
+              Rücknahme:{" "}
+              {booking.rk != "" ? booking.rk : " noch nicht vergeben"}
+            </p>
+            {/* <p>
+              Rücknahme:{" "}
+              {booking.rk && booking.timestamp_start_rk != ""
+                ? booking.rk +
+                  ", Start: " +
+                  Intl.DateTimeFormat("de-DE", {
+                    year: "2-digit",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "numeric",
+                    minute: "numeric",
+                  }).format(Date.parse(booking.timestamp_start_rk))
+                : " noch nicht vergeben"}
+            </p> */}
+          </AdminInfo>
         </BasicInfo>
         <Interaction>
-          <EditButton href="#" currentUserRole={currentUserRole}>
+          <EditButton href="#" isAdmin={isAdmin}>
             <FontAwesomeIcon icon={faCog} />
           </EditButton>
-          <BookmarkButton href="#">
+          <BookmarkButton
+            onClick={() => setModalIsOpen(true)}
+            isStaffedUEK={isStaffedUEK}
+            isStaffedRK={isStaffedRK}
+            isAdmin={isAdmin}
+          >
             <FontAwesomeIcon icon={faPlusCircle} />
           </BookmarkButton>
-          <InfoButton href="#" onClick={handleToggle}>
+          <InfoButton onClick={handleToggle}>
             <FontAwesomeIcon icon={faChevronCircleDown} />
           </InfoButton>
         </Interaction>
@@ -75,6 +126,16 @@ export default function BookingCard({ booking, id, currentUserRole }) {
           {booking.zusatz_10 != "-" ? ", " + booking.zusatz_10 : ""}
         </p>
       </AddInformation>
+      {modalIsOpen && (
+        <BookingToShiftModal
+          booking={booking}
+          currentUserRole={currentUserRole}
+          modalIsOpen={modalIsOpen}
+          setModalIsOpen={setModalIsOpen}
+          setNewParameters={setNewParameters}
+          newParameters={newParameters}
+        />
+      )}
     </Card>
   );
 }
@@ -97,21 +158,20 @@ const BasicInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.2em;
-  border-left: 3px;
-  border-left-style: solid;
-  border-left-color: var(--primary-color);
-  padding-left: 1em;
 `;
 const Interaction = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 `;
+const AdminInfo = styled.div`
+  display: ${(props) => (props.isAdmin ? `block` : `none`)};
+`;
 const AddInformation = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.2em;
-  background: var(--secondary-bg);
+  background: var(--headings-color);
   padding-left: 1em;
   padding-right: 1em;
   border-bottom-left-radius: 1em;
@@ -127,7 +187,13 @@ const AddInformation = styled.div`
 const BookmarkButton = styled.a`
   font-size: var(--icon-size);
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
-  color: #44d68d;
+  display: block;
+  color: ${(props) =>
+    props.isStaffedRK || props.isStaffedUEK || props.isAdmin
+      ? `#8f8f8f;`
+      : `#44d68d;`};
+  pointer-events: ${(props) =>
+    props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `none` : `auto`};
   display: block;
   cursor: pointer;
   transition: all 0.2s;
@@ -144,10 +210,39 @@ const InfoButton = styled(BookmarkButton)`
   }
 `;
 const EditButton = styled(BookmarkButton)`
-  display: ${(props) => (props.currentUserRole == "ADMIN" ? `block` : `none`)};
+  display: ${(props) => (props.isAdmin ? `block` : `none`)};
+  pointer-events: ${(props) => (props.isAdmin ? `auto` : `none`)};
   color: #f1bd4e;
   &:hover,
   &:active {
     color: #d4a744;
   }
+`;
+const UserRibbonWrapper = styled.div`
+  display: ${(props) =>
+    props.isStaffedRK || props.isStaffedUEK ? `block` : `none`};
+  width: 80px;
+  height: 88px;
+  overflow: hidden;
+  position: absolute;
+  z-index: 200;
+`;
+const UserRibbon = styled.div`
+  display: block;
+  color: #333;
+  text-align: center;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  position: relative;
+  padding: min(1vw, 7px);
+  top: 11px;
+  right: 35px;
+  width: 120px;
+  background-color: var(--primary-color);
+  color: var(--secondary-bg);
+  font-size: var(--basic-font-size);
+  font-weight: 600;
 `;

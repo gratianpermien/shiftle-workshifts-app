@@ -5,19 +5,21 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt, faCog } from "@fortawesome/free-solid-svg-icons";
+
 export default function AppHeader({
   authenticated,
   admin,
-  currentUserName,
+  currentUserRole,
   currentPage,
   setNewParameters,
-  newParameters,
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
   setFilterDateArrivalEarliest,
   setFilterDateArrivalLatest,
 }) {
-  //Refresh shift information from Monday and get admin data if admin
+  //Refresh shift information from Monday and get admin data if admin (preload)
   async function updateShifts() {
     const response = await fetch("api/shifts", {
       method: "PUT",
@@ -25,7 +27,7 @@ export default function AppHeader({
         "Content-Type": "application/json",
       },
     });
-    const syncData = await response;
+    const syncData = response;
   }
   async function fetchAdminParameters() {
     const response = await fetch("api/admin");
@@ -47,38 +49,60 @@ export default function AppHeader({
 
   return (
     <>
-      <UserRibbonWrapper headerTheme={headerTheme}>
+      {/* <UserRibbonWrapper headerTheme={headerTheme}>
         <UserRibbon>{currentUserName}</UserRibbon>
-      </UserRibbonWrapper>
+      </UserRibbonWrapper> */}
       <HeaderWrapper headerTheme={headerTheme}>
         <Header>
           <Nav>
-            <NavItem to="/">Logout</NavItem>
             <NavItem to="/buchungen">Buchungen</NavItem>
             <NavItem to="/schichten">Schichten</NavItem>
-            {admin ? <NavItem to="/admin">Admin</NavItem> : null}
+            <IconsWrapper>
+              {admin ? (
+                <Icon to="/admin">
+                  <FontAwesomeIcon icon={faCog} />
+                </Icon>
+              ) : null}
+              <Icon to="/">
+                <FontAwesomeIcon icon={faSignOutAlt} />
+              </Icon>
+            </IconsWrapper>
           </Nav>
           <HeaderInteraction>
-            <h1>{currentPage}</h1>
-            <FilterSection>
-              <div>
-                <DatePicker
-                  dateFormat="dd/MM/yyyy"
-                  wrapperClassName="date_picker--adjustedwidth"
-                  selected={filterDateArrivalEarliest}
-                  onChange={(date) => setFilterDateArrivalEarliest(date)}
-                />
-              </div>
-              <div>
-                <DatePicker
-                  dateFormat="dd/MM/yyyy"
-                  wrapperClassName="date_picker--adjustedwidth"
-                  selected={filterDateArrivalLatest}
-                  onChange={(date) => setFilterDateArrivalLatest(date)}
-                />
-                <DatePickerWrapperStyles />
-              </div>
-            </FilterSection>
+            <div>{currentUserRole == "UEK" ? "Abfahrt " : "Ankunft "}</div>
+            <div>
+              <DatePicker
+                dateFormat="dd/MM/yyyy"
+                wrapperClassName="date_picker--adjustedwidth"
+                selected={
+                  currentUserRole == "UEK"
+                    ? filterDateDepartureEarliest
+                    : filterDateArrivalEarliest
+                }
+                onChange={
+                  currentUserRole == "UEK"
+                    ? (date) => setFilterDateDepartureEarliest(date)
+                    : (date) => setFilterDateArrivalEarliest(date)
+                }
+              />
+            </div>
+            <div>
+              <DatePicker
+                dateFormat="dd/MM/yyyy"
+                wrapperClassName="date_picker--adjustedwidth"
+                selected={
+                  currentUserRole == "UEK"
+                    ? filterDateDepartureLatest
+                    : filterDateArrivalLatest
+                }
+                onChange={
+                  currentUserRole == "UEK"
+                    ? (date) => setFilterDateDepartureLatest(date)
+                    : (date) => setFilterDateArrivalLatest(date)
+                }
+              />
+              <DatePickerWrapperStyles />
+            </div>
           </HeaderInteraction>
         </Header>
       </HeaderWrapper>
@@ -94,60 +118,58 @@ const HeaderWrapper = styled.footer`
   width: 100%;
   background: var(--tertiary-bg);
   padding: 5vw;
-  z-index: 200;
+  z-index: 250;
 `;
 const Header = styled.div`
   display: flex;
+  flex-direction: column;
   gap: min(3vw, 1em);
   max-width: 600px;
   margin: 0 auto;
 `;
-const UserRibbonWrapper = styled.div`
-  display: ${(props) => (props.headerTheme ? `block` : `none`)};
-  width: 80px;
-  height: 88px;
-  overflow: hidden;
-  position: fixed;
-  right: 0;
-  z-index: 300;
-`;
-const UserRibbon = styled.div`
-  color: #333;
-  text-align: center;
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  position: relative;
-  padding: min(1vw, 7px);
-  top: 11px;
-  right: 11px;
-  width: 120px;
-  background-color: var(--primary-color);
-  color: var(--secondary-bg);
-  font-size: var(--basic-font-size);
-  font-weight: 600;
-`;
 const Nav = styled.div`
-  width: min(25vw, 150px);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: min(25vw, 150px) min(25vw, 150px) auto;
   gap: min(3vw, 0.4em);
+  align-items: center;
 `;
 const NavItem = styled(NavLink)`
   display: block;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  padding: 0.4em 1em;
+  padding: 0.4em 0.5em;
   border-radius: 2em;
+  border: 2px solid var(--primary-color);
   box-sizing: border-box;
   text-decoration: none;
   text-transform: uppercase;
   font-weight: 600;
   color: var(--secondary-bg);
   background-color: var(--primary-color);
-  opacity: 1;
-  text-align: left;
+  text-align: center;
+  transition: all 0.2s;
+  &:hover {
+    color: var(--headings-color);
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--headings-color);
+  }
+  &.active {
+    color: var(--headings-color);
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--headings-color);
+  }
+`;
+
+const IconsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-self: end;
+  gap: min(3vw, 0.4em);
+  align-items: center;
+`;
+const Icon = styled(NavLink)`
+  font-size: var(--icon-size);
+  display: block;
+  color: var(--primary-color);
   transition: all 0.2s;
   &:hover {
     color: var(--headings-color);
@@ -156,16 +178,15 @@ const NavItem = styled(NavLink)`
     color: var(--headings-color);
   }
 `;
-const FilterSection = styled.div`
-  display: flex;
-  gap: 0.2em;
-  max-width: 100%;
-`;
+
 const HeaderInteraction = styled.div`
+  font-weight: 600;
+  color: var(--primary-color);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  flex-direction: row;
   width: 100%;
   justify-content: flex-end;
-  align-items: flex-end;
+  gap: min(3vw, 0.4em);
+  max-width: 100%;
+  align-items: center;
 `;

@@ -17,10 +17,11 @@ function Admin({ newParameters, setNewParameters }) {
   }
 
   //Admin: submit form data (no validation needed)
-  const SubmitParameters = (parameterDetails) => {
+  const SubmitParameters = async (parameterDetails) => {
+    //async State Update?
     try {
-      setNewParameters({
-        presenceWindowMins: newParameters.presenceWindowMins,
+      await setNewParameters({
+        presenceWindowMins: parameterDetails.presenceWindowMins,
         presenceParallel: parameterDetails.presenceParallel,
         shiftBufferHandoverMins: parameterDetails.shiftBufferHandoverMins,
         shiftBufferReturnMins: parameterDetails.shiftBufferReturnMins,
@@ -40,7 +41,6 @@ function Admin({ newParameters, setNewParameters }) {
   };
   //Update Admin-Parameters in DB
   async function updateParameters(newParameters) {
-    console.log(newParameters);
     const result = await fetch("api/admin/61e146a9fbc9e947b9f19496", {
       method: "PUT",
       headers: {
@@ -73,6 +73,7 @@ function Admin({ newParameters, setNewParameters }) {
       setParameterError("Eingabe ist ungültig." + { error });
     }
   };
+
   //Post new user to DB
   async function createUser(newUser) {
     const result = await fetch("api/users", {
@@ -88,8 +89,9 @@ function Admin({ newParameters, setNewParameters }) {
     <View>
       <BaseContainer>
         <ButtonSection>
-          <CenteredButton onClick={handleToggle}>Switch</CenteredButton>
           <SingleRouteButton to="/buchungen">Zurück</SingleRouteButton>
+          <CenteredButton onClick={handleToggle}>CSV per Mail</CenteredButton>
+          <CenteredButton onClick={handleToggle}>Switch</CenteredButton>
         </ButtonSection>
         <FormContainer>
           <NewUserAdminForm
@@ -116,7 +118,7 @@ const View = styled.div`
   background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   background-attachment: fixed;
   min-height: 100vh;
-  /* padding: 1rem 5vw 25vh; */
+  padding: 1rem 5vw 25vh;
 `;
 const BaseContainer = styled.div`
   width: min(38vw, 600px);
@@ -130,13 +132,12 @@ const FormContainer = styled.div`
   flex-direction: column;
   gap: 1em;
   justify-content: space-between;
-  margin: 0 auto;
   width: 100%;
 `;
 const ButtonSection = styled.div`
   display: flex;
   gap: min(3vw, 1em);
-  flex-direction: column;
-  align-items: center;
-  margin: 3em auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 `;

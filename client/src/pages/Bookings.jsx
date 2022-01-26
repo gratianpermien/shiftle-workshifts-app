@@ -8,6 +8,8 @@ export default function Buchungen({
   simpleSite,
   filterDateArrivalEarliest,
   filterDateArrivalLatest,
+  setNewParameters,
+  newParameters,
 }) {
   const [allBookings, setAllBookings] = useState([]);
 
@@ -15,16 +17,12 @@ export default function Buchungen({
   async function fetchShifts() {
     const res = await fetch("api/shifts");
     const fetchedData = await res.json();
-    // fetchedData.forEach((shift)=>{
-    //   const startHour
-    //   shift.kombidatum_ende.getHours()
-
-    // }) -- nope das packen wir in den Übergang zu Shifts
     setAllBookings(fetchedData);
   }
   useEffect(() => {
     fetchShifts();
   }, []);
+
   return (
     <View simpleTheming={simpleSite}>
       <BookingContainer>
@@ -37,11 +35,12 @@ export default function Buchungen({
                 new Date(filterDateArrivalLatest)
           )
           .map((booking) => (
-            //hier prop "admin" durchreichen und edit knopf anzeigen - nur bei Schichten, nicht bei Buchungen
             <BookingCard
-              id={booking.monday_id.toString()}
+              id={booking.monday_id}
               booking={booking}
               currentUserRole={currentUser.role}
+              setNewParameters={setNewParameters}
+              newParameters={newParameters}
             />
           ))}
       </BookingContainer>

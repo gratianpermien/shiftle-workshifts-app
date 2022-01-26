@@ -33,8 +33,8 @@ function App() {
     <View>
       <AppHeader
         authenticated={authenticated}
-        currentUserName={user.name}
-        admin={admin}
+        currentUserRole={user.role}
+        admin={admin} //überflüssig?
         setNewParameters={setNewParameters}
         newParameters={newParameters}
         currentPage={currentPage}
@@ -72,6 +72,8 @@ function App() {
                     filterDateArrivalLatest={filterDateArrivalLatest}
                     simpleSite={false}
                     currentUser={user}
+                    setNewParameters={setNewParameters}
+                    newParameters={newParameters}
                   />
                 }
               />

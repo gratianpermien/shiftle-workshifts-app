@@ -104,6 +104,7 @@ const updateShifts = async (req, res) => {
       upsert: true,
       returnOriginal: false,
       setDefaultsOnInsert: true,
+      rawResult: true,
     };
     try {
       const updatedShift = await shift.findOneAndUpdate(
@@ -112,7 +113,7 @@ const updateShifts = async (req, res) => {
         options
       );
       console.log("Successful DB func");
-    } catch {
+    } catch (error) {
       console.log("Error des Todes");
       res.json({
         success: false,
@@ -123,6 +124,57 @@ const updateShifts = async (req, res) => {
   });
   res.json(allUpdatedShifts);
 };
+
+// const exportShifts
+// const exportLogs = async (req, res) => {
+//   const logs = await Log.find();
+
+//   res.setHeader('Content-Type', 'text/csv');
+
+//   const columns = [
+//     'date',
+//     'time',
+//     'duration',
+//     'country',
+//     'spot',
+//     'airStart',
+//     'airEnd',
+//     'airEan',
+//     'waterDepthMax',
+//     'waterDepthAvg',
+//     'waterTemp',
+//     'notes',
+//     'buddy',
+//   ];
+
+//   res.write(
+//     columns.map((column) => `"${column}"`).join(',') + '\r\n'
+//   );
+
+//   const csvString = logs
+//     .map((log) =>
+//       [
+//         log.date,
+//         log.time,
+//         log.duration,
+//         log.country,
+//         log.spot,
+//         log.airStart,
+//         log.airEnd,
+//         log.airEan,
+//         log.waterDepthMax,
+//         log.waterDepthAvg,
+//         log.waterTemp,
+//         log.notes,
+//         log.buddy,
+//       ]
+//         .map((property) => `"${property}"`)
+//         .join(',')
+//     )
+//     .join('\r\n');
+//   res.write(csvString);
+//   res.end();
+// };
 
 export {
   getShifts,
