@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import BookingToShiftModal from "./BookingToShiftModal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,7 +9,14 @@ import {
   faCog,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function BookingCard({ booking, id, currentUserRole }) {
+export default function BookingCard({
+  booking,
+  id,
+  currentUserRole,
+  setNewParameters,
+  newParameters,
+}) {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
   function handleToggle() {
     setToggle(!toggle);
@@ -62,11 +70,31 @@ export default function BookingCard({ booking, id, currentUserRole }) {
           <AdminInfo isAdmin={isAdmin}>
             <p>
               Übergabe:{" "}
-              {booking.uek != "" ? booking.uek : " noch nicht vergeben"}
+              {booking.uek != ""
+                ? booking.uek +
+                  ", Start: " +
+                  Intl.DateTimeFormat("de-DE", {
+                    year: "2-digit",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "numeric",
+                    minute: "numeric",
+                  }).format(Date.parse(booking.timestamp_start_uek))
+                : " noch nicht vergeben"}
             </p>
             <p>
               Rücknahme:{" "}
-              {booking.rk != "" ? booking.rk : " noch nicht vergeben"}
+              {booking.rk != ""
+                ? booking.rk +
+                  ", Start: " +
+                  Intl.DateTimeFormat("de-DE", {
+                    year: "2-digit",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "numeric",
+                    minute: "numeric",
+                  }).format(Date.parse(booking.timestamp_start_rk))
+                : " noch nicht vergeben"}
             </p>
           </AdminInfo>
         </BasicInfo>
@@ -75,14 +103,14 @@ export default function BookingCard({ booking, id, currentUserRole }) {
             <FontAwesomeIcon icon={faCog} />
           </EditButton>
           <BookmarkButton
-            href="#"
+            onClick={() => setModalIsOpen(true)}
             isStaffedUEK={isStaffedUEK}
             isStaffedRK={isStaffedRK}
             isAdmin={isAdmin}
           >
             <FontAwesomeIcon icon={faPlusCircle} />
           </BookmarkButton>
-          <InfoButton href="#" onClick={handleToggle}>
+          <InfoButton onClick={handleToggle}>
             <FontAwesomeIcon icon={faChevronCircleDown} />
           </InfoButton>
         </Interaction>
@@ -104,6 +132,16 @@ export default function BookingCard({ booking, id, currentUserRole }) {
           {booking.zusatz_10 != "-" ? ", " + booking.zusatz_10 : ""}
         </p>
       </AddInformation>
+      {modalIsOpen && (
+        <BookingToShiftModal
+          booking={booking}
+          currentUserRole={currentUserRole}
+          modalIsOpen={modalIsOpen}
+          setModalIsOpen={setModalIsOpen}
+          setNewParameters={setNewParameters}
+          newParameters={newParameters}
+        />
+      )}
     </Card>
   );
 }
@@ -193,7 +231,7 @@ const UserRibbonWrapper = styled.div`
   height: 88px;
   overflow: hidden;
   position: absolute;
-  z-index: 300;
+  z-index: 200;
 `;
 const UserRibbon = styled.div`
   display: block;

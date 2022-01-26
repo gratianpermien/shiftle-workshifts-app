@@ -19,7 +19,7 @@ export default function AppHeader({
   setFilterDateArrivalEarliest,
   setFilterDateArrivalLatest,
 }) {
-  //Refresh shift information from Monday and get admin data if admin
+  //Refresh shift information from Monday and get admin data if admin (preload)
   async function updateShifts() {
     const response = await fetch("api/shifts", {
       method: "PUT",
@@ -27,7 +27,7 @@ export default function AppHeader({
         "Content-Type": "application/json",
       },
     });
-    const syncData = await response;
+    const syncData = response;
   }
   async function fetchAdminParameters() {
     const response = await fetch("api/admin");
@@ -118,7 +118,7 @@ const HeaderWrapper = styled.footer`
   width: 100%;
   background: var(--tertiary-bg);
   padding: 5vw;
-  z-index: 200;
+  z-index: 250;
 `;
 const Header = styled.div`
   display: flex;
@@ -127,33 +127,6 @@ const Header = styled.div`
   max-width: 600px;
   margin: 0 auto;
 `;
-// const UserRibbonWrapper = styled.div`
-//   display: ${(props) => (props.headerTheme ? `block` : `none`)};
-//   width: 80px;
-//   height: 88px;
-//   overflow: hidden;
-//   position: fixed;
-//   right: 0;
-//   z-index: 300;
-// `;
-// const UserRibbon = styled.div`
-//   color: #333;
-//   text-align: center;
-//   transform: rotate(45deg);
-//   -webkit-transform: rotate(45deg);
-//   -moz-transform: rotate(45deg);
-//   -ms-transform: rotate(45deg);
-//   -o-transform: rotate(45deg);
-//   position: relative;
-//   padding: min(1vw, 7px);
-//   top: 11px;
-//   right: 11px;
-//   width: 120px;
-//   background-color: var(--primary-color);
-//   color: var(--secondary-bg);
-//   font-size: var(--basic-font-size);
-//   font-weight: 600;
-// `;
 const Nav = styled.div`
   display: grid;
   grid-template-columns: min(25vw, 150px) min(25vw, 150px) auto;
@@ -162,7 +135,6 @@ const Nav = styled.div`
 `;
 const NavItem = styled(NavLink)`
   display: block;
-  /* width: min(25vw, 150px); */
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   padding: 0.4em 0.5em;
   border-radius: 2em;
@@ -217,7 +189,4 @@ const HeaderInteraction = styled.div`
   gap: min(3vw, 0.4em);
   max-width: 100%;
   align-items: center;
-  /* h1 {
-    margin-left: 0.2em;
-  } */
 `;

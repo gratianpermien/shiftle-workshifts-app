@@ -49,7 +49,10 @@ const DatePickerWrapperStyles = createGlobalStyle`
         width: min(26vw,120px);
         margin-right: 0.2em;
     }
-    .date_picker--adjustedwidth .react-datepicker__input-container > *{
+     .date_picker--adjustedwidthlarge {
+        width: min(32vw,170px);
+    }
+    .date_picker--adjustedwidthlarge .react-datepicker__input-container > *, .date_picker--adjustedwidth .react-datepicker__input-container > *{
         width: 100%;
         font-size: var(--basic-font-size);
         padding: 0.4em 1em;

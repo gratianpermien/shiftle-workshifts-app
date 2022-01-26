@@ -72,6 +72,8 @@ function App() {
                     filterDateArrivalLatest={filterDateArrivalLatest}
                     simpleSite={false}
                     currentUser={user}
+                    setNewParameters={setNewParameters}
+                    newParameters={newParameters}
                   />
                 }
               />
