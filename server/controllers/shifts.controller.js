@@ -112,12 +112,12 @@ const updateShifts = async (req, res) => {
         update,
         options
       );
-      console.log("Successful DB func");
+      console.log("DB Sync successful");
     } catch (error) {
-      console.log("Error des Todes");
+      console.log("DB Sync error");
       res.json({
         success: false,
-        message: "Error des Todes",
+        message: "Error",
         error: error.message,
       });
     }

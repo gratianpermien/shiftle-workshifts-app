@@ -97,7 +97,7 @@ const Modal = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  position: absolute;
+  position: fixed;
 `;
 const InputContainer = styled.div`
   width: min(38vw, 600px);
