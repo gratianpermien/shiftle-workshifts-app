@@ -154,7 +154,4 @@ function App() {
 
 export default App;
 
-//Fallback, wenn keine Route was rendert --> brauche ich das?
-const View = styled.div`
-  min-height: 100vh;
-`;
+const View = styled.div``;

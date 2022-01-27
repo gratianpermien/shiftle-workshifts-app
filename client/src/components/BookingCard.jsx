@@ -15,6 +15,7 @@ export default function BookingCard({
   currentUserRole,
   setNewParameters,
   newParameters,
+  allBookings,
 }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
@@ -134,6 +135,7 @@ export default function BookingCard({
           setModalIsOpen={setModalIsOpen}
           setNewParameters={setNewParameters}
           newParameters={newParameters}
+          allBookings={allBookings}
         />
       )}
     </Card>

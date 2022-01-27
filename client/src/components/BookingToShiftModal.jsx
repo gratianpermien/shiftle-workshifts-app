@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { InputButton, CenteredButton } from "./Buttons";
+import { CenteredButton } from "./Buttons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
@@ -8,37 +8,102 @@ import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
 export default function BookingToShiftModal({
   booking,
   currentUserRole,
-  modalIsOpen,
   setModalIsOpen,
-  setNewParameters,
   newParameters,
+  allBookings,
 }) {
+  const [saveActivated, setSaveActivated] = useState(false);
+  const [error, setError] = useState(false);
+  console.log(allBookings);
+  //Calculation for datepicker limitation (role: RK) and state
   const shiftBeginTime =
     currentUserRole == "UEK"
-      ? Date.parse(booking.kombidatum_start) +
+      ? Date.parse(booking.kombidatum_start) -
         newParameters.shiftBufferHandoverMins * 60 * 1000
       : Date.parse(booking.kombidatum_ende) +
-        newParameters.shiftBufferReturnMins * 60 * 1000;
-
-  const [rkTimestamp, setRKTimestamp] = useState(shiftBeginTime);
-  const [uekTimestamp, setUEKTimestamp] = useState(shiftBeginTime);
-
-  console.log(rkTimestamp, uekTimestamp);
-
+        newParameters.shiftBufferReturnMins * 60 * 1000 -
+        1 * 60 * 1000;
   const msPerDay = 24 * 3600 * 1000;
   const shiftTimeOnly = msPerDay - (shiftBeginTime % msPerDay);
   const morningTimeOnly = 3 * 3600 * 1000;
-  const shiftNextMorning = shiftTimeOnly + morningTimeOnly + shiftBeginTime;
-
+  const shiftEndNextMorning = shiftTimeOnly + morningTimeOnly + shiftBeginTime;
   const filterTimeWindow = (time) => {
-    const earliestDate = new Date(shiftBeginTime);
-    const latestDate = new Date(shiftNextMorning);
-    const selectedDate = new Date(time);
-    return (
-      earliestDate.getTime() < selectedDate.getTime() &&
-      selectedDate.getTime() < latestDate.getTime()
-    );
+    if (currentUserRole == "UEK") {
+      const earliestDate = new Date(shiftBeginTime);
+      const latestDate = new Date(shiftBeginTime);
+      const selectedDate = new Date(time);
+      return (
+        earliestDate.getTime() < selectedDate.getTime() &&
+        selectedDate.getTime() < latestDate.getTime()
+      );
+    } else {
+      const earliestDate = new Date(shiftBeginTime);
+      const latestDate = new Date(shiftEndNextMorning);
+      const selectedDate = new Date(time);
+      return (
+        earliestDate.getTime() < selectedDate.getTime() &&
+        selectedDate.getTime() < latestDate.getTime()
+      );
+    }
   };
+  const [rkTimestamp, setRKTimestamp] = useState(shiftBeginTime);
+  const [uekTimestamp, setUEKTimestamp] = useState(shiftBeginTime);
+
+  //Define worktime for return only (!), build time config array (presenceSlices)
+  let durationReturn = "";
+  switch (booking.fahrzeug.substring(0, 3)) {
+    case "DRE":
+      durationReturn = newParameters.durationDreamerHrs;
+      break;
+    case "ADV":
+      durationReturn = newParameters.durationAdventurerHrs;
+      break;
+    case "TRA":
+      durationReturn = newParameters.durationTravelerHrs;
+      break;
+  }
+  const firstHour = new Date(
+    currentUserRole == "UEK" ? uekTimestamp : rkTimestamp
+  ).getHours();
+  const lastHour =
+    currentUserRole == "UEK"
+      ? rkTimestamp.getHours()
+      : firstHour + durationReturn - 1;
+  let presenceSlices = [];
+  if (lastHour < 24) {
+    for (let i = firstHour; i <= lastHour; i++) {
+      presenceSlices = [...presenceSlices, i];
+    }
+  } else {
+    const lastHourNextDay = lastHour - 24;
+    for (let i = firstHour; i < 24; i++) {
+      presenceSlices = [...presenceSlices, i];
+    }
+    for (let i = 0; i <= lastHourNextDay; i++) {
+      presenceSlices = [...presenceSlices, i];
+    }
+  }
+
+  //Check for parallel vehicles (through array comparison) and if allowed, write to DB
+  function checkParallel(presenceSlices, newParameters) {
+    let parallelPresence = 0;
+    allBookings.every((booking) => {
+      const doublePresence = booking.presenceSlices.some((presenceSlice) =>
+        presenceSlices.includes(presenceSlice)
+      );
+      doublePresence && parallelPresence + 1;
+      if (parallelPresence > newParameters.presenceParallel) {
+        console.log("too many cars at the same time");
+        setError(true);
+        return false;
+      } else {
+        console.log("shift allowed");
+        setSaveActivated(true);
+        //Datenbank schreiben
+        return true;
+      }
+    });
+  }
   return (
     <>
       <Modal>
@@ -47,13 +112,13 @@ export default function BookingToShiftModal({
             Schließen
           </CenteredButton>{" "}
           <Title>Startzeit?</Title>
-          {/* <Confirm>{newUser ? <div>User ist angelegt.</div> : ""}</Confirm>
-          <Error>{error ? <div>{error}</div> : ""}</Error> */}
-          <div>
-            Wähle bitte deine Startzeit im angezeigten Zeitraum. Wenn bereits zu
-            viele Fahrzeuge zur gleichen Zeit bearbeitet werden, erscheint eine
-            Fehlermeldung – wähle dann bitte eine andere Zeit aus.
-          </div>
+          <Confirm>
+            {saveActivated ? <div>Schicht gespeichert.</div> : null}
+          </Confirm>
+          <Error>
+            {error ? <div>Zu viele Fahrzeuge gleichzeitig.</div> : null}
+          </Error>
+          <div>Wähle bitte deine Startzeit im angezeigten Zeitraum.</div>
           <DatePicker
             wrapperClassName="date_picker--adjustedwidthlarge"
             selected={currentUserRole == "UEK" ? uekTimestamp : rkTimestamp}
@@ -62,17 +127,32 @@ export default function BookingToShiftModal({
                 ? (date) => setUEKTimestamp(date)
                 : (date) => setRKTimestamp(date)
             }
+            onCalendarClose={() => setSaveActivated(true)}
             showTimeSelect
             minDate={shiftBeginTime}
-            maxDate={shiftNextMorning}
+            maxDate={shiftEndNextMorning}
             filterTime={filterTimeWindow}
             timeIntervals={60}
             timeCaption="Uhrzeit"
             dateFormat="dd/MM/yyyy HH:mm"
           />
-          <CenteredButton onClick={() => setModalIsOpen(false)}>
-            {/* Prüfen-Funktion */}Go! (inaktiv)
-          </CenteredButton>{" "}
+          <DatePickerWrapperStyles />
+          <div>
+            Mit diesem Startzeitpunkt wäre das Fahrzeug für {durationReturn}{" "}
+            Stunden in den Stunden {presenceSlices.join(", ")} in der
+            Aufbereitung. Zeitgleich anwesende Fahrzeuge:
+          </div>
+          <SaveButton
+            saveActivated={saveActivated}
+            onClick={() => {
+              checkParallel();
+              setTimeout(() => {
+                setModalIsOpen(false);
+              }, 2000);
+            }}
+          >
+            Prüfen
+          </SaveButton>{" "}
         </InputContainer>
       </Modal>
     </>
@@ -90,7 +170,7 @@ const Error = styled.h3`
 `;
 
 const Modal = styled.div`
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   width: 100vw;
   height: 100vh;
   z-index: 499;
@@ -107,4 +187,8 @@ const InputContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);
+`;
+
+const SaveButton = styled(CenteredButton)`
+  pointer-events: ${(props) => (props.saveActivated ? `auto` : `none`)};
 `;

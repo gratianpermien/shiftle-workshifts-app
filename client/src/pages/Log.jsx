@@ -26,7 +26,7 @@ export default function Log({
     fetchUsers();
   }, []);
 
-  const Login = (details) => {
+  const Login(details) {
     allUsers.forEach((user) => {
       if (
         details.email.split("@")[1].includes(".") &&

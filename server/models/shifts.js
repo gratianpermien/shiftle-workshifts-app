@@ -7,7 +7,7 @@ const shiftSchema = new mongoose.Schema({
   timestamp_ende_rk: Number,
   timestamp_start_uek: Number,
   timestamp_ende_uek: Number,
-  presence_slices: { type: Array, default: undefined }, //primitive array
+  presence_slices: Array,
   rk: String,
   uek: String,
   client: { type: String, required: true },
