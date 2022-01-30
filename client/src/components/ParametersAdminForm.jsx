@@ -223,7 +223,7 @@ const Error = styled.h3`
   color: var(--primary-color);
 `;
 const ParameterForm = styled.form`
-  display: ${(props) => (props.visible ? "none" : "flex")};
+  display: ${(props) => (props.visible ? "flex" : "none")};
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);

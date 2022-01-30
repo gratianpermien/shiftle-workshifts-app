@@ -19,12 +19,13 @@ function App() {
     email: "",
     role: "",
   });
-  const [filterDateArrivalEarliest, setFilterDateArrivalEarliest] = useState(
+  const [filterDateEarliest, setFilterDateEarliest] = useState(
     new Date()
   );
-  const [filterDateArrivalLatest, setFilterDateArrivalLatest] = useState(
+  const [filterDateLatest, setFilterDateLatest] = useState(
     new Date().setDate(new Date().getDate() + 30)
   );
+
 
   //Read path for path-dependant theming of header (log is for "/" route)
   const pageSlug = useLocation().pathname.replace("/", "");
@@ -38,10 +39,10 @@ function App() {
         setNewParameters={setNewParameters}
         newParameters={newParameters}
         currentPage={currentPage}
-        filterDateArrivalEarliest={filterDateArrivalEarliest}
-        filterDateArrivalLatest={filterDateArrivalLatest}
-        setFilterDateArrivalEarliest={setFilterDateArrivalEarliest}
-        setFilterDateArrivalLatest={setFilterDateArrivalLatest}
+        filterDateEarliest={filterDateEarliest}
+        filterDateLatest={filterDateLatest}
+        setFilterDateEarliest={setFilterDateEarliest}
+        setFilterDateLatest={setFilterDateLatest}
       />
       <Routes>
         <Route
@@ -55,7 +56,6 @@ function App() {
               setAdmin={setAdmin}
               authenticated={authenticated}
               setAuthenticated={setAuthenticated}
-              simpleSite={true}
             />
           }
         />
@@ -68,8 +68,8 @@ function App() {
                 path="buchungen"
                 element={
                   <Buchungen
-                    filterDateArrivalEarliest={filterDateArrivalEarliest}
-                    filterDateArrivalLatest={filterDateArrivalLatest}
+                    filterDateEarliest={filterDateEarliest}
+                    filterDateLatest={filterDateLatest}
                     simpleSite={false}
                     currentUser={user}
                     setNewParameters={setNewParameters}
@@ -100,8 +100,8 @@ function App() {
                 path="buchungen"
                 element={
                   <Buchungen
-                    filterDateArrivalEarliest={filterDateArrivalEarliest}
-                    filterDateArrivalLatest={filterDateArrivalLatest}
+                    filterDateEarliest={filterDateEarliest}
+                    filterDateLatest={filterDateLatest}
                     simpleSite={false}
                     currentUser={user}
                   />

@@ -14,10 +14,10 @@ export default function AppHeader({
   currentUserRole,
   currentPage,
   setNewParameters,
-  filterDateArrivalEarliest,
-  filterDateArrivalLatest,
-  setFilterDateArrivalEarliest,
-  setFilterDateArrivalLatest,
+  filterDateEarliest,
+  filterDateLatest,
+  setFilterDateEarliest,
+  setFilterDateLatest,
 }) {
   //Refresh shift information from Monday and get admin data if admin (preload)
   async function updateShifts() {
@@ -49,20 +49,16 @@ export default function AppHeader({
 
   return (
     <>
-      {/* <UserRibbonWrapper headerTheme={headerTheme}>
-        <UserRibbon>{currentUserName}</UserRibbon>
-      </UserRibbonWrapper> */}
       <HeaderWrapper headerTheme={headerTheme}>
         <Header>
           <Nav>
             <NavItem to="/buchungen">Buchungen</NavItem>
-            <NavItem to="/schichten">Schichten</NavItem>
+            {admin ? (
+              <NavItem to="/admin">Settings</NavItem>
+            ) : (
+              <NavItem to="/schichten">Schichten</NavItem>
+            )}
             <IconsWrapper>
-              {admin ? (
-                <Icon to="/admin">
-                  <FontAwesomeIcon icon={faCog} />
-                </Icon>
-              ) : null}
               <Icon to="/">
                 <FontAwesomeIcon icon={faSignOutAlt} />
               </Icon>
@@ -74,32 +70,16 @@ export default function AppHeader({
               <DatePicker
                 dateFormat="dd/MM/yyyy"
                 wrapperClassName="date_picker--adjustedwidth"
-                selected={
-                  currentUserRole == "UEK"
-                    ? filterDateDepartureEarliest
-                    : filterDateArrivalEarliest
-                }
-                onChange={
-                  currentUserRole == "UEK"
-                    ? (date) => setFilterDateDepartureEarliest(date)
-                    : (date) => setFilterDateArrivalEarliest(date)
-                }
+                selected={filterDateEarliest}
+                onChange={(date) => setFilterDateEarliest(date)}
               />
             </div>
             <div>
               <DatePicker
                 dateFormat="dd/MM/yyyy"
                 wrapperClassName="date_picker--adjustedwidth"
-                selected={
-                  currentUserRole == "UEK"
-                    ? filterDateDepartureLatest
-                    : filterDateArrivalLatest
-                }
-                onChange={
-                  currentUserRole == "UEK"
-                    ? (date) => setFilterDateDepartureLatest(date)
-                    : (date) => setFilterDateArrivalLatest(date)
-                }
+                selected={filterDateLatest}
+                onChange={(date) => setFilterDateLatest(date)}
               />
               <DatePickerWrapperStyles />
             </div>

@@ -6,14 +6,14 @@ import BookingCard from "../components/BookingCard";
 export default function Buchungen({
   currentUser,
   simpleSite,
-  filterDateArrivalEarliest,
-  filterDateArrivalLatest,
+  filterDateEarliest,
+  filterDateLatest,
   setNewParameters,
   newParameters,
 }) {
   const [allBookings, setAllBookings] = useState([]);
 
-  //Get booking information from server / database (updates itself in backend) on opening the app / reloading
+  //Get booking information from server / database (updates itself in backend) on opening the app / reloading and store in state
   async function fetchShifts() {
     const res = await fetch("api/shifts");
     const fetchedData = await res.json();
@@ -29,18 +29,26 @@ export default function Buchungen({
         {allBookings
           .filter(
             (booking) =>
-              new Date(booking.kombidatum_ende) >=
-                new Date(filterDateArrivalEarliest) &&
-              new Date(booking.kombidatum_ende) <=
-                new Date(filterDateArrivalLatest)
+              new Date(
+                currentUser.role === "UEK"
+                  ? booking.kombidatum_start
+                  : booking.kombidatum_ende
+              ) >= new Date(filterDateEarliest) &&
+              new Date(
+                currentUser.role === "UEK"
+                  ? booking.kombidatum_start
+                  : booking.kombidatum_ende
+              ) <= new Date(filterDateLatest)
           )
           .map((booking) => (
             <BookingCard
               id={booking.monday_id}
               booking={booking}
               currentUserRole={currentUser.role}
+              currentUserName={currentUser.name}
               setNewParameters={setNewParameters}
               newParameters={newParameters}
+              allBookings={allBookings}
             />
           ))}
       </BookingContainer>

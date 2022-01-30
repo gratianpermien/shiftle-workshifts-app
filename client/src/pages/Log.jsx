@@ -10,6 +10,7 @@ export default function Log({
   currentUser,
   setUser,
   setAdmin,
+  admin,
   authenticated,
   setAuthenticated,
 }) {
@@ -26,7 +27,7 @@ export default function Log({
     fetchUsers();
   }, []);
 
-  const Login(details) {
+  const Login = (details) => {
     allUsers.forEach((user) => {
       if (
         details.email.split("@")[1].includes(".") &&
@@ -73,6 +74,9 @@ export default function Log({
               <ButtonSection>
                 <CenteredButton onClick={Logout}>Logout</CenteredButton>
                 <SingleRouteButton to="/buchungen">Buchungen</SingleRouteButton>
+                {admin ? (
+                  <SingleRouteButton to="/admin">Settings</SingleRouteButton>
+                ) : null}
               </ButtonSection>
             </Welcome>
           ) : (

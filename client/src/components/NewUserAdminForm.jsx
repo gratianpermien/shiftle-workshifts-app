@@ -25,7 +25,7 @@ export default function NewUserAdminForm({
         <Confirm>{newUser ? <div>User ist angelegt.</div> : ""}</Confirm>
         <Error>{error ? <div>{error}</div> : ""}</Error>
         <InputGroup>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">Email*</label>
           <input
             type="email"
             name="email"
@@ -37,7 +37,7 @@ export default function NewUserAdminForm({
           />
         </InputGroup>
         <InputGroup>
-          <label htmlFor="role">Rolle</label>
+          <label htmlFor="role">Rolle*</label>
           <select
             name="role"
             id="role"
@@ -53,7 +53,7 @@ export default function NewUserAdminForm({
           </select>
         </InputGroup>
         <InputGroup>
-          <label htmlFor="password">Passwort</label>
+          <label htmlFor="password">Passwort*</label>
           <input
             type="password"
             name="password"

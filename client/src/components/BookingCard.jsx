@@ -13,6 +13,7 @@ export default function BookingCard({
   booking,
   id,
   currentUserRole,
+  currentUserName,
   setNewParameters,
   newParameters,
   allBookings,
@@ -26,8 +27,8 @@ export default function BookingCard({
   const bookingRK = booking.rk;
   const bookingUEK = booking.uek;
   const isAdmin = currentUserRole == "ADMIN";
-  const isStaffedRK = currentUserRole == "RK" && bookingRK !== "";
-  const isStaffedUEK = currentUserRole == "UE" && bookingUEK !== "";
+  const isStaffedRK = currentUserRole == "RK" && bookingRK != "";
+  const isStaffedUEK = currentUserRole == "UE" && bookingUEK != "";
 
   return (
     <Card key={id}>
@@ -131,6 +132,7 @@ export default function BookingCard({
         <BookingToShiftModal
           booking={booking}
           currentUserRole={currentUserRole}
+          currentUserName={currentUserName}
           modalIsOpen={modalIsOpen}
           setModalIsOpen={setModalIsOpen}
           setNewParameters={setNewParameters}
@@ -196,7 +198,6 @@ const BookmarkButton = styled.a`
       : `#44d68d;`};
   pointer-events: ${(props) =>
     props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `none` : `auto`};
-  display: block;
   cursor: pointer;
   transition: all 0.2s;
   &:hover,

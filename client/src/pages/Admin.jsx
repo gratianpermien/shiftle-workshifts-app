@@ -3,22 +3,50 @@ import styled from "styled-components";
 import shiftle_watermark from "../assets/shiftle_watermark.svg";
 import NewUserAdminForm from "../components/NewUserAdminForm";
 import ParametersAdminForm from "../components/ParametersAdminForm";
+import NewBookingAdminForm from "../components/NewBookingAdminForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
+
 import { CenteredButton, SingleRouteButton } from "../components/Buttons";
 
 function Admin({ newParameters, setNewParameters }) {
   const [userError, setUserError] = useState("");
   const [parameterError, setParameterError] = useState("");
+  const [bookingError, setBookingError] = useState("");
   const [parameterConf, setParameterConf] = useState("");
   const [newUser, setNewUser] = useState("");
-  const [toggle, setToggle] = useState(false);
+  const [newBooking, setNewBooking] = useState("");
+  const [slideA, setSlideA] = useState(true);
+  const [slideB, setSlideB] = useState(false);
+  const [slideC, setSlideC] = useState(false);
 
-  function handleToggle() {
-    setToggle(!toggle);
+  useEffect(() => {
+    createUser(newUser);
+  }, [newUser]);
+
+  useEffect(() => {
+    updateParameters(newParameters);
+  }, [newParameters]);
+
+  useEffect(() => {
+    createBooking(newBooking);
+  }, [newBooking]);
+
+  function handleSlide() {
+    if (slideA) {
+      setSlideA(false);
+      setSlideB(true);
+    } else if (slideB) {
+      setSlideB(false);
+      setSlideC(true);
+    } else {
+      setSlideC(false);
+      setSlideA(true);
+    }
   }
-
-  //Admin: submit form data (no validation needed)
+  //Parameters: get and submit form data (no validation needed)
   const SubmitParameters = async (parameterDetails) => {
-    //async State Update?
+    //async State Update? 2x Event handling required, why?
     try {
       await setNewParameters({
         presenceWindowMins: parameterDetails.presenceWindowMins,
@@ -31,7 +59,7 @@ function Admin({ newParameters, setNewParameters }) {
         durationDreamerHrs: parameterDetails.durationDreamerHrs,
         durationTravelerHrs: parameterDetails.durationTravelerHrs,
       });
-      updateParameters(newParameters);
+      // updateParameters(newParameters);
       setParameterError("");
       setParameterConf("Parameter geändert.");
     } catch (error) {
@@ -50,7 +78,6 @@ function Admin({ newParameters, setNewParameters }) {
     });
     return await result.json();
   }
-
   //User: check form data and submit
   const SubmitUser = (userDetails) => {
     try {
@@ -64,7 +91,7 @@ function Admin({ newParameters, setNewParameters }) {
           email: userDetails.email,
           password: userDetails.password,
         });
-        createUser(newUser);
+        // createUser(newUser);
         setUserError("");
       } else {
         setUserError("Eingabe ist ungültig.");
@@ -85,27 +112,71 @@ function Admin({ newParameters, setNewParameters }) {
     });
     return await result.json();
   }
+  //Manual booking: check form data and submit
+  const SubmitBooking = (bookingDetails) => {
+    try {
+      if (
+        bookingDetails.client.length > 0 &&
+        bookingDetails.kennzeichen.length > 0
+      ) {
+        setNewBooking({
+          client: bookingDetails.client,
+          fahrzeug: bookingDetails.fahrzeug,
+          kennzeichen: bookingDetails.kennzeichen,
+          bemerkung: bookingDetails.bemerkung,
+          kombidatum_start: bookingDetails.kombidatum_start,
+          kombidatum_ende: bookingDetails.kombidatum_ende,
+        });
+        // createBooking(newBooking);
+        setBookingError("");
+      } else {
+        setBookingError("Eingabe ist ungültig.");
+      }
+    } catch (error) {
+      setBookingError("Eingabe ist ungültig." + { error });
+    }
+  };
+
+  //Post new booking to DB
+  async function createBooking(newBooking) {
+    const result = await fetch("api/shifts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newBooking),
+    });
+    return await result.json();
+  }
   return (
     <View>
+      <SlideButton onClick={handleSlide}>
+        <FontAwesomeIcon icon={faChevronCircleRight} />
+      </SlideButton>
       <BaseContainer>
         <ButtonSection>
-          <SingleRouteButton to="/buchungen">Zurück</SingleRouteButton>
-          <CenteredButton onClick={handleToggle}>CSV per Mail</CenteredButton>
-          <CenteredButton onClick={handleToggle}>Switch</CenteredButton>
+          <SingleRouteButton to="/buchungen">Buchungen</SingleRouteButton>
+          <CenteredButton onClick={handleSlide}>CSV per Mail</CenteredButton>
         </ButtonSection>
         <FormContainer>
           <NewUserAdminForm
-            visible={toggle}
+            visible={slideA}
             SubmitUser={SubmitUser}
             newUser={newUser}
             error={userError}
           />
           <ParametersAdminForm
-            visible={toggle}
+            visible={slideC}
             newParameters={newParameters}
             SubmitParameters={SubmitParameters}
             parameterError={parameterError}
             parameterConf={parameterConf}
+          />
+          <NewBookingAdminForm
+            visible={slideB}
+            newBooking={newBooking}
+            bookingError={bookingError}
+            SubmitBooking={SubmitBooking}
           />
         </FormContainer>
       </BaseContainer>
@@ -140,4 +211,21 @@ const ButtonSection = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+`;
+const SlideButton = styled.a`
+  position: fixed;
+  display: block;
+  z-index: 200;
+  font-size: var(--icon-size);
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
+  display: block;
+  right: 1em;
+  top: 50vh;
+  color: #8f8f8f;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover,
+  &:active {
+    color: #444444;
+  }
 `;
