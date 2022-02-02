@@ -22,13 +22,13 @@ export default function NewUserAdminForm({
     <>
       <UserForm onSubmit={submitHandler} visible={visible}>
         <Title>User.</Title>
-
         <InputGroup>
           <label htmlFor="name">Name*</label>
           <input
             type="text"
             name="name"
             id="name"
+            maxlength="10"
             onChange={(event) =>
               setUserDetails({ ...userDetails, name: event.target.value })
             }

@@ -68,49 +68,48 @@ export default function ReturnModal({
       return await result.json();
     }
   }
+
   return (
-    <>
-      <Modal accepted={accepted}>
-        <InputContainer>
-          <CenteredButton onClick={() => setReturnModalIsOpen(false)}>
-            Schließen
-          </CenteredButton>{" "}
-          <Title>Stattdessen?</Title>
-          <div>
-            {daysToStart <= 7
-              ? "Du kannst die Schicht nicht zurückgeben, da der Start weniger als 7 Tage in der Zukunft liegt. Bitte wähle eine Vertretung."
-              : "Du kannst die Schicht zurückgeben, da der Start mehr als 7 Tage in der Zukunft liegt. Besser ist es, wenn du dich direkt um eine Vertretung kümmerst."}
-          </div>
-          <InputGroup>
-            <label htmlFor="subst">Vertretung</label>
-            <select
-              name="subst"
-              id="subst"
-              onChange={(event) => {
-                setSubst(event.target.value);
-                setSaveActivated(true);
-              }}
-              value={subst}
-            >
-              <option value="">Auswählen</option>
-              {usersList.map((user) => (
-                <option value={user}>{user}</option>
-              ))}
-            </select>
-          </InputGroup>
-          <Confirm>{accepted ? <div>Gespeichert.</div> : null}</Confirm>
-          <Error>{error ? <div>Wähle eine Stellvertretung.</div> : null}</Error>
-          <SaveButton
-            saveActivated={saveActivated}
-            onClick={() => {
-              checkTimeLeft(modifier, booking, daysToStart);
+    <Modal accepted={accepted}>
+      <InputContainer>
+        <CenteredButton onClick={() => setReturnModalIsOpen(false)}>
+          Schließen
+        </CenteredButton>
+        <Title>Stattdessen?</Title>
+        <div>
+          {daysToStart <= 7
+            ? "Du kannst die Schicht nicht zurückgeben, da der Start weniger als 7 Tage in der Zukunft liegt. Bitte wähle eine Vertretung."
+            : "Du kannst die Schicht zurückgeben, da der Start mehr als 7 Tage in der Zukunft liegt. Besser ist es, wenn du dich direkt um eine Vertretung kümmerst."}
+        </div>
+        <InputGroup>
+          <label htmlFor="subst">Vertretung</label>
+          <select
+            name="subst"
+            id="subst"
+            onChange={(event) => {
+              setSubst(event.target.value);
+              setSaveActivated(true);
             }}
+            value={subst}
           >
-            Übergeben
-          </SaveButton>{" "}
-        </InputContainer>
-      </Modal>
-    </>
+            <option value="">Auswählen</option>
+            {usersList.map((user) => (
+              <option value={user}>{user}</option>
+            ))}
+          </select>
+        </InputGroup>
+        <Confirm>{accepted ? <div>Gespeichert.</div> : null}</Confirm>
+        <Error>{error ? <div>Wähle eine Stellvertretung.</div> : null}</Error>
+        <SaveButton
+          saveActivated={saveActivated}
+          onClick={() => {
+            checkTimeLeft(modifier, booking, daysToStart);
+          }}
+        >
+          Übergeben
+        </SaveButton>
+      </InputContainer>
+    </Modal>
   );
 }
 

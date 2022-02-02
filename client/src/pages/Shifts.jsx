@@ -17,6 +17,7 @@ export default function Shifts({
     (booking) =>
       booking.rk == currentUser.name || booking.uek == currentUser.name
   );
+  console.log(currentUser, allBookings);
 
   return (
     <View simpleTheming={simpleSite}>

@@ -36,14 +36,13 @@ function App() {
   }
 
   //Get all users for comparison in Login function and dropdowns
-
   async function fetchUsers() {
     const res = await fetch("api/users");
     const fetchedData = await res.json();
     setAllUsers(fetchedData);
   }
 
-  //Get all admin parameters
+  //Get all admin parameters (update sits in Admin)
   async function fetchAdminParams() {
     const res = await fetch("api/admin");
     const fetchedData = await res.json();
@@ -53,7 +52,7 @@ function App() {
     fetchShifts();
     fetchAdminParams();
     fetchUsers();
-  }, [newBooking, newParameters]);
+  }, [newBooking, newUser]);
 
   //Read path for path-dependant theming of components (log is for "/" route)
   const pageSlug = useLocation().pathname.replace("/", "");

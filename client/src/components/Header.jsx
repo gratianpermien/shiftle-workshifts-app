@@ -19,7 +19,7 @@ export default function AppHeader({
   setFilterDateEarliest,
   setFilterDateLatest,
 }) {
-  //Refresh shift information from Monday and get admin data if admin (preload)
+  //Refresh shift information from Monday and get admin data if admin (preload sits in Header)
   async function updateShifts() {
     const response = await fetch("api/shifts", {
       method: "PUT",
