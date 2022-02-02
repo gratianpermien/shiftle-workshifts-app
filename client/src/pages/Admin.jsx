@@ -7,15 +7,20 @@ import NewBookingAdminForm from "../components/NewBookingAdminForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
 
-import { CenteredButton, SingleRouteButton } from "../components/Buttons";
+import { SingleRouteButton } from "../components/Buttons";
 
-function Admin({ newParameters, setNewParameters }) {
+function Admin({
+  newParameters,
+  setNewParameters,
+  newUser,
+  setNewUser,
+  newBooking,
+  setNewBooking,
+}) {
   const [userError, setUserError] = useState("");
   const [parameterError, setParameterError] = useState("");
   const [bookingError, setBookingError] = useState("");
   const [parameterConf, setParameterConf] = useState("");
-  const [newUser, setNewUser] = useState("");
-  const [newBooking, setNewBooking] = useState("");
   const [slideA, setSlideA] = useState(true);
   const [slideB, setSlideB] = useState(false);
   const [slideC, setSlideC] = useState(false);
@@ -44,6 +49,7 @@ function Admin({ newParameters, setNewParameters }) {
       setSlideA(true);
     }
   }
+
   //Parameters: get and submit form data (no validation needed)
   const SubmitParameters = async (parameterDetails) => {
     //async State Update? 2x Event handling required, why?
@@ -61,7 +67,7 @@ function Admin({ newParameters, setNewParameters }) {
       });
       // updateParameters(newParameters);
       setParameterError("");
-      setParameterConf("Parameter geändert.");
+      setParameterConf("Geändert.");
     } catch (error) {
       setParameterError("Eingabe ist ungültig." + { error });
       setParameterConf("");
@@ -76,22 +82,22 @@ function Admin({ newParameters, setNewParameters }) {
       },
       body: JSON.stringify(newParameters),
     });
-    return await result.json();
   }
   //User: check form data and submit
   const SubmitUser = (userDetails) => {
     try {
       if (
+        userDetails.name.length > 0 &&
         userDetails.email.length > 0 &&
         userDetails.email.split("@")[1].includes(".") &&
         userDetails.password.length > 0
       ) {
         setNewUser({
+          name: userDetails.name,
           role: userDetails.role,
           email: userDetails.email,
           password: userDetails.password,
         });
-        // createUser(newUser);
         setUserError("");
       } else {
         setUserError("Eingabe ist ungültig.");
@@ -103,14 +109,18 @@ function Admin({ newParameters, setNewParameters }) {
 
   //Post new user to DB
   async function createUser(newUser) {
-    const result = await fetch("api/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUser),
-    });
-    return await result.json();
+    if (newUser != "") {
+      const result = await fetch("api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      });
+      setTimeout(() => {
+        setNewUser("");
+      }, 2000);
+    }
   }
   //Manual booking: check form data and submit
   const SubmitBooking = (bookingDetails) => {
@@ -127,27 +137,31 @@ function Admin({ newParameters, setNewParameters }) {
           kombidatum_start: bookingDetails.kombidatum_start,
           kombidatum_ende: bookingDetails.kombidatum_ende,
         });
-        // createBooking(newBooking);
         setBookingError("");
       } else {
-        setBookingError("Eingabe ist ungültig.");
+        setBookingError("Eingabe ungültig.");
       }
     } catch (error) {
-      setBookingError("Eingabe ist ungültig." + { error });
+      setBookingError("Eingabe ungültig." + { error });
     }
   };
 
   //Post new booking to DB
   async function createBooking(newBooking) {
-    const result = await fetch("api/shifts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newBooking),
-    });
-    return await result.json();
+    if (newBooking != "") {
+      const result = await fetch("api/shifts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newBooking),
+      });
+      setTimeout(() => {
+        setNewBooking("");
+      }, 2000);
+    }
   }
+
   return (
     <View>
       <SlideButton onClick={handleSlide}>
@@ -156,7 +170,9 @@ function Admin({ newParameters, setNewParameters }) {
       <BaseContainer>
         <ButtonSection>
           <SingleRouteButton to="/buchungen">Buchungen</SingleRouteButton>
-          <CenteredButton onClick={handleSlide}>CSV per Mail</CenteredButton>
+          <SingleRouteButton to="/api/export" target="_blank">
+            CSV
+          </SingleRouteButton>
         </ButtonSection>
         <FormContainer>
           <NewUserAdminForm
@@ -189,7 +205,7 @@ const View = styled.div`
   background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   background-attachment: fixed;
   min-height: 100vh;
-  padding: 1rem 5vw 25vh;
+  padding: min(5vw, 2em) 0 25vh;
 `;
 const BaseContainer = styled.div`
   width: min(38vw, 600px);

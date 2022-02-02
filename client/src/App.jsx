@@ -1,41 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import Log from "./pages/Log";
 import Admin from "./pages/Admin";
-import Schichten from "./pages/Shifts";
-import Buchungen from "./pages/Bookings";
+import Shifts from "./pages/Shifts";
+import Bookings from "./pages/Bookings";
 
 import AppHeader from "./components/Header";
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [admin, setAdmin] = useState(false);
+  const [allUsers, setAllUsers] = useState([]);
+  const [allBookings, setAllBookings] = useState([]);
   const [newParameters, setNewParameters] = useState("");
-
+  const [newUser, setNewUser] = useState("");
+  const [newBooking, setNewBooking] = useState("");
   const [user, setUser] = useState({
     name: "",
     email: "",
     role: "",
   });
-  const [filterDateEarliest, setFilterDateEarliest] = useState(
-    new Date()
-  );
+
+  const [filterDateEarliest, setFilterDateEarliest] = useState(new Date());
   const [filterDateLatest, setFilterDateLatest] = useState(
     new Date().setDate(new Date().getDate() + 30)
   );
 
+  //Get booking information from server / database (updates itself in backend) on opening the app / reloading and store in state
+  async function fetchShifts() {
+    const res = await fetch("api/shifts");
+    const fetchedData = await res.json();
+    setAllBookings(fetchedData);
+  }
 
-  //Read path for path-dependant theming of header (log is for "/" route)
+  //Get all users for comparison in Login function and dropdowns
+
+  async function fetchUsers() {
+    const res = await fetch("api/users");
+    const fetchedData = await res.json();
+    setAllUsers(fetchedData);
+  }
+
+  //Get all admin parameters
+  async function fetchAdminParams() {
+    const res = await fetch("api/admin");
+    const fetchedData = await res.json();
+    setNewParameters(fetchedData[0]);
+  }
+  useEffect(() => {
+    fetchShifts();
+    fetchAdminParams();
+    fetchUsers();
+  }, [newBooking, newParameters]);
+
+  //Read path for path-dependant theming of components (log is for "/" route)
   const pageSlug = useLocation().pathname.replace("/", "");
   const currentPage = pageSlug ? pageSlug : "log";
+
   return (
     <View>
       <AppHeader
         authenticated={authenticated}
         currentUserRole={user.role}
-        admin={admin} //überflüssig?
+        currentUserName={user.name}
+        admin={admin}
         setNewParameters={setNewParameters}
         newParameters={newParameters}
         currentPage={currentPage}
@@ -50,6 +80,8 @@ function App() {
           path="/"
           element={
             <Log
+              allUsers={allUsers}
+              setAllUsers={setAllUsers}
               currentUser={user}
               setUser={setUser}
               admin={admin}
@@ -67,12 +99,14 @@ function App() {
                 exact
                 path="buchungen"
                 element={
-                  <Buchungen
+                  <Bookings
+                    allUsers={allUsers}
                     filterDateEarliest={filterDateEarliest}
                     filterDateLatest={filterDateLatest}
-                    simpleSite={false}
                     currentUser={user}
-                    setNewParameters={setNewParameters}
+                    currentPage={currentPage}
+                    allBookings={allBookings}
+                    setAllBookings={setAllBookings}
                     newParameters={newParameters}
                   />
                 }
@@ -80,7 +114,17 @@ function App() {
               <Route
                 exact
                 path="schichten"
-                element={<Schichten simpleSite={false} />}
+                element={
+                  <Shifts
+                    allUsers={allUsers}
+                    filterDateEarliest={filterDateEarliest}
+                    filterDateLatest={filterDateLatest}
+                    currentUser={user}
+                    currentPage={currentPage}
+                    allBookings={allBookings}
+                    newParameters={newParameters}
+                  />
+                }
               />
               user.role == "ADMIN" ? (
               <Route
@@ -88,9 +132,12 @@ function App() {
                 path="admin"
                 element={
                   <Admin
-                    simpleSite={true}
                     newParameters={newParameters}
                     setNewParameters={setNewParameters}
+                    newUser={newUser}
+                    setNewUser={setNewUser}
+                    newBooking={newBooking}
+                    setNewBooking={setNewBooking}
                   />
                 }
               />
@@ -99,10 +146,9 @@ function App() {
                 exact
                 path="buchungen"
                 element={
-                  <Buchungen
+                  <Bookings
                     filterDateEarliest={filterDateEarliest}
                     filterDateLatest={filterDateLatest}
-                    simpleSite={false}
                     currentUser={user}
                   />
                 }

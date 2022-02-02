@@ -22,8 +22,19 @@ export default function NewUserAdminForm({
     <>
       <UserForm onSubmit={submitHandler} visible={visible}>
         <Title>User.</Title>
-        <Confirm>{newUser ? <div>User ist angelegt.</div> : ""}</Confirm>
-        <Error>{error ? <div>{error}</div> : ""}</Error>
+
+        <InputGroup>
+          <label htmlFor="name">Name*</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            onChange={(event) =>
+              setUserDetails({ ...userDetails, name: event.target.value })
+            }
+            value={userDetails.name}
+          />
+        </InputGroup>
         <InputGroup>
           <label htmlFor="email">Email*</label>
           <input
@@ -64,6 +75,8 @@ export default function NewUserAdminForm({
             value={userDetails.password}
           />
         </InputGroup>
+        <Confirm>{newUser ? <div>Angelegt.</div> : ""}</Confirm>
+        <Error>{error ? <div>{error}</div> : ""}</Error>
         <InputButton type="submit" value="Anlegen" />
       </UserForm>
     </>

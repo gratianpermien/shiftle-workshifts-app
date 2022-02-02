@@ -8,8 +8,8 @@ const GlobalStyle = createGlobalStyle`
 }
 :root {
 --primary-bg: linear-gradient(245deg, rgba(255,255,255,1) 0%, rgba(238,238,238,1) 100%); //hell
---secondary-bg: #FFfdfd; //in Admin
---tertiary-bg: linear-gradient(245deg, rgba(42,42,42,1) 0%, rgba(120,51,80,1)100%); //dunkel
+--secondary-bg: #FFfdfd;
+--tertiary-bg: rgba(86, 90, 94, 1);
 --headings-color: #eeeeee; //in Admin
 --primary-color: #F56FA8; //in Admin
 --icon-size: clamp(1.5rem, -0.875rem + 8.333vw, 2.3rem);

@@ -33,8 +33,7 @@ export default function NewBookingAdminForm({
     <>
       <BookingForm onSubmit={submitHandler} visible={visible}>
         <Title>Buchung.</Title>
-        <Confirm>{newBooking ? <div>Buchung ist angelegt.</div> : ""}</Confirm>
-        <Error>{bookingError ? <div>{error}</div> : ""}</Error>
+
         <InputGroup>
           <label htmlFor="client">Kunde*</label>
           <input
@@ -104,30 +103,6 @@ export default function NewBookingAdminForm({
           />
         </InputGroup>
         <InputGroup>
-          <label htmlFor="rk">Name RK</label>
-          <input
-            type="text"
-            name="rk"
-            id="rk"
-            onChange={(event) =>
-              setBookingDetails({ ...bookingDetails, rk: event.target.value })
-            }
-            value={bookingDetails.rk}
-          />
-        </InputGroup>
-        <InputGroup>
-          <label htmlFor="uek">Name ÜK</label>
-          <input
-            type="text"
-            name="uek"
-            id="uek"
-            onChange={(event) =>
-              setBookingDetails({ ...bookingDetails, uek: event.target.value })
-            }
-            value={bookingDetails.uek}
-          />
-        </InputGroup>
-        <InputGroup>
           <label>Abfahrt*</label>
           <DatePicker
             wrapperClassName="date_picker--adjustedwidthlarge"
@@ -161,6 +136,8 @@ export default function NewBookingAdminForm({
           />
         </InputGroup>
         <DatePickerWrapperStyles />
+        <Confirm>{newBooking ? <div>Angelegt.</div> : ""}</Confirm>
+        <Error>{bookingError ? <div>{error}</div> : ""}</Error>
         <InputButton type="submit" value="Anlegen" />
       </BookingForm>
     </>

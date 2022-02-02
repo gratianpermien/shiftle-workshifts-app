@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { InputButton } from "./Buttons";
 
 export default function LoginForm({ Login, loginError }) {
-  const [details, setDetails] = useState({ name: "", email: "", password: "" });
+  const [details, setDetails] = useState({ email: "", password: "" });
 
   function submitHandler(event) {
     event.preventDefault();
@@ -13,19 +13,6 @@ export default function LoginForm({ Login, loginError }) {
   return (
     <>
       <Form onSubmit={submitHandler}>
-        <Error>{loginError != "" ? <div>{loginError}</div> : ""}</Error>
-        <InputGroup>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            onChange={(event) =>
-              setDetails({ ...details, name: event.target.value })
-            }
-            value={details.name}
-          />
-        </InputGroup>
         <InputGroup>
           <label htmlFor="email">Email</label>
           <input
@@ -50,6 +37,7 @@ export default function LoginForm({ Login, loginError }) {
             value={details.password}
           />
         </InputGroup>
+        <Error>{loginError != "" ? <div>{loginError}</div> : ""}</Error>
         <InputButton type="submit" value="Login" />
       </Form>
     </>

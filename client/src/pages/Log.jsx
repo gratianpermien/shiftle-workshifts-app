@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import LoginForm from "../components/LoginForm";
 import styled from "styled-components";
 import shiftle_watermark from "../assets/shiftle_watermark.svg";
 import shiftle_logo from "../assets/shiftle_logo.svg";
-import greeting from "greeting";
 import { CenteredButton, SingleRouteButton } from "../components/Buttons";
 
 export default function Log({
   currentUser,
+  allUsers,
+  setAllUsers,
   setUser,
   setAdmin,
   admin,
@@ -16,33 +17,26 @@ export default function Log({
 }) {
   const [error, setError] = useState("");
 
-  //Get all users for comparison in Login function
-  const [allUsers, setAllUsers] = useState([]);
-  async function fetchUsers() {
-    const res = await fetch("api/Users");
-    const fetchedData = await res.json();
-    setAllUsers(fetchedData);
-  }
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
   const Login = (details) => {
     allUsers.forEach((user) => {
-      if (
-        details.email.split("@")[1].includes(".") &&
-        details.password.length > 0 &&
-        details.email == user.email &&
-        details.password == user.password
-      ) {
-        setUser({
-          name: details.name,
-          email: user.email,
-          role: user.role,
-        });
-        setAuthenticated(true);
-        user.role == "ADMIN" ? setAdmin(true) : setAdmin(false);
-      } else {
+      try {
+        if (
+          details.email.split("@")[1].includes(".") &&
+          details.password.length > 0 &&
+          details.email == user.email &&
+          details.password == user.password
+        ) {
+          setUser({
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          });
+          setAuthenticated(true);
+          user.role == "ADMIN" ? setAdmin(true) : setAdmin(false);
+        } else {
+          setError("Eingabe ungültig.");
+        }
+      } catch (error) {
         setError("Eingabe ungültig.");
       }
     });
@@ -52,6 +46,7 @@ export default function Log({
     setUser({
       name: "",
       email: "",
+      role: "",
     });
     setAllUsers([]);
     setAuthenticated(false);
@@ -66,9 +61,7 @@ export default function Log({
           {authenticated ? (
             <Welcome>
               <div>
-                <h1>
-                  {greeting.random()}, {currentUser.name}.
-                </h1>
+                <h1>Moin, {currentUser.name}.</h1>
                 <h3>Du bist mit der Rolle {currentUser.role} eingeloggt.</h3>
               </div>
               <ButtonSection>
@@ -94,7 +87,6 @@ const View = styled.div`
       url("https://www.hamburg-startups.net/wp-content/uploads/2021/06/Produkt_Aussen_Dreamer_0035-1030x687.jpg");
   background-attachment: fixed;
   min-height: 100vh;
-  /* padding: 1rem 5vw 25vh; */
 `;
 
 const BaseContainer = styled.div`
@@ -102,13 +94,12 @@ const BaseContainer = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 `;
 
 const Logo = styled.img`
-  width: min(256px, 10vw);
+  width: min(64px, 10vw);
   filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.2));
-  margin: 3em auto 0;
+  margin: 3em auto 1em;
 `;
 
 const LoginContainer = styled.div`
@@ -126,12 +117,12 @@ const ButtonSection = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 2em auto;
 `;
 
 const Welcome = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
   gap: min(3vh, 1em);
   h1 {

@@ -6,14 +6,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faCog } from "@fortawesome/free-solid-svg-icons";
+import { faStopCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function AppHeader({
   authenticated,
   admin,
   currentUserRole,
+  currentUserName,
   currentPage,
-  setNewParameters,
   filterDateEarliest,
   filterDateLatest,
   setFilterDateEarliest,
@@ -27,16 +27,9 @@ export default function AppHeader({
         "Content-Type": "application/json",
       },
     });
-    const syncData = response;
-  }
-  async function fetchAdminParameters() {
-    const response = await fetch("api/admin");
-    const fetchedData = await response.json();
-    setNewParameters(fetchedData[0]);
   }
   useEffect(async () => {
     await updateShifts();
-    await fetchAdminParameters();
   }, []);
 
   const headerTheming = {
@@ -58,14 +51,17 @@ export default function AppHeader({
             ) : (
               <NavItem to="/schichten">Schichten</NavItem>
             )}
-            <IconsWrapper>
+            <LogWrapper>
+              <InfoTitle>{currentUserName}.</InfoTitle>
               <Icon to="/">
-                <FontAwesomeIcon icon={faSignOutAlt} />
+                <FontAwesomeIcon icon={faStopCircle} />
               </Icon>
-            </IconsWrapper>
+            </LogWrapper>
           </Nav>
           <HeaderInteraction>
-            <div>{currentUserRole == "UEK" ? "Abfahrt " : "Ankunft "}</div>
+            <InfoTitle>
+              {currentUserRole == "UEK" ? "Abfahrt. " : "Ankunft. "}
+            </InfoTitle>
             <div>
               <DatePicker
                 dateFormat="dd/MM/yyyy"
@@ -97,7 +93,7 @@ const HeaderWrapper = styled.footer`
   top: 0;
   width: 100%;
   background: var(--tertiary-bg);
-  padding: 5vw;
+  padding: min(5vw, 2em);
   z-index: 250;
 `;
 const Header = styled.div`
@@ -139,7 +135,7 @@ const NavItem = styled(NavLink)`
   }
 `;
 
-const IconsWrapper = styled.div`
+const LogWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-self: end;
@@ -158,10 +154,12 @@ const Icon = styled(NavLink)`
     color: var(--headings-color);
   }
 `;
-
-const HeaderInteraction = styled.div`
+const InfoTitle = styled.h3`
   font-weight: 600;
+  text-transform: uppercase;
   color: var(--primary-color);
+`;
+const HeaderInteraction = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;

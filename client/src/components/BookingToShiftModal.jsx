@@ -9,7 +9,7 @@ export default function BookingToShiftModal({
   booking,
   currentUserRole,
   currentUserName,
-  setModalIsOpen,
+  setBookingToShiftModalIsOpen,
   newParameters,
   allBookings,
 }) {
@@ -23,8 +23,6 @@ export default function BookingToShiftModal({
   }, [updatedBooking]);
 
   //Calculation for datepicker limitation (role: RK) and state
-  newParameters.shiftBufferReturnMins;
-
   const shiftBeginTime =
     currentUserRole == "UEK"
       ? Date.parse(booking.kombidatum_start) -
@@ -33,28 +31,25 @@ export default function BookingToShiftModal({
         newParameters.shiftBufferReturnMins * 1000 * 60;
   const msPerDay = 24 * 3600 * 1000;
   const shiftTimeOnly = msPerDay - (shiftBeginTime % msPerDay);
+  //3 am the following day is limit for vehicle returns (RK role)
   const morningTimeOnly = 3 * 3600 * 1000;
-  const shiftEndNextMorning = shiftTimeOnly + morningTimeOnly + shiftBeginTime;
+  const shiftEndTime =
+    currentUserRole == "UEK"
+      ? shiftBeginTime + 1 * 3600 * 1000
+      : shiftTimeOnly + morningTimeOnly + shiftBeginTime;
   const filterTimeWindow = (time) => {
     const earliestDate = new Date(shiftBeginTime);
     const selectedDate = new Date(time);
-    if (currentUserRole == "UEK") {
-      const latestDate = new Date(shiftBeginTime);
-      return (
-        earliestDate.getTime() <= selectedDate.getTime() &&
-        selectedDate.getTime() <= latestDate.getTime()
-      );
-    } else {
-      const latestDate = new Date(shiftEndNextMorning);
-      return (
-        earliestDate.getTime() <= selectedDate.getTime() &&
-        selectedDate.getTime() <= latestDate.getTime()
-      );
-    }
+    const latestDate = new Date(shiftEndTime);
+    return (
+      earliestDate.getTime() <= selectedDate.getTime() &&
+      selectedDate.getTime() <= latestDate.getTime()
+    );
   };
+
+  //Timestamps for datepicker
   const [rkTimestamp, setRKTimestamp] = useState(shiftBeginTime);
   const [uekTimestamp, setUEKTimestamp] = useState(shiftBeginTime);
-
   //Define worktime for return only
   let durationReturn = "";
   switch (booking.fahrzeug.substring(0, 3)) {
@@ -68,7 +63,6 @@ export default function BookingToShiftModal({
       durationReturn = newParameters.durationTravelerHrs;
       break;
   }
-
   function checkParallel(durationReturn, currentUserRole, currentUserName) {
     //Calculate first and last hour and construct presence slides array
     const firstHour = new Date(
@@ -89,7 +83,7 @@ export default function BookingToShiftModal({
       for (let i = firstHour; i <= lastHour; i++) {
         presenceSlices = [
           ...presenceSlices,
-          parseInt(`${year}${month}${day}${i}`),
+          parseInt(`${year}${month}${day}${i < 10 ? "0" + i : i}`),
         ];
       }
     } else {
@@ -97,13 +91,13 @@ export default function BookingToShiftModal({
       for (let i = firstHour; i < 24; i++) {
         presenceSlices = [
           ...presenceSlices,
-          parseInt(`${year}${month}${day}${i}`),
+          parseInt(`${year}${month}${day}${i < 10 ? "0" + i : i}`),
         ];
       }
       for (let i = 0; i <= lastHourNextDay; i++) {
         presenceSlices = [
           ...presenceSlices,
-          parseInt(`${year}${month}${dayAfter}${i}`),
+          parseInt(`${year}${month}${dayAfter}${i < 10 ? "0" + i : i}`),
         ];
       }
     }
@@ -121,22 +115,25 @@ export default function BookingToShiftModal({
         setAccepted(true);
         setError(false);
         const staffNameStampUEK =
-          currentUserRole == "UEK" ? currentUserName : "";
-        const staffNameStampRK = currentUserRole == "RK" ? currentUserName : "";
+          currentUserRole == "UEK" ? currentUserName : booking.uek;
+        const staffNameStampRK =
+          currentUserRole == "RK" ? currentUserName : booking.rk;
+        const totalSlices = [booking.presence_slices, ...presenceSlices];
         const modifier = {
-          presence_slices: presenceSlices,
+          presence_slices: totalSlices.flat().sort(),
           uek: staffNameStampUEK,
           rk: staffNameStampRK,
         };
         setUpdatedBooking(Object.assign(booking, modifier));
+        setSaveActivated(false);
         setTimeout(() => {
-          setModalIsOpen(false);
-        }, 4000);
+          setBookingToShiftModalIsOpen(false);
+        }, 2000);
         return true;
       }
     });
   }
-  //Update Admin-Parameters in DB
+  //Update Booking in DB
   async function updateBooking(updatedBooking) {
     if (updatedBooking !== "") {
       const bookingId = updatedBooking._id;
@@ -155,7 +152,7 @@ export default function BookingToShiftModal({
     <>
       <Modal accepted={accepted}>
         <InputContainer>
-          <CenteredButton onClick={() => setModalIsOpen(false)}>
+          <CenteredButton onClick={() => setBookingToShiftModalIsOpen(false)}>
             Schließen
           </CenteredButton>{" "}
           <Title>Startzeit?</Title>
@@ -177,7 +174,7 @@ export default function BookingToShiftModal({
             onCalendarClose={() => setSaveActivated(true)}
             showTimeSelect
             minDate={shiftBeginTime}
-            maxDate={shiftEndNextMorning}
+            maxDate={shiftEndTime}
             filterTime={filterTimeWindow}
             timeIntervals={60}
             timeCaption="Uhrzeit"
@@ -202,7 +199,7 @@ const Title = styled.h1`
   color: rgba(42, 42, 42, 1);
 `;
 const Confirm = styled.h3`
-  color: #44d68d;
+  color: #206643;
 `;
 const Error = styled.h3`
   color: var(--primary-color);
@@ -210,7 +207,7 @@ const Error = styled.h3`
 
 const Modal = styled.div`
   background-color: ${(props) =>
-    props.accepted ? `rgba(175, 241, 208, 0.9)` : `rgba(255, 255, 255, 0.9)`};
+    props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`};
   width: 100vw;
   height: 100vh;
   z-index: 499;
@@ -222,7 +219,7 @@ const Modal = styled.div`
 const InputContainer = styled.div`
   width: min(38vw, 600px);
   margin: 0 auto;
-  padding: 2em 0;
+  padding: min(5vw, 2em);
   display: flex;
   flex-direction: column;
   align-items: center;
