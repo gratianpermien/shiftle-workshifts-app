@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import BookingToShiftModal from './BookingToShiftModal';
 import ReturnModal from './ReturnModal';
 import ModBookingModal from './ModBookingAdminModal';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronCircleDown,
@@ -14,8 +13,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function BookingCard({
+  key,
   booking,
-  id,
   deleted,
   setDeleted,
   allUsers,
@@ -26,8 +25,7 @@ export default function BookingCard({
   allBookings,
   setAllBookings,
 }) {
-  const [bookingToShiftModalIsOpen, setBookingToShiftModalIsOpen] =
-    useState(false);
+  const [bookingToShiftModalIsOpen, setBookingToShiftModalIsOpen] = useState(false);
   const [returnModalIsOpen, setReturnModalIsOpen] = useState(false);
   const [modBookingModalIsOpen, setModBookingModalIsOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
@@ -38,7 +36,7 @@ export default function BookingCard({
 
   async function deleteBooking(booking) {
     const bookingId = booking._id;
-    const result = await fetch(`api/shifts/${bookingId}`, {
+    await fetch(`api/shifts/${bookingId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -61,15 +59,9 @@ export default function BookingCard({
   const isStaffedRK = currentUserRole == 'RK' && bookingRK != '';
   const isStaffedUEK = currentUserRole == 'UEK' && bookingUEK != '';
   return (
-    <Card deleted={deleted} key={booking._id}>
-      <UserRibbonWrapper
-        isAdmin={isAdmin}
-        isStaffedRK={isStaffedRK}
-        isStaffedUEK={isStaffedUEK}
-      >
-        <UserRibbon>
-          {currentUserRole == 'RK' ? bookingRK : bookingUEK}
-        </UserRibbon>
+    <Card deleted={deleted} key={key}>
+      <UserRibbonWrapper isAdmin={isAdmin} isStaffedRK={isStaffedRK} isStaffedUEK={isStaffedUEK}>
+        <UserRibbon>{currentUserRole == 'RK' ? bookingRK : bookingUEK}</UserRibbon>
       </UserRibbonWrapper>
       <CardRow>
         <BasicInfo>
@@ -105,36 +97,19 @@ export default function BookingCard({
               Schichtbeginn Aufbereitung:{' '}
               {booking.presence_slices[0] > 0
                 ? booking.presence_slices[1] - booking.presence_slices[0] > 1
-                  ? String(booking.presence_slices[1]).substring(
-                      String(booking.presence_slices[1]).length - 2
-                    ) + ':00'
-                  : String(booking.presence_slices[0]).substring(
-                      String(booking.presence_slices[0]).length - 2
-                    ) + ':00'
+                  ? String(booking.presence_slices[1]).substring(String(booking.presence_slices[1]).length - 2) + ':00'
+                  : String(booking.presence_slices[0]).substring(String(booking.presence_slices[0]).length - 2) + ':00'
                 : ' noch nicht vergeben'}
             </p>
-            <p>
-              Übergabe:{' '}
-              {booking.uek != '' ? booking.uek : ' noch nicht vergeben'}
-            </p>
-            <p>
-              Rücknahme:{' '}
-              {booking.rk != '' ? booking.rk : ' noch nicht vergeben'}
-            </p>
+            <p>Übergabe: {booking.uek != '' ? booking.uek : ' noch nicht vergeben'}</p>
+            <p>Rücknahme: {booking.rk != '' ? booking.rk : ' noch nicht vergeben'}</p>
           </AdminInfo>
         </BasicInfo>
         <Interaction>
-          <EditButton
-            isAdmin={isAdmin}
-            onClick={() => setModBookingModalIsOpen(true)}
-          >
+          <EditButton isAdmin={isAdmin} onClick={() => setModBookingModalIsOpen(true)}>
             <FontAwesomeIcon icon={faCog} />
           </EditButton>
-          <DeleteButton
-            deleted={deleted}
-            isAdmin={isAdmin}
-            onClick={() => deleteBooking(booking)}
-          >
+          <DeleteButton deleted={deleted} isAdmin={isAdmin} onClick={() => deleteBooking(booking)}>
             <FontAwesomeIcon icon={faTimesCircle} />
           </DeleteButton>
           {isShifts ? null : (
@@ -263,18 +238,13 @@ const AddInformation = styled.div`
   height: ${(props) => (props.visible ? '1' : '0')};
   opacity: ${(props) => (props.visible ? '1' : '0')};
   visibility: ${(props) => (props.visible ? 'visible' : 'hidden')};
-  transition: padding-bottom 600ms, padding-top 600ms, height 600ms,
-    opacity 600ms;
+  transition: padding-bottom 600ms, padding-top 600ms, height 600ms, opacity 600ms;
 `;
 const BookmarkButton = styled.a`
   font-size: var(--icon-size);
   display: ${(props) => (props.isAdmin ? `none;` : `block;`)};
-  color: ${(props) =>
-    props.isStaffedRK || props.isStaffedUEK || props.isAdmin
-      ? `#8f8f8f;`
-      : `#44d68d;`};
-  pointer-events: ${(props) =>
-    props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `none` : `auto`};
+  color: ${(props) => (props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `#8f8f8f;` : `#44d68d;`)};
+  pointer-events: ${(props) => (props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `none` : `auto`)};
   cursor: pointer;
   transition: all 0.2s;
   &:hover,
@@ -316,8 +286,7 @@ const DeleteButton = styled(EditButton)`
   }
 `;
 const UserRibbonWrapper = styled.div`
-  display: ${(props) =>
-    props.isStaffedRK || props.isStaffedUEK ? `block` : `none`};
+  display: ${(props) => (props.isStaffedRK || props.isStaffedUEK ? `block` : `none`)};
   width: 80px;
   height: 88px;
   overflow: hidden;

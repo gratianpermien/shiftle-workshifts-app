@@ -9,14 +9,7 @@ import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
 
 import { SingleRouteButton } from '../components/Buttons';
 
-function Admin({
-  newParameters,
-  setNewParameters,
-  newUser,
-  setNewUser,
-  newBooking,
-  setNewBooking,
-}) {
+function Admin({ newParameters, setNewParameters, newUser, setNewUser, newBooking, setNewBooking }) {
   const [userError, setUserError] = useState('');
   const [parameterError, setParameterError] = useState('');
   const [bookingError, setBookingError] = useState('');
@@ -75,7 +68,7 @@ function Admin({
   };
   //Update Admin-Parameters in DB
   async function updateParameters(newParameters) {
-    const result = await fetch('api/admin/61e146a9fbc9e947b9f19496', {
+    await fetch('api/admin/61e146a9fbc9e947b9f19496', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -100,17 +93,17 @@ function Admin({
         });
         setUserError('');
       } else {
-        setUserError('Eingabe ist ungültig.');
+        setUserError('Eingabe ungültig.');
       }
     } catch (error) {
-      setParameterError('Eingabe ist ungültig.' + { error });
+      setParameterError('Eingabe ungültig.' + { error });
     }
   };
 
   //Post new user to DB
   async function createUser(newUser) {
     if (newUser != '') {
-      const result = await fetch('api/users', {
+      await fetch('api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,10 +118,7 @@ function Admin({
   //Manual booking: check form data and submit
   const SubmitBooking = (bookingDetails) => {
     try {
-      if (
-        bookingDetails.client.length > 0 &&
-        bookingDetails.kennzeichen.length > 0
-      ) {
+      if (bookingDetails.client.length > 0 && bookingDetails.kennzeichen.length > 0) {
         setNewBooking({
           client: bookingDetails.client,
           fahrzeug: bookingDetails.fahrzeug,
@@ -149,7 +139,7 @@ function Admin({
   //Post new booking to DB
   async function createBooking(newBooking) {
     if (newBooking != '') {
-      const result = await fetch('api/shifts', {
+      await fetch('api/shifts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -175,12 +165,7 @@ function Admin({
           </SingleRouteButton>
         </ButtonSection>
         <FormContainer>
-          <NewUserAdminForm
-            visible={slideA}
-            SubmitUser={SubmitUser}
-            newUser={newUser}
-            error={userError}
-          />
+          <NewUserAdminForm visible={slideA} SubmitUser={SubmitUser} newUser={newUser} error={userError} />
           <ParametersAdminForm
             visible={slideC}
             newParameters={newParameters}

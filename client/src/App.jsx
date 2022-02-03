@@ -23,9 +23,7 @@ function App() {
   });
 
   const [filterDateEarliest, setFilterDateEarliest] = useState(new Date());
-  const [filterDateLatest, setFilterDateLatest] = useState(
-    new Date().setDate(new Date().getDate() + 30)
-  );
+  const [filterDateLatest, setFilterDateLatest] = useState(new Date().setDate(new Date().getDate() + 30));
 
   //Get booking information from server / database (updates itself in backend) on opening the app / reloading and store in state
   async function fetchShifts() {
@@ -154,26 +152,10 @@ function App() {
             </>
           ) : (
             <>
-              <Route
-                exact
-                path="buchungen"
-                element={<Navigate to="/" replace={true} />}
-              />
-              <Route
-                exact
-                path="schichten"
-                element={<Navigate to="/" replace={true} />}
-              />
-              <Route
-                exact
-                path="buchungen"
-                element={<Navigate to="/" replace={true} />}
-              />
-              <Route
-                exact
-                path="admin"
-                element={<Navigate to="/" replace={true} />}
-              />
+              <Route exact path="buchungen" element={<Navigate to="/" replace={true} />} />
+              <Route exact path="schichten" element={<Navigate to="/" replace={true} />} />
+              <Route exact path="buchungen" element={<Navigate to="/" replace={true} />} />
+              <Route exact path="admin" element={<Navigate to="/" replace={true} />} />
               <Route
                 exact
                 path="/"

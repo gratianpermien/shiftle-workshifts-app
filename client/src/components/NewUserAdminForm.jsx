@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { InputButton } from './Buttons';
 
-export default function NewUserAdminForm({
-  SubmitUser,
-  newUser,
-  error,
-  visible,
-}) {
+export default function NewUserAdminForm({ SubmitUser, newUser, error, visible }) {
   const [userDetails, setUserDetails] = useState({
     role: '',
     email: '',
@@ -28,10 +23,8 @@ export default function NewUserAdminForm({
             type="text"
             name="name"
             id="name"
-            maxlength="10"
-            onChange={(event) =>
-              setUserDetails({ ...userDetails, name: event.target.value })
-            }
+            maxLength="10"
+            onChange={(event) => setUserDetails({ ...userDetails, name: event.target.value })}
             value={userDetails.name}
           />
         </InputGroup>
@@ -41,9 +34,7 @@ export default function NewUserAdminForm({
             type="email"
             name="email"
             id="email"
-            onChange={(event) =>
-              setUserDetails({ ...userDetails, email: event.target.value })
-            }
+            onChange={(event) => setUserDetails({ ...userDetails, email: event.target.value })}
             value={userDetails.email}
           />
         </InputGroup>
@@ -52,9 +43,7 @@ export default function NewUserAdminForm({
           <select
             name="role"
             id="role"
-            onChange={(event) =>
-              setUserDetails({ ...userDetails, role: event.target.value })
-            }
+            onChange={(event) => setUserDetails({ ...userDetails, role: event.target.value })}
             value={userDetails.role}
           >
             <option>Auswählen</option>
@@ -69,9 +58,7 @@ export default function NewUserAdminForm({
             type="password"
             name="password"
             id="password"
-            onChange={(event) =>
-              setUserDetails({ ...userDetails, password: event.target.value })
-            }
+            onChange={(event) => setUserDetails({ ...userDetails, password: event.target.value })}
             value={userDetails.password}
           />
         </InputGroup>

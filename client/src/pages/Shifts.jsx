@@ -13,10 +13,7 @@ export default function Shifts({
   newParameters,
   allBookings,
 }) {
-  const userShifts = allBookings.filter(
-    (booking) =>
-      booking.rk == currentUser.name || booking.uek == currentUser.name
-  );
+  const userShifts = allBookings.filter((booking) => booking.rk == currentUser.name || booking.uek == currentUser.name);
 
   return (
     <View simpleTheming={simpleSite}>
@@ -24,21 +21,15 @@ export default function Shifts({
         {userShifts
           .filter(
             (booking) =>
-              new Date(
-                currentUser.role === 'UEK'
-                  ? booking.kombidatum_start
-                  : booking.kombidatum_ende
-              ) >= new Date(filterDateEarliest) &&
-              new Date(
-                currentUser.role === 'UEK'
-                  ? booking.kombidatum_start
-                  : booking.kombidatum_ende
-              ) <= new Date(filterDateLatest)
+              new Date(currentUser.role === 'UEK' ? booking.kombidatum_start : booking.kombidatum_ende) >=
+                new Date(filterDateEarliest) &&
+              new Date(currentUser.role === 'UEK' ? booking.kombidatum_start : booking.kombidatum_ende) <=
+                new Date(filterDateLatest)
           )
           .map((booking, index) => (
             <BookingCard
               currentPage={currentPage}
-              id={index}
+              key={index}
               booking={booking}
               allUsers={allUsers}
               currentUserRole={currentUser.role}

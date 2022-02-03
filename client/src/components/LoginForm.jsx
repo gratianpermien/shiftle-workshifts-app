@@ -19,9 +19,7 @@ export default function LoginForm({ Login, loginError }) {
             type="email"
             name="email"
             id="email"
-            onChange={(event) =>
-              setDetails({ ...details, email: event.target.value })
-            }
+            onChange={(event) => setDetails({ ...details, email: event.target.value })}
             value={details.email}
           />
         </InputGroup>
@@ -31,9 +29,7 @@ export default function LoginForm({ Login, loginError }) {
             type="password"
             name="password"
             id="password"
-            onChange={(event) =>
-              setDetails({ ...details, password: event.target.value })
-            }
+            onChange={(event) => setDetails({ ...details, password: event.target.value })}
             value={details.password}
           />
         </InputGroup>

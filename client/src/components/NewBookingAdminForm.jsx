@@ -5,12 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
 
-export default function NewBookingAdminForm({
-  newBooking,
-  bookingError,
-  SubmitBooking,
-  visible,
-}) {
+export default function NewBookingAdminForm({ newBooking, bookingError, SubmitBooking, visible }) {
   const [bookingDetails, setBookingDetails] = useState({
     client: '',
     fahrzeug: '',
@@ -20,9 +15,7 @@ export default function NewBookingAdminForm({
     kombidatum_ende: '',
   });
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(
-    new Date().setDate(new Date().getDate() + 14)
-  );
+  const [endDate, setEndDate] = useState(new Date().setDate(new Date().getDate() + 14));
 
   function submitHandler(event) {
     event.preventDefault();
@@ -126,9 +119,7 @@ export default function NewBookingAdminForm({
             wrapperClassName="date_picker--adjustedwidthlarge"
             selected={endDate}
             onChange={(date) => setEndDate(date)}
-            onCalendarClose={() =>
-              setBookingDetails({ ...bookingDetails, kombidatum_ende: endDate })
-            }
+            onCalendarClose={() => setBookingDetails({ ...bookingDetails, kombidatum_ende: endDate })}
             showTimeSelect
             timeIntervals={60}
             timeCaption="Uhrzeit"
@@ -137,7 +128,7 @@ export default function NewBookingAdminForm({
         </InputGroup>
         <DatePickerWrapperStyles />
         <Confirm>{newBooking ? <div>Angelegt.</div> : ''}</Confirm>
-        <Error>{bookingError ? <div>{error}</div> : ''}</Error>
+        <Error>{bookingError ? <div>{bookingError}</div> : ''}</Error>
         <InputButton type="submit" value="Anlegen" />
       </BookingForm>
     </>

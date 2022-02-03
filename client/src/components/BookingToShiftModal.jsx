@@ -25,26 +25,19 @@ export default function BookingToShiftModal({
   //Calculation for datepicker limitation (role: RK) and state
   const shiftBeginTime =
     currentUserRole == 'UEK'
-      ? Date.parse(booking.kombidatum_start) -
-        newParameters.shiftBufferHandoverMins * 1000 * 60
-      : Date.parse(booking.kombidatum_ende) +
-        newParameters.shiftBufferReturnMins * 1000 * 60;
+      ? Date.parse(booking.kombidatum_start) - newParameters.shiftBufferHandoverMins * 1000 * 60
+      : Date.parse(booking.kombidatum_ende) + newParameters.shiftBufferReturnMins * 1000 * 60;
   const msPerDay = 24 * 3600 * 1000;
   const shiftTimeOnly = msPerDay - (shiftBeginTime % msPerDay);
   //3 am the following day is limit for vehicle returns (RK role)
   const morningTimeOnly = 3 * 3600 * 1000;
   const shiftEndTime =
-    currentUserRole == 'UEK'
-      ? shiftBeginTime + 1 * 3600 * 1000
-      : shiftTimeOnly + morningTimeOnly + shiftBeginTime;
+    currentUserRole == 'UEK' ? shiftBeginTime + 1 * 3600 * 1000 : shiftTimeOnly + morningTimeOnly + shiftBeginTime;
   const filterTimeWindow = (time) => {
     const earliestDate = new Date(shiftBeginTime);
     const selectedDate = new Date(time);
     const latestDate = new Date(shiftEndTime);
-    return (
-      earliestDate.getTime() <= selectedDate.getTime() &&
-      selectedDate.getTime() <= latestDate.getTime()
-    );
+    return earliestDate.getTime() <= selectedDate.getTime() && selectedDate.getTime() <= latestDate.getTime();
   };
 
   //Timestamps for datepicker
@@ -65,40 +58,26 @@ export default function BookingToShiftModal({
   }
   function checkParallel(durationReturn, currentUserRole, currentUserName) {
     //Calculate first and last hour and construct presence slides array
-    const firstHour = new Date(
-      currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp
-    ).getHours();
-    const lastHour =
-      currentUserRole == 'UEK' ? firstHour : firstHour + durationReturn - 1;
+    const firstHour = new Date(currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp).getHours();
+    const lastHour = currentUserRole == 'UEK' ? firstHour : firstHour + durationReturn - 1;
 
     let presenceSlices = [];
-    let presenceDate = new Date(
-      currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp
-    );
+    let presenceDate = new Date(currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp);
     let year = presenceDate.getFullYear();
     let month = presenceDate.getMonth() + 1;
     let day = presenceDate.getDate();
     let dayAfter = day + 1;
     if (lastHour < 24) {
       for (let i = firstHour; i <= lastHour; i++) {
-        presenceSlices = [
-          ...presenceSlices,
-          parseInt(`${year}${month}${day}${i < 10 ? '0' + i : i}`),
-        ];
+        presenceSlices = [...presenceSlices, parseInt(`${year}${month}${day}${i < 10 ? '0' + i : i}`)];
       }
     } else {
       const lastHourNextDay = lastHour - 24;
       for (let i = firstHour; i < 24; i++) {
-        presenceSlices = [
-          ...presenceSlices,
-          parseInt(`${year}${month}${day}${i < 10 ? '0' + i : i}`),
-        ];
+        presenceSlices = [...presenceSlices, parseInt(`${year}${month}${day}${i < 10 ? '0' + i : i}`)];
       }
       for (let i = 0; i <= lastHourNextDay; i++) {
-        presenceSlices = [
-          ...presenceSlices,
-          parseInt(`${year}${month}${dayAfter}${i < 10 ? '0' + i : i}`),
-        ];
+        presenceSlices = [...presenceSlices, parseInt(`${year}${month}${dayAfter}${i < 10 ? '0' + i : i}`)];
       }
     }
     //Check for parallel vehicles (through array comparison) and if allowed, write to DB, otherwise stop and display error
@@ -114,10 +93,8 @@ export default function BookingToShiftModal({
       } else {
         setAccepted(true);
         setError(false);
-        const staffNameStampUEK =
-          currentUserRole == 'UEK' ? currentUserName : booking.uek;
-        const staffNameStampRK =
-          currentUserRole == 'RK' ? currentUserName : booking.rk;
+        const staffNameStampUEK = currentUserRole == 'UEK' ? currentUserName : booking.uek;
+        const staffNameStampRK = currentUserRole == 'RK' ? currentUserName : booking.rk;
         const totalSlices = [booking.presence_slices, ...presenceSlices];
         const modifier = {
           presence_slices: totalSlices.flat().sort(),
@@ -152,25 +129,15 @@ export default function BookingToShiftModal({
     <>
       <Modal accepted={accepted}>
         <InputContainer>
-          <CenteredButton onClick={() => setBookingToShiftModalIsOpen(false)}>
-            Schließen
-          </CenteredButton>{' '}
+          <CenteredButton onClick={() => setBookingToShiftModalIsOpen(false)}>Schließen</CenteredButton>{' '}
           <Title>Startzeit?</Title>
           <Confirm>{accepted ? <div>Schicht gespeichert.</div> : null}</Confirm>
-          <Error>
-            {error ? (
-              <div>Kein Platz, bitte wähle eine andere Zeit.</div>
-            ) : null}
-          </Error>
+          <Error>{error ? <div>Kein Platz, bitte wähle eine andere Zeit.</div> : null}</Error>
           <div>Wähle bitte deine Startzeit im angezeigten Zeitraum.</div>
           <DatePicker
             wrapperClassName="date_picker--adjustedwidthlarge"
             selected={currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp}
-            onChange={
-              currentUserRole == 'UEK'
-                ? (date) => setUEKTimestamp(date)
-                : (date) => setRKTimestamp(date)
-            }
+            onChange={currentUserRole == 'UEK' ? (date) => setUEKTimestamp(date) : (date) => setRKTimestamp(date)}
             onCalendarClose={() => setSaveActivated(true)}
             showTimeSelect
             minDate={shiftBeginTime}
@@ -204,10 +171,8 @@ const Confirm = styled.h3`
 const Error = styled.h3`
   color: var(--primary-color);
 `;
-
 const Modal = styled.div`
-  background-color: ${(props) =>
-    props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`};
+  background-color: ${(props) => (props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`)};
   width: 100vw;
   height: 100vh;
   z-index: 499;

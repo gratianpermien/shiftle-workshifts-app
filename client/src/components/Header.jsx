@@ -20,7 +20,7 @@ export default function AppHeader({
 }) {
   //Refresh shift information from Monday and get admin data if admin (preload sits in Header)
   async function updateShifts() {
-    const response = await fetch('api/shifts', {
+    await fetch('api/shifts', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -45,11 +45,7 @@ export default function AppHeader({
         <Header>
           <Nav>
             <NavItem to="/buchungen">Buchungen</NavItem>
-            {admin ? (
-              <NavItem to="/admin">Settings</NavItem>
-            ) : (
-              <NavItem to="/schichten">Schichten</NavItem>
-            )}
+            {admin ? <NavItem to="/admin">Settings</NavItem> : <NavItem to="/schichten">Schichten</NavItem>}
             <LogWrapper>
               <InfoTitle>{currentUserName}.</InfoTitle>
               <Icon to="/">
@@ -58,9 +54,7 @@ export default function AppHeader({
             </LogWrapper>
           </Nav>
           <HeaderInteraction>
-            <InfoTitle>
-              {currentUserRole == 'UEK' ? 'Abfahrt? ' : 'Ankunft? '}
-            </InfoTitle>
+            <InfoTitle>{currentUserRole == 'UEK' ? 'Abfahrt? ' : 'Ankunft? '}</InfoTitle>
             <div>
               <DatePicker
                 dateFormat="dd/MM/yyyy"

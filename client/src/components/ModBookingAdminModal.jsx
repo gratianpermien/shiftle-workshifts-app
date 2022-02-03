@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { CenteredButton, InputButton } from './Buttons';
+import { CenteredButton } from './Buttons';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -26,7 +26,6 @@ export default function ModBookingModal({
   });
   const [updatedBooking, setUpdatedBooking] = useState('');
   const [accepted, setAccepted] = useState(false);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     updateBooking(updatedBooking);
@@ -35,9 +34,7 @@ export default function ModBookingModal({
   //Prepare user list for select
   const usersList = [];
   allUsers.forEach((user) =>
-    user.name !== currentUserName && user.role !== 'ADMIN'
-      ? usersList.push(user.name)
-      : null
+    user.name !== currentUserName && user.role !== 'ADMIN' ? usersList.push(user.name) : null
   );
 
   // const staffNameStampUEK = currentUserRole == "UEK" ? subst : booking.uek;
@@ -57,7 +54,7 @@ export default function ModBookingModal({
   async function updateBooking(updatedBooking) {
     if (updatedBooking !== '') {
       const bookingId = updatedBooking._id;
-      const result = await fetch(`api/shifts/${bookingId}`, {
+      await fetch(`api/shifts/${bookingId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -76,9 +73,7 @@ export default function ModBookingModal({
     <>
       <Modal accepted={accepted}>
         <InputContainer>
-          <CenteredButton onClick={() => setModBookingModalIsOpen(false)}>
-            Schließen
-          </CenteredButton>{' '}
+          <CenteredButton onClick={() => setModBookingModalIsOpen(false)}>Schließen</CenteredButton>{' '}
           <Title>Ändern.</Title>
           <div>Änderungen einer Buchung sind hier möglich.</div>
           <InputGroup>
@@ -196,8 +191,10 @@ export default function ModBookingModal({
               }}
             >
               <option value="">Auswählen</option>
-              {usersList.map((user) => (
-                <option value={user}>{user}</option>
+              {usersList.map((user, index) => (
+                <option value={user} key={index}>
+                  {user}
+                </option>
               ))}
             </select>
           </InputGroup>
@@ -214,13 +211,14 @@ export default function ModBookingModal({
               }}
             >
               <option value="">Auswählen</option>
-              {usersList.map((user) => (
-                <option value={user}>{user}</option>
+              {usersList.map((user, index) => (
+                <option value={user} key={index}>
+                  {user}
+                </option>
               ))}
             </select>
           </InputGroup>
           <Confirm>{accepted ? <div>Gespeichert.</div> : null}</Confirm>
-          <Error>{error ? <div>Wähle eine Stellvertretung.</div> : null}</Error>
           <SaveButton
             onClick={() => {
               checkModifiedBooking(bookingDetails);
@@ -240,13 +238,8 @@ const Title = styled.h1`
 const Confirm = styled.h3`
   color: #206643;
 `;
-const Error = styled.h3`
-  color: var(--primary-color);
-`;
-
 const Modal = styled.div`
-  background-color: ${(props) =>
-    props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`};
+  background-color: ${(props) => (props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`)};
   width: 100vw;
   height: 100vh;
   z-index: 499;
@@ -264,10 +257,6 @@ const InputContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);
-`;
-
-const SaveButton = styled(CenteredButton)`
-  pointer-events: auto;
 `;
 const InputGroup = styled.div`
   display: flex;
@@ -294,4 +283,7 @@ const InputGroup = styled.div`
   textarea {
     border-radius: 1em;
   }
+`;
+const SaveButton = styled(CenteredButton)`
+  pointer-events: auto;
 `;

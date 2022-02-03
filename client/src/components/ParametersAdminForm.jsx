@@ -133,9 +133,7 @@ export default function ParametersAdminForm({
               }
               value={parameterDetails.presenceParallel}
             />
-            <output className="output">
-              {parameterDetails.presenceParallel}
-            </output>
+            <output className="output">{parameterDetails.presenceParallel}</output>
           </SliderGroup>
         </InputGroup>
         <InputGroup>
@@ -156,9 +154,7 @@ export default function ParametersAdminForm({
               }
               value={parameterDetails.durationAdventurerHrs}
             />
-            <output className="output">
-              {parameterDetails.durationAdventurerHrs}
-            </output>
+            <output className="output">{parameterDetails.durationAdventurerHrs}</output>
           </SliderGroup>
         </InputGroup>
         <InputGroup>
@@ -179,9 +175,7 @@ export default function ParametersAdminForm({
               }
               value={parameterDetails.durationDreamerHrs}
             />
-            <output className="output">
-              {parameterDetails.durationDreamerHrs}
-            </output>
+            <output className="output">{parameterDetails.durationDreamerHrs}</output>
           </SliderGroup>
         </InputGroup>
         <InputGroup>
@@ -202,9 +196,7 @@ export default function ParametersAdminForm({
               }
               value={parameterDetails.durationTravelerHrs}
             />
-            <output className="output">
-              {parameterDetails.durationTravelerHrs}
-            </output>
+            <output className="output">{parameterDetails.durationTravelerHrs}</output>
           </SliderGroup>
         </InputGroup>
         <Confirm>{parameterConf ? <div>{parameterConf}</div> : ''}</Confirm>

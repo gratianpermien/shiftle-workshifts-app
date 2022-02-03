@@ -7,10 +7,16 @@
     "preview": "vite preview",
     "start": "parcel index.html",
     "prettier": "prettier -c ./src",
-    "prettier-fix": "prettier -c -w ./src"
+    "prettier-fix": "prettier -c -w ./src",
+    "lint": "eslint ./src"
   },
   "devDependencies": {
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "eslint": "^8.8.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^26.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",

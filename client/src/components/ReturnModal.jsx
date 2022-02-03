@@ -23,17 +23,13 @@ export default function ReturnModal({
   //Calculation for days to start
   const shiftBeginTime =
     currentUserRole == 'UEK'
-      ? Date.parse(booking.kombidatum_start) -
-        newParameters.shiftBufferHandoverMins * 1000 * 60
-      : Date.parse(booking.kombidatum_ende) +
-        newParameters.shiftBufferReturnMins * 1000 * 60;
+      ? Date.parse(booking.kombidatum_start) - newParameters.shiftBufferHandoverMins * 1000 * 60
+      : Date.parse(booking.kombidatum_ende) + newParameters.shiftBufferReturnMins * 1000 * 60;
   const daysToStart = (shiftBeginTime - Date.parse(new Date())) / 86400000;
 
   const usersList = [];
   allUsers.forEach((user) =>
-    user.name !== currentUserName && user.role !== 'ADMIN'
-      ? usersList.push(user.name)
-      : null
+    user.name !== currentUserName && user.role !== 'ADMIN' ? usersList.push(user.name) : null
   );
 
   const staffNameStampUEK = currentUserRole == 'UEK' ? subst : booking.uek;
@@ -72,9 +68,7 @@ export default function ReturnModal({
   return (
     <Modal accepted={accepted}>
       <InputContainer>
-        <CenteredButton onClick={() => setReturnModalIsOpen(false)}>
-          Schließen
-        </CenteredButton>
+        <CenteredButton onClick={() => setReturnModalIsOpen(false)}>Schließen</CenteredButton>
         <Title>Stattdessen?</Title>
         <div>
           {daysToStart <= 7
@@ -93,8 +87,10 @@ export default function ReturnModal({
             value={subst}
           >
             <option value="">Auswählen</option>
-            {usersList.map((user) => (
-              <option value={user}>{user}</option>
+            {usersList.map((user, index) => (
+              <option value={user} key={index}>
+                {user}
+              </option>
             ))}
           </select>
         </InputGroup>
@@ -122,10 +118,8 @@ const Confirm = styled.h3`
 const Error = styled.h3`
   color: var(--primary-color);
 `;
-
 const Modal = styled.div`
-  background-color: ${(props) =>
-    props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`};
+  background-color: ${(props) => (props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`)};
   width: 100vw;
   height: 100vh;
   z-index: 499;
@@ -144,9 +138,6 @@ const InputContainer = styled.div`
   gap: min(3vh, 1em);
 `;
 
-const SaveButton = styled(CenteredButton)`
-  pointer-events: ${(props) => (props.saveActivated ? `auto` : `none`)};
-`;
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -168,4 +159,7 @@ const InputGroup = styled.div`
     outline: none;
     border: 2px solid var(--primary-color);
   }
+`;
+const SaveButton = styled(CenteredButton)`
+  pointer-events: ${(props) => (props.saveActivated ? `auto` : `none`)};
 `;
