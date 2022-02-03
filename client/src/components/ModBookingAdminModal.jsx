@@ -282,6 +282,7 @@ const InputGroup = styled.div`
   }
   textarea {
     border-radius: 1em;
+    font-family: inherit;
   }
 `;
 const SaveButton = styled(CenteredButton)`

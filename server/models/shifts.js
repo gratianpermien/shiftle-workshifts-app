@@ -20,6 +20,7 @@ const shiftSchema = new mongoose.Schema({
   zusatz_8: { type: String, default: "-" },
   zusatz_9: { type: String, default: "-" },
   zusatz_10: { type: String, default: "-" },
+  letztes_update: Date,
   fahrzeug: String,
   kennzeichen: { type: String, required: true },
   bemerkung: { type: String, default: "-" },

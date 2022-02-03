@@ -90,6 +90,7 @@ const updateShifts = async (req, res) => {
       zusatz_8: booking.zusatz_8,
       zusatz_9: booking.zusatz_9,
       zusatz_10: booking.zusatz_10,
+      letztes_update: booking.letztes_update,
     };
     const options = {
       new: true,

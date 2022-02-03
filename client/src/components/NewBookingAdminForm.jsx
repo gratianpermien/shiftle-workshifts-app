@@ -165,7 +165,8 @@ const InputGroup = styled.div`
   input,
   select,
   textarea {
-    font-size: var(--basic-font-size);
+    font-family: inherit;
+    font-size: inherit;
     padding: 0.4em 1em;
     width: 200px;
     border-radius: 2em;

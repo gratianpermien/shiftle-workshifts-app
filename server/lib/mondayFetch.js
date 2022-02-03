@@ -42,6 +42,7 @@ export default async function fetchBookingDataFromMonday() {
     "Zusatz 8",
     "Zusatz 9",
     "Zusatz 10",
+    "Letztes Update",
   ];
 
   const restructuredData = flattenedData.map((booking) => {

@@ -56,7 +56,7 @@ export default function BookingToShiftModal({
       durationReturn = newParameters.durationTravelerHrs;
       break;
   }
-  function checkParallel(durationReturn, currentUserRole, currentUserName) {
+  function checkParallel(booking, durationReturn, currentUserRole, currentUserName) {
     //Calculate first and last hour and construct presence slides array
     const firstHour = new Date(currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp).getHours();
     const lastHour = currentUserRole == 'UEK' ? firstHour : firstHour + durationReturn - 1;
