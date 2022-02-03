@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { InputButton } from './Buttons';
-import NotificationsAnalysis from '../lib/NotificationsAnalysis';
 
 export default function LoginForm({ Login, loginError }) {
   const [details, setDetails] = useState({ email: '', password: '' });
@@ -36,7 +35,6 @@ export default function LoginForm({ Login, loginError }) {
         </InputGroup>
         <Error>{loginError != '' ? <div>{loginError}</div> : ''}</Error>
         <InputButton type="submit" value="Login" />
-        <NotificationsAnalysis />
       </Form>
     </>
   );

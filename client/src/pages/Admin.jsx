@@ -4,9 +4,9 @@ import shiftle_watermark from '../assets/shiftle_watermark.svg';
 import NewUserAdminForm from '../components/NewUserAdminForm';
 import ParametersAdminForm from '../components/ParametersAdminForm';
 import NewBookingAdminForm from '../components/NewBookingAdminForm';
+import NotificationsAnalysis from '../lib/NotificationsAnalysis';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
-
 import { SingleRouteButton } from '../components/Buttons';
 
 function Admin({ newParameters, setNewParameters, newUser, setNewUser, newBooking, setNewBooking }) {
@@ -163,6 +163,7 @@ function Admin({ newParameters, setNewParameters, newUser, setNewUser, newBookin
           <SingleRouteButton to="/api/export" target="_blank">
             CSV
           </SingleRouteButton>
+          <NotificationsAnalysis />
         </ButtonSection>
         <FormContainer>
           <NewUserAdminForm visible={slideA} SubmitUser={SubmitUser} newUser={newUser} error={userError} />

@@ -7,47 +7,41 @@
 // IDEE: 2. API Fetch bei Monday.com --> https://api.developer.monday.com/docs/activity-logs, gefilter nach den Spalten Kombidatum Start und Ende, Append als Array an die zugehörige Item ID in MongoDB?
 
 import React, { useState } from 'react';
-import { CenteredButton } from './components/Buttons';
+import { CenteredButton } from '../components/Buttons';
 
 export default function NotificationsAnalysis() {
   //   const [bookingsToAnalyze, setbookingsToAnalyze] = useState(allBookings);
   const [mailerState, setMailerState] = useState({
-    name: 'test',
-    email: 'test@test.com',
+    email: 'gratian@klarhe.it',
+    subject: 'Testbetreff',
     message: 'Moin, Testnachricht',
   });
 
-  const submitEmail = async (event) => {
-    event.preventDefault();
+  async function submitEmail() {
     console.log({ mailerState });
-    const response = await fetch('http://localhost:3000/send', {
+    const response = await fetch('api/send', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({ mailerState }),
     });
-    await res.json();
-    await setMailerState({
-      name: 'test',
-      email: 'test@test.com',
-      message: 'Moin, Testnachricht',
-    });
-    //   .then((res) => res.json())
-    //   .then(() => {
-    //     setMailerState({
-    //       email: '',
-    //       name: '',
-    //       message: '',
-    //     });
-    //   });
-  };
-
-  function handleStateChange(e) {
-    setMailerState((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+    if (response.status == 200) {
+      // let json = await response.json();
+      const resData = await response.json();
+      console.log(resData);
+      if (resData.status === 'success') {
+        alert('Message Sent');
+      } else if (resData.status === 'fail') {
+        alert('Message failed to send');
+      }
+      setMailerState({
+        name: 'test',
+        email: 'test@test.com',
+        message: 'Moin, Testnachricht',
+      });
+    }
   }
+
   return <CenteredButton onClick={submitEmail}>TESTMAIL</CenteredButton>;
 }

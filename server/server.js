@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import adminRoutes from "./routes/admin.routes.js";
 import shiftsRoutes from "./routes/shifts.routes.js";
 import usersRoutes from "./routes/users.routes.js";
+import mailsRoutes from "./routes/mails.routes.js";
+
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 dotenv.config();
@@ -23,7 +25,7 @@ mongoose.connect(connectionString);
 const server = express();
 server.use(cors());
 server.use(express.json());
-server.use("/api", [adminRoutes, shiftsRoutes, usersRoutes]);
+server.use("/api", [adminRoutes, shiftsRoutes, usersRoutes, mailsRoutes]);
 server.use(express.static(path.join(__dirname, "./client/dist")));
 
 //Additional Routes for test and dist delivery
