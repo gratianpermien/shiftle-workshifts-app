@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { InputButton } from "./Buttons";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { InputButton } from './Buttons';
 
 export default function ParametersAdminForm({
   visible,
@@ -207,8 +207,8 @@ export default function ParametersAdminForm({
             </output>
           </SliderGroup>
         </InputGroup>
-        <Confirm>{parameterConf ? <div>{parameterConf}</div> : ""}</Confirm>
-        <Error>{parameterError ? <div>{parameterError}</div> : ""}</Error>
+        <Confirm>{parameterConf ? <div>{parameterConf}</div> : ''}</Confirm>
+        <Error>{parameterError ? <div>{parameterError}</div> : ''}</Error>
         <InputButton type="submit" value="Anpassen" />
       </ParameterForm>
     </>
@@ -225,7 +225,7 @@ const Error = styled.h3`
   color: var(--primary-color);
 `;
 const ParameterForm = styled.form`
-  display: ${(props) => (props.visible ? "flex" : "none")};
+  display: ${(props) => (props.visible ? 'flex' : 'none')};
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);

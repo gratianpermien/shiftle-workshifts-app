@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { InputButton } from "./Buttons";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { InputButton } from './Buttons';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
 
 export default function NewBookingAdminForm({
   newBooking,
@@ -12,12 +12,12 @@ export default function NewBookingAdminForm({
   visible,
 }) {
   const [bookingDetails, setBookingDetails] = useState({
-    client: "",
-    fahrzeug: "",
-    kennzeichen: "",
-    bemerkung: "",
-    kombidatum_start: "",
-    kombidatum_ende: "",
+    client: '',
+    fahrzeug: '',
+    kennzeichen: '',
+    bemerkung: '',
+    kombidatum_start: '',
+    kombidatum_ende: '',
   });
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(
@@ -136,8 +136,8 @@ export default function NewBookingAdminForm({
           />
         </InputGroup>
         <DatePickerWrapperStyles />
-        <Confirm>{newBooking ? <div>Angelegt.</div> : ""}</Confirm>
-        <Error>{bookingError ? <div>{error}</div> : ""}</Error>
+        <Confirm>{newBooking ? <div>Angelegt.</div> : ''}</Confirm>
+        <Error>{bookingError ? <div>{error}</div> : ''}</Error>
         <InputButton type="submit" value="Anlegen" />
       </BookingForm>
     </>
@@ -154,7 +154,7 @@ const Error = styled.h3`
   color: var(--primary-color);
 `;
 const BookingForm = styled.form`
-  display: ${(props) => (props.visible ? "flex" : "none")};
+  display: ${(props) => (props.visible ? 'flex' : 'none')};
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);

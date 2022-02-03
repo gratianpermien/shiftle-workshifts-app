@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { CenteredButton, InputButton } from "./Buttons";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { CenteredButton, InputButton } from './Buttons';
 
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
 
 export default function ModBookingModal({
   booking,
@@ -24,7 +24,7 @@ export default function ModBookingModal({
     rk: booking.rk,
     uek: booking.uek,
   });
-  const [updatedBooking, setUpdatedBooking] = useState("");
+  const [updatedBooking, setUpdatedBooking] = useState('');
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState(false);
 
@@ -35,7 +35,7 @@ export default function ModBookingModal({
   //Prepare user list for select
   const usersList = [];
   allUsers.forEach((user) =>
-    user.name !== currentUserName && user.role !== "ADMIN"
+    user.name !== currentUserName && user.role !== 'ADMIN'
       ? usersList.push(user.name)
       : null
   );
@@ -55,16 +55,16 @@ export default function ModBookingModal({
   }
   //Update Admin-Parameters in DB
   async function updateBooking(updatedBooking) {
-    if (updatedBooking !== "") {
+    if (updatedBooking !== '') {
       const bookingId = updatedBooking._id;
       const result = await fetch(`api/shifts/${bookingId}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedBooking),
       });
-      const res = await fetch("api/shifts");
+      const res = await fetch('api/shifts');
       const fetchedData = await res.json();
       setTimeout(() => {
         setAllBookings(fetchedData);
@@ -78,7 +78,7 @@ export default function ModBookingModal({
         <InputContainer>
           <CenteredButton onClick={() => setModBookingModalIsOpen(false)}>
             Schließen
-          </CenteredButton>{" "}
+          </CenteredButton>{' '}
           <Title>Ändern.</Title>
           <div>Änderungen einer Buchung sind hier möglich.</div>
           <InputGroup>

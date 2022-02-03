@@ -5,7 +5,12 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "prettier": "prettier -c ./src",
+    "prettier-fix": "prettier -c -w ./src"
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",

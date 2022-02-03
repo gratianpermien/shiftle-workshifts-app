@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import shiftle_watermark from "../assets/shiftle_watermark.svg";
-import NewUserAdminForm from "../components/NewUserAdminForm";
-import ParametersAdminForm from "../components/ParametersAdminForm";
-import NewBookingAdminForm from "../components/NewBookingAdminForm";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import shiftle_watermark from '../assets/shiftle_watermark.svg';
+import NewUserAdminForm from '../components/NewUserAdminForm';
+import ParametersAdminForm from '../components/ParametersAdminForm';
+import NewBookingAdminForm from '../components/NewBookingAdminForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
 
-import { SingleRouteButton } from "../components/Buttons";
+import { SingleRouteButton } from '../components/Buttons';
 
 function Admin({
   newParameters,
@@ -17,10 +17,10 @@ function Admin({
   newBooking,
   setNewBooking,
 }) {
-  const [userError, setUserError] = useState("");
-  const [parameterError, setParameterError] = useState("");
-  const [bookingError, setBookingError] = useState("");
-  const [parameterConf, setParameterConf] = useState("");
+  const [userError, setUserError] = useState('');
+  const [parameterError, setParameterError] = useState('');
+  const [bookingError, setBookingError] = useState('');
+  const [parameterConf, setParameterConf] = useState('');
   const [slideA, setSlideA] = useState(true);
   const [slideB, setSlideB] = useState(false);
   const [slideC, setSlideC] = useState(false);
@@ -66,19 +66,19 @@ function Admin({
         durationTravelerHrs: parameterDetails.durationTravelerHrs,
       });
       // updateParameters(newParameters);
-      setParameterError("");
-      setParameterConf("Geändert.");
+      setParameterError('');
+      setParameterConf('Geändert.');
     } catch (error) {
-      setParameterError("Eingabe ist ungültig." + { error });
-      setParameterConf("");
+      setParameterError('Eingabe ist ungültig.' + { error });
+      setParameterConf('');
     }
   };
   //Update Admin-Parameters in DB
   async function updateParameters(newParameters) {
-    const result = await fetch("api/admin/61e146a9fbc9e947b9f19496", {
-      method: "PUT",
+    const result = await fetch('api/admin/61e146a9fbc9e947b9f19496', {
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(newParameters),
     });
@@ -89,7 +89,7 @@ function Admin({
       if (
         userDetails.name.length > 0 &&
         userDetails.email.length > 0 &&
-        userDetails.email.split("@")[1].includes(".") &&
+        userDetails.email.split('@')[1].includes('.') &&
         userDetails.password.length > 0
       ) {
         setNewUser({
@@ -98,27 +98,27 @@ function Admin({
           email: userDetails.email,
           password: userDetails.password,
         });
-        setUserError("");
+        setUserError('');
       } else {
-        setUserError("Eingabe ist ungültig.");
+        setUserError('Eingabe ist ungültig.');
       }
     } catch (error) {
-      setParameterError("Eingabe ist ungültig." + { error });
+      setParameterError('Eingabe ist ungültig.' + { error });
     }
   };
 
   //Post new user to DB
   async function createUser(newUser) {
-    if (newUser != "") {
-      const result = await fetch("api/users", {
-        method: "POST",
+    if (newUser != '') {
+      const result = await fetch('api/users', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(newUser),
       });
       setTimeout(() => {
-        setNewUser("");
+        setNewUser('');
       }, 2000);
     }
   }
@@ -137,27 +137,27 @@ function Admin({
           kombidatum_start: bookingDetails.kombidatum_start,
           kombidatum_ende: bookingDetails.kombidatum_ende,
         });
-        setBookingError("");
+        setBookingError('');
       } else {
-        setBookingError("Eingabe ungültig.");
+        setBookingError('Eingabe ungültig.');
       }
     } catch (error) {
-      setBookingError("Eingabe ungültig." + { error });
+      setBookingError('Eingabe ungültig.' + { error });
     }
   };
 
   //Post new booking to DB
   async function createBooking(newBooking) {
-    if (newBooking != "") {
-      const result = await fetch("api/shifts", {
-        method: "POST",
+    if (newBooking != '') {
+      const result = await fetch('api/shifts', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(newBooking),
       });
       setTimeout(() => {
-        setNewBooking("");
+        setNewBooking('');
       }, 2000);
     }
   }

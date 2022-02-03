@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import shiftle_watermark from "../assets/shiftle_watermark.svg";
-import BookingCard from "../components/BookingCard";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import shiftle_watermark from '../assets/shiftle_watermark.svg';
+import BookingCard from '../components/BookingCard';
 
 export default function Bookings({
   currentUser,
@@ -22,29 +22,29 @@ export default function Bookings({
           .filter(
             (booking) =>
               new Date(
-                currentUser.role === "UEK"
+                currentUser.role === 'UEK'
                   ? booking.kombidatum_start
                   : booking.kombidatum_ende
               ) >= new Date(filterDateEarliest) &&
               new Date(
-                currentUser.role === "UEK"
+                currentUser.role === 'UEK'
                   ? booking.kombidatum_start
                   : booking.kombidatum_ende
               ) <= new Date(filterDateLatest)
           )
-          .map((booking) => (
+          .map((booking, index) => (
             <BookingCard
+              key={index}
               currentPage={currentPage}
-              id={booking._id}
               allUsers={allUsers}
               booking={booking}
               currentUserRole={currentUser.role}
               currentUserName={currentUser.name}
               deleted={deleted}
               setDeleted={setDeleted}
-              newParameters={newParameters}
               allBookings={allBookings}
               setAllBookings={setAllBookings}
+              newParameters={newParameters}
             />
           ))}
       </BookingContainer>

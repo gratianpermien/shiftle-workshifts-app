@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { InputButton } from "./Buttons";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { InputButton } from './Buttons';
 
 export default function NewUserAdminForm({
   SubmitUser,
@@ -9,9 +9,9 @@ export default function NewUserAdminForm({
   visible,
 }) {
   const [userDetails, setUserDetails] = useState({
-    role: "",
-    email: "",
-    password: "",
+    role: '',
+    email: '',
+    password: '',
   });
 
   function submitHandler(event) {
@@ -75,8 +75,8 @@ export default function NewUserAdminForm({
             value={userDetails.password}
           />
         </InputGroup>
-        <Confirm>{newUser ? <div>Angelegt.</div> : ""}</Confirm>
-        <Error>{error ? <div>{error}</div> : ""}</Error>
+        <Confirm>{newUser ? <div>Angelegt.</div> : ''}</Confirm>
+        <Error>{error ? <div>{error}</div> : ''}</Error>
         <InputButton type="submit" value="Anlegen" />
       </UserForm>
     </>
@@ -93,7 +93,7 @@ const Error = styled.h3`
   color: var(--primary-color);
 `;
 const UserForm = styled.form`
-  display: ${(props) => (props.visible ? "flex" : "none")};
+  display: ${(props) => (props.visible ? 'flex' : 'none')};
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { CenteredButton } from "./Buttons";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { CenteredButton } from './Buttons';
 
 export default function ReturnModal({
   booking,
@@ -10,10 +10,10 @@ export default function ReturnModal({
   newParameters,
   setReturnModalIsOpen,
 }) {
-  const [updatedBooking, setUpdatedBooking] = useState("");
+  const [updatedBooking, setUpdatedBooking] = useState('');
   const [saveActivated, setSaveActivated] = useState(false);
   const [accepted, setAccepted] = useState(false);
-  const [subst, setSubst] = useState("");
+  const [subst, setSubst] = useState('');
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function ReturnModal({
 
   //Calculation for days to start
   const shiftBeginTime =
-    currentUserRole == "UEK"
+    currentUserRole == 'UEK'
       ? Date.parse(booking.kombidatum_start) -
         newParameters.shiftBufferHandoverMins * 1000 * 60
       : Date.parse(booking.kombidatum_ende) +
@@ -31,20 +31,20 @@ export default function ReturnModal({
 
   const usersList = [];
   allUsers.forEach((user) =>
-    user.name !== currentUserName && user.role !== "ADMIN"
+    user.name !== currentUserName && user.role !== 'ADMIN'
       ? usersList.push(user.name)
       : null
   );
 
-  const staffNameStampUEK = currentUserRole == "UEK" ? subst : booking.uek;
-  const staffNameStampRK = currentUserRole == "RK" ? subst : booking.rk;
+  const staffNameStampUEK = currentUserRole == 'UEK' ? subst : booking.uek;
+  const staffNameStampRK = currentUserRole == 'RK' ? subst : booking.rk;
   const modifier = {
     uek: staffNameStampUEK,
     rk: staffNameStampRK,
   };
   function checkTimeLeft(modifier, booking, daysToStart) {
     if (daysToStart <= 7) {
-      subst !== "" ? setAccepted(true) : setError(true);
+      subst !== '' ? setAccepted(true) : setError(true);
     } else {
       setAccepted(true);
     }
@@ -56,12 +56,12 @@ export default function ReturnModal({
   }
   //Update Admin-Parameters in DB
   async function updateBooking(updatedBooking) {
-    if (updatedBooking !== "") {
+    if (updatedBooking !== '') {
       const bookingId = updatedBooking._id;
       const result = await fetch(`api/shifts/${bookingId}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedBooking),
       });
@@ -78,8 +78,8 @@ export default function ReturnModal({
         <Title>Stattdessen?</Title>
         <div>
           {daysToStart <= 7
-            ? "Du kannst die Schicht nicht zurückgeben, da der Start weniger als 7 Tage in der Zukunft liegt. Bitte wähle eine Vertretung."
-            : "Du kannst die Schicht zurückgeben, da der Start mehr als 7 Tage in der Zukunft liegt. Besser ist es, wenn du dich direkt um eine Vertretung kümmerst."}
+            ? 'Du kannst die Schicht nicht zurückgeben, da der Start weniger als 7 Tage in der Zukunft liegt. Bitte wähle eine Vertretung.'
+            : 'Du kannst die Schicht zurückgeben, da der Start mehr als 7 Tage in der Zukunft liegt. Besser ist es, wenn du dich direkt um eine Vertretung kümmerst.'}
         </div>
         <InputGroup>
           <label htmlFor="subst">Vertretung</label>

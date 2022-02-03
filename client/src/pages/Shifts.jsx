@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import shiftle_watermark from "../assets/shiftle_watermark.svg";
-import BookingCard from "../components/BookingCard";
+import React from 'react';
+import styled from 'styled-components';
+import shiftle_watermark from '../assets/shiftle_watermark.svg';
+import BookingCard from '../components/BookingCard';
 
 export default function Shifts({
   currentUser,
@@ -17,7 +17,6 @@ export default function Shifts({
     (booking) =>
       booking.rk == currentUser.name || booking.uek == currentUser.name
   );
-  console.log(currentUser, allBookings);
 
   return (
     <View simpleTheming={simpleSite}>
@@ -26,20 +25,20 @@ export default function Shifts({
           .filter(
             (booking) =>
               new Date(
-                currentUser.role === "UEK"
+                currentUser.role === 'UEK'
                   ? booking.kombidatum_start
                   : booking.kombidatum_ende
               ) >= new Date(filterDateEarliest) &&
               new Date(
-                currentUser.role === "UEK"
+                currentUser.role === 'UEK'
                   ? booking.kombidatum_start
                   : booking.kombidatum_ende
               ) <= new Date(filterDateLatest)
           )
-          .map((booking) => (
+          .map((booking, index) => (
             <BookingCard
               currentPage={currentPage}
-              id={booking._id}
+              id={index}
               booking={booking}
               allUsers={allUsers}
               currentUserRole={currentUser.role}

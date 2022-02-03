@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import BookingToShiftModal from "./BookingToShiftModal";
-import ReturnModal from "./ReturnModal";
-import ModBookingModal from "./ModBookingAdminModal";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import BookingToShiftModal from './BookingToShiftModal';
+import ReturnModal from './ReturnModal';
+import ModBookingModal from './ModBookingAdminModal';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronCircleDown,
   faPlusCircle,
   faMinusCircle,
   faTimesCircle,
   faCog,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function BookingCard({
   booking,
@@ -39,14 +39,14 @@ export default function BookingCard({
   async function deleteBooking(booking) {
     const bookingId = booking._id;
     const result = await fetch(`api/shifts/${bookingId}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(booking),
     });
     setDeleted(true);
-    const res = await fetch("api/shifts");
+    const res = await fetch('api/shifts');
     const fetchedData = await res.json();
     setTimeout(() => {
       setAllBookings(fetchedData);
@@ -56,70 +56,70 @@ export default function BookingCard({
 
   const bookingRK = booking.rk;
   const bookingUEK = booking.uek;
-  const isAdmin = currentUserRole == "ADMIN";
-  const isShifts = currentPage == "schichten" ? true : false;
-  const isStaffedRK = currentUserRole == "RK" && bookingRK != "";
-  const isStaffedUEK = currentUserRole == "UEK" && bookingUEK != "";
+  const isAdmin = currentUserRole == 'ADMIN';
+  const isShifts = currentPage == 'schichten' ? true : false;
+  const isStaffedRK = currentUserRole == 'RK' && bookingRK != '';
+  const isStaffedUEK = currentUserRole == 'UEK' && bookingUEK != '';
   return (
-    <Card deleted={deleted} key={id}>
+    <Card deleted={deleted} key={booking._id}>
       <UserRibbonWrapper
         isAdmin={isAdmin}
         isStaffedRK={isStaffedRK}
         isStaffedUEK={isStaffedUEK}
       >
         <UserRibbon>
-          {currentUserRole == "RK" ? bookingRK : bookingUEK}
+          {currentUserRole == 'RK' ? bookingRK : bookingUEK}
         </UserRibbon>
       </UserRibbonWrapper>
       <CardRow>
         <BasicInfo>
           <h2>{booking.client}</h2>
           <h3>
-            {booking.fahrzeug}, {"HH-" + booking.kennzeichen}
+            {booking.fahrzeug}, {'HH-' + booking.kennzeichen}
           </h3>
           <p>
             Abfahrt:
-            {" " +
-              Intl.DateTimeFormat("de-DE", {
-                year: "2-digit",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "numeric",
-                minute: "numeric",
+            {' ' +
+              Intl.DateTimeFormat('de-DE', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+                hour: 'numeric',
+                minute: 'numeric',
               }).format(Date.parse(booking.kombidatum_start))}
           </p>
           <p>
             Ankunft:
-            {" " +
-              Intl.DateTimeFormat("de-DE", {
-                year: "2-digit",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "numeric",
-                minute: "numeric",
-              }).format(Date.parse(booking.kombidatum_ende))}{" "}
+            {' ' +
+              Intl.DateTimeFormat('de-DE', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+                hour: 'numeric',
+                minute: 'numeric',
+              }).format(Date.parse(booking.kombidatum_ende))}{' '}
           </p>
 
           <AdminInfo isAdmin={isAdmin}>
             <p>
-              Schichtbeginn Aufbereitung:{" "}
+              Schichtbeginn Aufbereitung:{' '}
               {booking.presence_slices[0] > 0
                 ? booking.presence_slices[1] - booking.presence_slices[0] > 1
                   ? String(booking.presence_slices[1]).substring(
                       String(booking.presence_slices[1]).length - 2
-                    ) + ":00"
+                    ) + ':00'
                   : String(booking.presence_slices[0]).substring(
                       String(booking.presence_slices[0]).length - 2
-                    ) + ":00"
-                : " noch nicht vergeben"}
+                    ) + ':00'
+                : ' noch nicht vergeben'}
             </p>
             <p>
-              Übergabe:{" "}
-              {booking.uek != "" ? booking.uek : " noch nicht vergeben"}
+              Übergabe:{' '}
+              {booking.uek != '' ? booking.uek : ' noch nicht vergeben'}
             </p>
             <p>
-              Rücknahme:{" "}
-              {booking.rk != "" ? booking.rk : " noch nicht vergeben"}
+              Rücknahme:{' '}
+              {booking.rk != '' ? booking.rk : ' noch nicht vergeben'}
             </p>
           </AdminInfo>
         </BasicInfo>
@@ -166,19 +166,19 @@ export default function BookingCard({
       </CardRow>
       <AddInformation visible={toggle}>
         <h3>Bemerkung:</h3>
-        <p>{booking.bemerkung ? booking.bemerkung : " keine Besonderheiten"}</p>
+        <p>{booking.bemerkung ? booking.bemerkung : ' keine Besonderheiten'}</p>
         <h3>Zusatzausstattung:</h3>
         <p>
-          {booking.zusatz_1 != "-" ? booking.zusatz_1 : ""}
-          {booking.zusatz_2 != "-" ? ", " + booking.zusatz_2 : ""}
-          {booking.zusatz_3 != "-" ? ", " + booking.zusatz_3 : ""}
-          {booking.zusatz_4 != "-" ? ", " + booking.zusatz_4 : ""}
-          {booking.zusatz_5 != "-" ? ", " + booking.zusatz_5 : ""}
-          {booking.zusatz_6 != "-" ? ", " + booking.zusatz_6 : ""}
-          {booking.zusatz_7 != "-" ? ", " + booking.zusatz_7 : ""}
-          {booking.zusatz_8 != "-" ? ", " + booking.zusatz_8 : ""}
-          {booking.zusatz_9 != "-" ? ", " + booking.zusatz_9 : ""}
-          {booking.zusatz_10 != "-" ? ", " + booking.zusatz_10 : ""}
+          {booking.zusatz_1 != '-' ? booking.zusatz_1 : ''}
+          {booking.zusatz_2 != '-' ? ', ' + booking.zusatz_2 : ''}
+          {booking.zusatz_3 != '-' ? ', ' + booking.zusatz_3 : ''}
+          {booking.zusatz_4 != '-' ? ', ' + booking.zusatz_4 : ''}
+          {booking.zusatz_5 != '-' ? ', ' + booking.zusatz_5 : ''}
+          {booking.zusatz_6 != '-' ? ', ' + booking.zusatz_6 : ''}
+          {booking.zusatz_7 != '-' ? ', ' + booking.zusatz_7 : ''}
+          {booking.zusatz_8 != '-' ? ', ' + booking.zusatz_8 : ''}
+          {booking.zusatz_9 != '-' ? ', ' + booking.zusatz_9 : ''}
+          {booking.zusatz_10 != '-' ? ', ' + booking.zusatz_10 : ''}
         </p>
       </AddInformation>
       {bookingToShiftModalIsOpen && (
@@ -258,11 +258,11 @@ const AddInformation = styled.div`
   padding-right: 1em;
   border-bottom-left-radius: 1em;
   border-bottom-right-radius: 1em;
-  padding-bottom: ${(props) => (props.visible ? "1em" : "0")};
-  padding-top: ${(props) => (props.visible ? "1em" : "0")};
-  height: ${(props) => (props.visible ? "1" : "0")};
-  opacity: ${(props) => (props.visible ? "1" : "0")};
-  visibility: ${(props) => (props.visible ? "visible" : "hidden")};
+  padding-bottom: ${(props) => (props.visible ? '1em' : '0')};
+  padding-top: ${(props) => (props.visible ? '1em' : '0')};
+  height: ${(props) => (props.visible ? '1' : '0')};
+  opacity: ${(props) => (props.visible ? '1' : '0')};
+  visibility: ${(props) => (props.visible ? 'visible' : 'hidden')};
   transition: padding-bottom 600ms, padding-top 600ms, height 600ms,
     opacity 600ms;
 `;

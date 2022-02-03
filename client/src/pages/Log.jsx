@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import LoginForm from "../components/LoginForm";
-import styled from "styled-components";
-import shiftle_watermark from "../assets/shiftle_watermark.svg";
-import shiftle_logo from "../assets/shiftle_logo.svg";
-import { CenteredButton, SingleRouteButton } from "../components/Buttons";
+import React, { useState } from 'react';
+import LoginForm from '../components/LoginForm';
+import styled from 'styled-components';
+import shiftle_watermark from '../assets/shiftle_watermark.svg';
+import shiftle_logo from '../assets/shiftle_logo.svg';
+import { CenteredButton, SingleRouteButton } from '../components/Buttons';
 
 export default function Log({
   currentUser,
@@ -11,17 +11,16 @@ export default function Log({
   setAllUsers,
   setUser,
   setAdmin,
-  admin,
   authenticated,
   setAuthenticated,
 }) {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const Login = (details) => {
     allUsers.forEach((user) => {
       try {
         if (
-          details.email.split("@")[1].includes(".") &&
+          details.email.split('@')[1].includes('.') &&
           details.password.length > 0 &&
           details.email == user.email &&
           details.password == user.password
@@ -32,21 +31,21 @@ export default function Log({
             role: user.role,
           });
           setAuthenticated(true);
-          user.role == "ADMIN" ? setAdmin(true) : setAdmin(false);
+          user.role == 'ADMIN' ? setAdmin(true) : setAdmin(false);
         } else {
-          setError("Eingabe ungültig.");
+          setError('Ungültig.');
         }
       } catch (error) {
-        setError("Eingabe ungültig.");
+        setError('Ungültig.');
       }
     });
   };
 
   const Logout = () => {
     setUser({
-      name: "",
-      email: "",
-      role: "",
+      name: '',
+      email: '',
+      role: '',
     });
     setAllUsers([]);
     setAuthenticated(false);
@@ -67,9 +66,6 @@ export default function Log({
               <ButtonSection>
                 <CenteredButton onClick={Logout}>Logout</CenteredButton>
                 <SingleRouteButton to="/buchungen">Buchungen</SingleRouteButton>
-                {admin ? (
-                  <SingleRouteButton to="/admin">Settings</SingleRouteButton>
-                ) : null}
               </ButtonSection>
             </Welcome>
           ) : (
@@ -84,7 +80,7 @@ export default function Log({
 const View = styled.div`
   background: 50% 95% no-repeat url(${shiftle_watermark}),
     top left / cover no-repeat
-      url("https://www.hamburg-startups.net/wp-content/uploads/2021/06/Produkt_Aussen_Dreamer_0035-1030x687.jpg");
+      url('https://www.hamburg-startups.net/wp-content/uploads/2021/06/Produkt_Aussen_Dreamer_0035-1030x687.jpg');
   background-attachment: fixed;
   min-height: 100vh;
 `;

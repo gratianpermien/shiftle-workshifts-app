@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { InputButton } from "./Buttons";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { InputButton } from './Buttons';
 
 export default function LoginForm({ Login, loginError }) {
-  const [details, setDetails] = useState({ email: "", password: "" });
+  const [details, setDetails] = useState({ email: '', password: '' });
 
   function submitHandler(event) {
     event.preventDefault();
@@ -37,7 +37,7 @@ export default function LoginForm({ Login, loginError }) {
             value={details.password}
           />
         </InputGroup>
-        <Error>{loginError != "" ? <div>{loginError}</div> : ""}</Error>
+        <Error>{loginError != '' ? <div>{loginError}</div> : ''}</Error>
         <InputButton type="submit" value="Login" />
       </Form>
     </>

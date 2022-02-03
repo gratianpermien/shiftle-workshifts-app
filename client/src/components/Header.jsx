@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import { NavLink } from "react-router-dom";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStopCircle } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStopCircle } from '@fortawesome/free-solid-svg-icons';
 
 export default function AppHeader({
   authenticated,
@@ -21,10 +20,10 @@ export default function AppHeader({
 }) {
   //Refresh shift information from Monday and get admin data if admin (preload sits in Header)
   async function updateShifts() {
-    const response = await fetch("api/shifts", {
-      method: "PUT",
+    const response = await fetch('api/shifts', {
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   }
@@ -60,7 +59,7 @@ export default function AppHeader({
           </Nav>
           <HeaderInteraction>
             <InfoTitle>
-              {currentUserRole == "UEK" ? "Abfahrt. " : "Ankunft. "}
+              {currentUserRole == 'UEK' ? 'Abfahrt? ' : 'Ankunft? '}
             </InfoTitle>
             <div>
               <DatePicker

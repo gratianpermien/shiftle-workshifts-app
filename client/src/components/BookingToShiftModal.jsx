@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { CenteredButton } from "./Buttons";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { CenteredButton } from './Buttons';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
 
 export default function BookingToShiftModal({
   booking,
@@ -13,7 +13,7 @@ export default function BookingToShiftModal({
   newParameters,
   allBookings,
 }) {
-  const [updatedBooking, setUpdatedBooking] = useState("");
+  const [updatedBooking, setUpdatedBooking] = useState('');
   const [saveActivated, setSaveActivated] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState(false);
@@ -24,7 +24,7 @@ export default function BookingToShiftModal({
 
   //Calculation for datepicker limitation (role: RK) and state
   const shiftBeginTime =
-    currentUserRole == "UEK"
+    currentUserRole == 'UEK'
       ? Date.parse(booking.kombidatum_start) -
         newParameters.shiftBufferHandoverMins * 1000 * 60
       : Date.parse(booking.kombidatum_ende) +
@@ -34,7 +34,7 @@ export default function BookingToShiftModal({
   //3 am the following day is limit for vehicle returns (RK role)
   const morningTimeOnly = 3 * 3600 * 1000;
   const shiftEndTime =
-    currentUserRole == "UEK"
+    currentUserRole == 'UEK'
       ? shiftBeginTime + 1 * 3600 * 1000
       : shiftTimeOnly + morningTimeOnly + shiftBeginTime;
   const filterTimeWindow = (time) => {
@@ -51,29 +51,29 @@ export default function BookingToShiftModal({
   const [rkTimestamp, setRKTimestamp] = useState(shiftBeginTime);
   const [uekTimestamp, setUEKTimestamp] = useState(shiftBeginTime);
   //Define worktime for return only
-  let durationReturn = "";
+  let durationReturn = '';
   switch (booking.fahrzeug.substring(0, 3)) {
-    case "DRE":
+    case 'DRE':
       durationReturn = newParameters.durationDreamerHrs;
       break;
-    case "ADV":
+    case 'ADV':
       durationReturn = newParameters.durationAdventurerHrs;
       break;
-    case "TRA":
+    case 'TRA':
       durationReturn = newParameters.durationTravelerHrs;
       break;
   }
   function checkParallel(durationReturn, currentUserRole, currentUserName) {
     //Calculate first and last hour and construct presence slides array
     const firstHour = new Date(
-      currentUserRole == "UEK" ? uekTimestamp : rkTimestamp
+      currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp
     ).getHours();
     const lastHour =
-      currentUserRole == "UEK" ? firstHour : firstHour + durationReturn - 1;
+      currentUserRole == 'UEK' ? firstHour : firstHour + durationReturn - 1;
 
     let presenceSlices = [];
     let presenceDate = new Date(
-      currentUserRole == "UEK" ? uekTimestamp : rkTimestamp
+      currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp
     );
     let year = presenceDate.getFullYear();
     let month = presenceDate.getMonth() + 1;
@@ -83,7 +83,7 @@ export default function BookingToShiftModal({
       for (let i = firstHour; i <= lastHour; i++) {
         presenceSlices = [
           ...presenceSlices,
-          parseInt(`${year}${month}${day}${i < 10 ? "0" + i : i}`),
+          parseInt(`${year}${month}${day}${i < 10 ? '0' + i : i}`),
         ];
       }
     } else {
@@ -91,13 +91,13 @@ export default function BookingToShiftModal({
       for (let i = firstHour; i < 24; i++) {
         presenceSlices = [
           ...presenceSlices,
-          parseInt(`${year}${month}${day}${i < 10 ? "0" + i : i}`),
+          parseInt(`${year}${month}${day}${i < 10 ? '0' + i : i}`),
         ];
       }
       for (let i = 0; i <= lastHourNextDay; i++) {
         presenceSlices = [
           ...presenceSlices,
-          parseInt(`${year}${month}${dayAfter}${i < 10 ? "0" + i : i}`),
+          parseInt(`${year}${month}${dayAfter}${i < 10 ? '0' + i : i}`),
         ];
       }
     }
@@ -115,9 +115,9 @@ export default function BookingToShiftModal({
         setAccepted(true);
         setError(false);
         const staffNameStampUEK =
-          currentUserRole == "UEK" ? currentUserName : booking.uek;
+          currentUserRole == 'UEK' ? currentUserName : booking.uek;
         const staffNameStampRK =
-          currentUserRole == "RK" ? currentUserName : booking.rk;
+          currentUserRole == 'RK' ? currentUserName : booking.rk;
         const totalSlices = [booking.presence_slices, ...presenceSlices];
         const modifier = {
           presence_slices: totalSlices.flat().sort(),
@@ -135,12 +135,12 @@ export default function BookingToShiftModal({
   }
   //Update Booking in DB
   async function updateBooking(updatedBooking) {
-    if (updatedBooking !== "") {
+    if (updatedBooking !== '') {
       const bookingId = updatedBooking._id;
       const result = await fetch(`api/shifts/${bookingId}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedBooking),
       });
@@ -154,7 +154,7 @@ export default function BookingToShiftModal({
         <InputContainer>
           <CenteredButton onClick={() => setBookingToShiftModalIsOpen(false)}>
             Schließen
-          </CenteredButton>{" "}
+          </CenteredButton>{' '}
           <Title>Startzeit?</Title>
           <Confirm>{accepted ? <div>Schicht gespeichert.</div> : null}</Confirm>
           <Error>
@@ -165,9 +165,9 @@ export default function BookingToShiftModal({
           <div>Wähle bitte deine Startzeit im angezeigten Zeitraum.</div>
           <DatePicker
             wrapperClassName="date_picker--adjustedwidthlarge"
-            selected={currentUserRole == "UEK" ? uekTimestamp : rkTimestamp}
+            selected={currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp}
             onChange={
-              currentUserRole == "UEK"
+              currentUserRole == 'UEK'
                 ? (date) => setUEKTimestamp(date)
                 : (date) => setRKTimestamp(date)
             }
@@ -188,7 +188,7 @@ export default function BookingToShiftModal({
             }}
           >
             Prüfen
-          </SaveButton>{" "}
+          </SaveButton>{' '}
         </InputContainer>
       </Modal>
     </>
