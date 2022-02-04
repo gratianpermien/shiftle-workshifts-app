@@ -94,6 +94,17 @@ export default function BookingCard({
 
           <AdminInfo isAdmin={isAdmin}>
             <p>
+              Zuletzt aktualisiert:
+              {' ' +
+                Intl.DateTimeFormat('de-DE', {
+                  year: '2-digit',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                }).format(Date.parse(booking.letztes_update))}
+            </p>
+            <p>
               Schichtbeginn Aufbereitung:{' '}
               {booking.presence_slices[0] > 0
                 ? booking.presence_slices[1] - booking.presence_slices[0] > 1
