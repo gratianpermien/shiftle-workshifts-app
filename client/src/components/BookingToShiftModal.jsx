@@ -6,12 +6,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
 
 export default function BookingToShiftModal({
-  booking,
-  currentUserRole,
-  currentUserName,
-  setBookingToShiftModalIsOpen,
-  newParameters,
   allBookings,
+  booking,
+  currentUserName,
+  currentUserRole,
+  newParameters,
+  setBookingToShiftModalIsOpen,
 }) {
   const [updatedBooking, setUpdatedBooking] = useState('');
   const [saveActivated, setSaveActivated] = useState(false);
@@ -135,17 +135,17 @@ export default function BookingToShiftModal({
           <Error>{error ? <div>Kein Platz, bitte wähle eine andere Zeit.</div> : null}</Error>
           <div>Wähle bitte deine Startzeit im angezeigten Zeitraum.</div>
           <DatePicker
-            wrapperClassName="date_picker--adjustedwidthlarge"
-            selected={currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp}
-            onChange={currentUserRole == 'UEK' ? (date) => setUEKTimestamp(date) : (date) => setRKTimestamp(date)}
-            onCalendarClose={() => setSaveActivated(true)}
-            showTimeSelect
-            minDate={shiftBeginTime}
-            maxDate={shiftEndTime}
-            filterTime={filterTimeWindow}
-            timeIntervals={60}
-            timeCaption="Uhrzeit"
             dateFormat="dd/MM/yyyy HH:mm"
+            filterTime={filterTimeWindow}
+            maxDate={shiftEndTime}
+            minDate={shiftBeginTime}
+            onCalendarClose={() => setSaveActivated(true)}
+            onChange={currentUserRole == 'UEK' ? (date) => setUEKTimestamp(date) : (date) => setRKTimestamp(date)}
+            selected={currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp}
+            showTimeSelect
+            timeCaption="Uhrzeit"
+            timeIntervals={60}
+            wrapperClassName="date_picker--adjustedwidthlarge"
           />
           <DatePickerWrapperStyles />
           <SaveButton
@@ -173,22 +173,22 @@ const Error = styled.h3`
 `;
 const Modal = styled.div`
   background-color: ${(props) => (props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`)};
-  width: 100vw;
   height: 100vh;
-  z-index: 499;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  z-index: 49;
 `;
 const InputContainer = styled.div`
-  width: min(38vw, 600px);
-  margin: 0 auto;
-  padding: min(5vw, 2em);
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: min(3vh, 1em);
+  margin: 0 auto;
+  padding: min(5vw, 2em);
+  width: min(38vw, 600px);
 `;
 
 const SaveButton = styled(CenteredButton)`

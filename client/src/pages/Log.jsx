@@ -6,13 +6,13 @@ import shiftle_logo from '../assets/shiftle_logo.svg';
 import { CenteredButton, SingleRouteButton } from '../components/Buttons';
 
 export default function Log({
-  currentUser,
   allUsers,
-  setAllUsers,
-  setUser,
-  setAdmin,
   authenticated,
+  currentUser,
+  setAdmin,
+  setAllUsers,
   setAuthenticated,
+  setUser,
 }) {
   const [error, setError] = useState('');
 
@@ -86,16 +86,16 @@ const View = styled.div`
 `;
 
 const BaseContainer = styled.div`
-  width: min(38vw, 600px);
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
+  width: min(38vw, 600px);
 `;
 
 const Logo = styled.img`
-  width: min(64px, 10vw);
   filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.2));
   margin: 3em auto 1em;
+  width: min(64px, 10vw);
 `;
 
 const LoginContainer = styled.div`
@@ -109,22 +109,19 @@ const LoginContainer = styled.div`
 
 const ButtonSection = styled.div`
   display: flex;
-  gap: min(3vw, 0.4em);
   flex-direction: row;
   flex-wrap: wrap;
+  gap: min(3vw, 0.4em);
   justify-content: center;
 `;
 
 const Welcome = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
   gap: min(3vh, 1em);
-  h1 {
-    color: var(--secondary-bg);
-  }
+  justify-content: space-evenly;
   h3 {
-    color: var(--secondary-bg);
+    color: var(--headings-color);
   }
 `;

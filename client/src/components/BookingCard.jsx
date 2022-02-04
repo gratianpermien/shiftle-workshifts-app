@@ -6,24 +6,24 @@ import ModBookingModal from './ModBookingAdminModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronCircleDown,
-  faPlusCircle,
-  faMinusCircle,
-  faTimesCircle,
   faCog,
+  faMinusCircle,
+  faPlusCircle,
+  faTimesCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function BookingCard({
-  key,
-  booking,
-  deleted,
-  setDeleted,
-  allUsers,
-  currentPage,
-  currentUserRole,
-  currentUserName,
-  newParameters,
   allBookings,
+  allUsers,
+  booking,
+  bookingIndex,
+  currentPage,
+  currentUserName,
+  currentUserRole,
+  deleted,
+  newParameters,
   setAllBookings,
+  setDeleted,
 }) {
   const [bookingToShiftModalIsOpen, setBookingToShiftModalIsOpen] = useState(false);
   const [returnModalIsOpen, setReturnModalIsOpen] = useState(false);
@@ -59,7 +59,7 @@ export default function BookingCard({
   const isStaffedRK = currentUserRole == 'RK' && bookingRK != '';
   const isStaffedUEK = currentUserRole == 'UEK' && bookingUEK != '';
   return (
-    <Card deleted={deleted} key={key}>
+    <Card deleted={deleted} key={bookingIndex}>
       <UserRibbonWrapper isAdmin={isAdmin} isStaffedRK={isStaffedRK} isStaffedUEK={isStaffedUEK}>
         <UserRibbon>{currentUserRole == 'RK' ? bookingRK : bookingUEK}</UserRibbon>
       </UserRibbonWrapper>
@@ -196,18 +196,18 @@ export default function BookingCard({
 }
 
 const Card = styled.article`
-  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
   background-color: var(--secondary-bg);
   border-radius: 1em;
+  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   width: 100%;
 `;
 const CardRow = styled.article`
-  padding: 1em;
   display: flex;
-  justify-content: space-between;
   gap: 5vw;
+  justify-content: space-between;
+  padding: 1em;
 `;
 const BasicInfo = styled.div`
   display: flex;
@@ -220,32 +220,32 @@ const Interaction = styled.div`
   justify-content: space-evenly;
 `;
 const AdminInfo = styled.div`
+  border-left: 2px solid var(--headings-color);
   display: ${(props) => (props.isAdmin ? `block` : `none`)};
   padding-left: 0.4em;
-  border-left: 2px solid var(--headings-color);
 `;
 const AddInformation = styled.div`
+  background: var(--headings-color);
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.2em;
-  background: var(--headings-color);
-  padding-left: 1em;
-  padding-right: 1em;
-  border-bottom-left-radius: 1em;
-  border-bottom-right-radius: 1em;
-  padding-bottom: ${(props) => (props.visible ? '1em' : '0')};
-  padding-top: ${(props) => (props.visible ? '1em' : '0')};
   height: ${(props) => (props.visible ? '1' : '0')};
   opacity: ${(props) => (props.visible ? '1' : '0')};
-  visibility: ${(props) => (props.visible ? 'visible' : 'hidden')};
+  padding-bottom: ${(props) => (props.visible ? '1em' : '0')};
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: ${(props) => (props.visible ? '1em' : '0')};
   transition: padding-bottom 600ms, padding-top 600ms, height 600ms, opacity 600ms;
+  visibility: ${(props) => (props.visible ? 'visible' : 'hidden')};
 `;
 const BookmarkButton = styled.a`
-  font-size: var(--icon-size);
-  display: ${(props) => (props.isAdmin ? `none;` : `block;`)};
   color: ${(props) => (props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `#8f8f8f;` : `#44d68d;`)};
-  pointer-events: ${(props) => (props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `none` : `auto`)};
   cursor: pointer;
+  display: ${(props) => (props.isAdmin ? `none;` : `block;`)};
+  font-size: var(--icon-size);
+  pointer-events: ${(props) => (props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `none` : `auto`)};
   transition: all 0.2s;
   &:hover,
   &:active {
@@ -268,18 +268,18 @@ const InfoButton = styled(BookmarkButton)`
   }
 `;
 const EditButton = styled(BookmarkButton)`
+  color: #f1bd4e;
   display: ${(props) => (props.isAdmin ? `block` : `none`)};
   pointer-events: ${(props) => (props.isAdmin ? `auto` : `none`)};
-  color: #f1bd4e;
   &:hover,
   &:active {
     color: #d4a744;
   }
 `;
 const DeleteButton = styled(EditButton)`
+  color: #f1614e;
   display: ${(props) => (props.isAdmin ? `block` : `none`)};
   pointer-events: ${(props) => (props.isAdmin ? `auto` : `none`)};
-  color: #f1614e;
   &:hover,
   &:active {
     color: #b64738;
@@ -287,28 +287,28 @@ const DeleteButton = styled(EditButton)`
 `;
 const UserRibbonWrapper = styled.div`
   display: ${(props) => (props.isStaffedRK || props.isStaffedUEK ? `block` : `none`)};
-  width: 80px;
   height: 88px;
   overflow: hidden;
   position: absolute;
-  z-index: 200;
+  width: 80px;
+  z-index: 19;
 `;
 const UserRibbon = styled.div`
-  display: block;
+  background-color: var(--primary-color);
   color: #333;
+  color: var(--secondary-bg);
+  display: block;
+  font-size: var(--basic-font-size);
+  font-weight: 600;
+  padding: min(1vw, 7px);
+  position: relative;
+  right: 35px;
   text-align: center;
+  top: 11px;
   transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
   -ms-transform: rotate(-45deg);
   -o-transform: rotate(-45deg);
-  position: relative;
-  padding: min(1vw, 7px);
-  top: 11px;
-  right: 35px;
+  -webkit-transform: rotate(-45deg);
   width: 120px;
-  background-color: var(--primary-color);
-  color: var(--secondary-bg);
-  font-size: var(--basic-font-size);
-  font-weight: 600;
 `;

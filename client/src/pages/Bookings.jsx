@@ -4,13 +4,13 @@ import shiftle_watermark from '../assets/shiftle_watermark.svg';
 import BookingCard from '../components/BookingCard';
 
 export default function Bookings({
-  currentUser,
-  currentPage,
+  allBookings,
   allUsers,
+  currentPage,
+  currentUser,
   filterDateEarliest,
   filterDateLatest,
   newParameters,
-  allBookings,
   setAllBookings,
 }) {
   const [deleted, setDeleted] = useState(false);
@@ -28,17 +28,17 @@ export default function Bookings({
           )
           .map((booking, index) => (
             <BookingCard
-              key={index}
-              currentPage={currentPage}
+              allBookings={allBookings}
               allUsers={allUsers}
               booking={booking}
-              currentUserRole={currentUser.role}
+              bookingIndex={index}
+              currentPage={currentPage}
               currentUserName={currentUser.name}
+              currentUserRole={currentUser.role}
               deleted={deleted}
-              setDeleted={setDeleted}
-              allBookings={allBookings}
-              setAllBookings={setAllBookings}
               newParameters={newParameters}
+              setAllBookings={setAllBookings}
+              setDeleted={setDeleted}
             />
           ))}
       </BookingContainer>
@@ -59,10 +59,10 @@ const View = styled.div`
 `;
 
 const BookingContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  z-index: 99;
+  margin: 0 auto;
+  max-width: 600px;
+  z-index: 9;
 `;

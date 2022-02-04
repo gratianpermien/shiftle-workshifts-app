@@ -4,14 +4,14 @@ import shiftle_watermark from '../assets/shiftle_watermark.svg';
 import BookingCard from '../components/BookingCard';
 
 export default function Shifts({
-  currentUser,
-  currentPage,
+  allBookings,
   allUsers,
-  simpleSite,
+  currentPage,
+  currentUser,
   filterDateEarliest,
   filterDateLatest,
   newParameters,
-  allBookings,
+  simpleSite,
 }) {
   const userShifts = allBookings.filter((booking) => booking.rk == currentUser.name || booking.uek == currentUser.name);
 
@@ -28,14 +28,14 @@ export default function Shifts({
           )
           .map((booking, index) => (
             <BookingCard
-              currentPage={currentPage}
-              key={index}
-              booking={booking}
-              allUsers={allUsers}
-              currentUserRole={currentUser.role}
-              currentUserName={currentUser.name}
-              newParameters={newParameters}
               allBookings={allBookings}
+              allUsers={allUsers}
+              booking={booking}
+              bookingIndex={index}
+              currentPage={currentPage}
+              currentUserName={currentUser.name}
+              currentUserRole={currentUser.role}
+              newParameters={newParameters}
             />
           ))}
       </BookingContainer>
@@ -56,11 +56,10 @@ const View = styled.div`
 `;
 
 const BookingContainer = styled.div`
-  /* width: 90vw; */
-  max-width: 600px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  z-index: 99;
+  margin: 0 auto;
+  max-width: 600px;
+  z-index: 9;
 `;

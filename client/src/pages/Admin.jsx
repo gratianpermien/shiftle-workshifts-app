@@ -48,15 +48,15 @@ function Admin({ newParameters, setNewParameters, newUser, setNewUser, newBookin
     //async State Update? 2x Event handling required, why?
     try {
       await setNewParameters({
-        presenceWindowMins: parameterDetails.presenceWindowMins,
-        presenceParallel: parameterDetails.presenceParallel,
-        shiftBufferHandoverMins: parameterDetails.shiftBufferHandoverMins,
-        shiftBufferReturnMins: parameterDetails.shiftBufferReturnMins,
-        shiftReminderHrs: parameterDetails.shiftReminderHrs,
         adminEmail: parameterDetails.adminEmail,
         durationAdventurerHrs: parameterDetails.durationAdventurerHrs,
         durationDreamerHrs: parameterDetails.durationDreamerHrs,
         durationTravelerHrs: parameterDetails.durationTravelerHrs,
+        presenceParallel: parameterDetails.presenceParallel,
+        presenceWindowMins: parameterDetails.presenceWindowMins,
+        shiftBufferHandoverMins: parameterDetails.shiftBufferHandoverMins,
+        shiftBufferReturnMins: parameterDetails.shiftBufferReturnMins,
+        shiftReminderHrs: parameterDetails.shiftReminderHrs,
       });
       // updateParameters(newParameters);
       setParameterError('');
@@ -168,17 +168,17 @@ function Admin({ newParameters, setNewParameters, newUser, setNewUser, newBookin
         <FormContainer>
           <NewUserAdminForm visible={slideA} SubmitUser={SubmitUser} newUser={newUser} error={userError} />
           <ParametersAdminForm
-            visible={slideC}
             newParameters={newParameters}
-            SubmitParameters={SubmitParameters}
-            parameterError={parameterError}
             parameterConf={parameterConf}
+            parameterError={parameterError}
+            SubmitParameters={SubmitParameters}
+            visible={slideC}
           />
           <NewBookingAdminForm
-            visible={slideB}
-            newBooking={newBooking}
             bookingError={bookingError}
+            newBooking={newBooking}
             SubmitBooking={SubmitBooking}
+            visible={slideB}
           />
         </FormContainer>
       </BaseContainer>
@@ -188,17 +188,17 @@ function Admin({ newParameters, setNewParameters, newUser, setNewUser, newBookin
 export default Admin;
 
 const View = styled.div`
-  background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   background-attachment: fixed;
+  background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   min-height: 100vh;
   padding: min(5vw, 2em) 0 25vh;
 `;
 const BaseContainer = styled.div`
-  width: min(38vw, 600px);
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin: 0 auto;
+  width: min(38vw, 600px);
 `;
 const FormContainer = styled.div`
   display: flex;
@@ -209,23 +209,22 @@ const FormContainer = styled.div`
 `;
 const ButtonSection = styled.div`
   display: flex;
-  gap: min(3vw, 1em);
   flex-direction: row;
   flex-wrap: wrap;
+  gap: min(3vw, 1em);
   justify-content: center;
 `;
 const SlideButton = styled.a`
-  position: fixed;
-  display: block;
-  z-index: 200;
-  font-size: var(--icon-size);
-  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
-  display: block;
-  right: 1em;
-  top: 50vh;
   color: #8f8f8f;
   cursor: pointer;
+  display: block;
+  display: block;
+  font-size: var(--icon-size);
+  position: fixed;
+  right: 1em;
+  top: 50vh;
   transition: all 0.2s;
+  z-index: 19;
   &:hover,
   &:active {
     color: #444444;

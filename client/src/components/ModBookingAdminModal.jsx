@@ -7,20 +7,20 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
 
 export default function ModBookingModal({
-  booking,
   allUsers,
+  booking,
   currentUserName,
-  setModBookingModalIsOpen,
   setAllBookings,
+  setModBookingModalIsOpen,
 }) {
   const [bookingDetails, setBookingDetails] = useState({
     _id: booking._id,
+    bemerkung: booking.bemerkung,
     client: booking.client,
     fahrzeug: booking.fahrzeug,
     kennzeichen: booking.kennzeichen,
-    bemerkung: booking.bemerkung,
-    kombidatum_start: booking.kombidatum_start,
     kombidatum_ende: booking.kombidatum_ende,
+    kombidatum_start: booking.kombidatum_start,
     rk: booking.rk,
     uek: booking.uek,
   });
@@ -37,13 +37,7 @@ export default function ModBookingModal({
     user.name !== currentUserName && user.role !== 'ADMIN' ? usersList.push(user.name) : null
   );
 
-  // const staffNameStampUEK = currentUserRole == "UEK" ? subst : booking.uek;
-  // const staffNameStampRK = currentUserRole == "RK" ? subst : booking.rk;
-  // const modifier = {
-  //   uek: staffNameStampUEK,
-  //   rk: staffNameStampRK,
-  // };
-  function checkModifiedBooking(bookingDetails) {
+  function modifyBooking(bookingDetails) {
     setAccepted(true);
     setUpdatedBooking(bookingDetails);
     setTimeout(() => {
@@ -95,8 +89,8 @@ export default function ModBookingModal({
           <InputGroup>
             <label htmlFor="fahrzeug">Fahrzeug*</label>
             <select
-              name="fahrzeug"
               id="fahrzeug"
+              name="fahrzeug"
               required
               onChange={(event) =>
                 setBookingDetails({
@@ -115,10 +109,10 @@ export default function ModBookingModal({
           <InputGroup>
             <label htmlFor="kennzeichen">Kennzeichen</label>
             <input
-              type="text"
-              name="kennzeichen"
               id="kennzeichen"
+              name="kennzeichen"
               required
+              type="text"
               onChange={(event) =>
                 setBookingDetails({
                   ...bookingDetails,
@@ -131,8 +125,8 @@ export default function ModBookingModal({
           <InputGroup>
             <label htmlFor="bemerkung">Bemerkung</label>
             <textarea
-              name="bemerkung"
               id="bemerkung"
+              name="bemerkung"
               rows="3"
               onChange={(event) =>
                 setBookingDetails({
@@ -146,43 +140,43 @@ export default function ModBookingModal({
           <InputGroup>
             <label>Abfahrt</label>
             <DatePicker
-              wrapperClassName="date_picker--adjustedwidthlarge"
+              dateFormat="dd/MM/yyyy HH:mm"
               selected={Date.parse(bookingDetails.kombidatum_start)}
+              showTimeSelect
+              timeCaption="Uhrzeit"
+              timeIntervals={60}
+              wrapperClassName="date_picker--adjustedwidthlarge"
               onChange={(date) =>
                 setBookingDetails({
                   ...bookingDetails,
                   kombidatum_start: date,
                 })
               }
-              showTimeSelect
-              timeIntervals={60}
-              timeCaption="Uhrzeit"
-              dateFormat="dd/MM/yyyy HH:mm"
             />
           </InputGroup>
           <InputGroup>
             <label>Ankunft</label>
             <DatePicker
-              wrapperClassName="date_picker--adjustedwidthlarge"
+              dateFormat="dd/MM/yyyy HH:mm"
               selected={Date.parse(bookingDetails.kombidatum_ende)}
+              showTimeSelect
+              timeCaption="Uhrzeit"
+              timeIntervals={60}
+              wrapperClassName="date_picker--adjustedwidthlarge"
               onChange={(date) =>
                 setBookingDetails({
                   ...bookingDetails,
                   kombidatum_ende: date,
                 })
               }
-              showTimeSelect
-              timeIntervals={60}
-              timeCaption="Uhrzeit"
-              dateFormat="dd/MM/yyyy HH:mm"
             />
           </InputGroup>
           <DatePickerWrapperStyles />
           <InputGroup>
             <label htmlFor="rk">Name RK</label>
             <select
-              name="rk"
               id="rk"
+              name="rk"
               onChange={(event) => {
                 setBookingDetails({
                   ...bookingDetails,
@@ -201,8 +195,8 @@ export default function ModBookingModal({
           <InputGroup>
             <label htmlFor="uek">Name UEK</label>
             <select
-              name="uek"
               id="uek"
+              name="uek"
               onChange={(event) => {
                 setBookingDetails({
                   ...bookingDetails,
@@ -221,7 +215,7 @@ export default function ModBookingModal({
           <Confirm>{accepted ? <div>Gespeichert.</div> : null}</Confirm>
           <SaveButton
             onClick={() => {
-              checkModifiedBooking(bookingDetails);
+              modifyBooking(bookingDetails);
             }}
           >
             Ändern
@@ -240,45 +234,45 @@ const Confirm = styled.h3`
 `;
 const Modal = styled.div`
   background-color: ${(props) => (props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`)};
-  width: 100vw;
   height: 100vh;
-  z-index: 499;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  position: fixed;
   overflow-y: auto;
+  position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  z-index: 49;
 `;
 const InputContainer = styled.div`
-  width: min(38vw, 600px);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: min(3vh, 1em);
   margin: 0 auto;
   padding: min(5vw, 2em);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: min(3vh, 1em);
+  width: min(38vw, 600px);
 `;
 const InputGroup = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   label {
     display: block;
-    padding: 0.4em 1em;
-    text-transform: uppercase;
     font-weight: 600;
+    padding: 0.4em 1em;
     text-align: left;
+    text-transform: uppercase;
   }
   input,
   select,
   textarea {
+    border-radius: 2em;
+    border: 2px solid var(--primary-color);
+    box-sizing: border-box;
     font-size: var(--basic-font-size);
+    outline: none;
     padding: 0.4em 1em;
     width: 200px;
-    border-radius: 2em;
-    box-sizing: border-box;
-    outline: none;
-    border: 2px solid var(--primary-color);
   }
   textarea {
     border-radius: 1em;

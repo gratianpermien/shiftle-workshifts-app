@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { CenteredButton } from './Buttons';
 
 export default function ReturnModal({
-  booking,
   allUsers,
-  currentUserRole,
+  booking,
   currentUserName,
+  currentUserRole,
   newParameters,
   setReturnModalIsOpen,
 }) {
@@ -120,44 +120,44 @@ const Error = styled.h3`
 `;
 const Modal = styled.div`
   background-color: ${(props) => (props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`)};
-  width: 100vw;
   height: 100vh;
-  z-index: 499;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  z-index: 49;
 `;
 const InputContainer = styled.div`
-  width: min(38vw, 600px);
-  margin: 0 auto;
-  padding: min(5vw, 2em);
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: min(3vh, 1em);
+  margin: 0 auto;
+  padding: min(5vw, 2em);
+  width: min(38vw, 600px);
 `;
 
 const InputGroup = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   label {
     display: block;
-    padding: 0.4em 1em;
-    text-transform: uppercase;
     font-weight: 600;
+    padding: 0.4em 1em;
     text-align: left;
+    text-transform: uppercase;
   }
   input,
   select {
+    border-radius: 2em;
+    border: 2px solid var(--primary-color);
+    box-sizing: border-box;
     font-size: var(--basic-font-size);
+    outline: none;
     padding: 0.4em 1em;
     width: 200px;
-    border-radius: 2em;
-    box-sizing: border-box;
-    outline: none;
-    border: 2px solid var(--primary-color);
   }
 `;
 const SaveButton = styled(CenteredButton)`

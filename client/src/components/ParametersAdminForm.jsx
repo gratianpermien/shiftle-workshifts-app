@@ -3,22 +3,22 @@ import styled from 'styled-components';
 import { InputButton } from './Buttons';
 
 export default function ParametersAdminForm({
-  visible,
   newParameters,
-  SubmitParameters,
-  parameterError,
   parameterConf,
+  parameterError,
+  SubmitParameters,
+  visible,
 }) {
   const initState = {
-    presenceWindowMins: newParameters.presenceWindowMins,
-    presenceParallel: newParameters.presenceParallel,
-    shiftBufferHandoverMins: newParameters.shiftBufferHandoverMins,
-    shiftBufferReturnMins: newParameters.shiftBufferReturnMins,
-    shiftReminderHrs: newParameters.shiftReminderHrs,
     adminEmail: newParameters.adminEmail,
     durationAdventurerHrs: newParameters.durationAdventurerHrs,
     durationDreamerHrs: newParameters.durationDreamerHrs,
     durationTravelerHrs: newParameters.durationTravelerHrs,
+    presenceParallel: newParameters.presenceParallel,
+    presenceWindowMins: newParameters.presenceWindowMins,
+    shiftBufferHandoverMins: newParameters.shiftBufferHandoverMins,
+    shiftBufferReturnMins: newParameters.shiftBufferReturnMins,
+    shiftReminderHrs: newParameters.shiftReminderHrs,
   };
   const [parameterDetails, setParameterDetails] = useState(initState);
 
@@ -36,61 +36,61 @@ export default function ParametersAdminForm({
         <InputGroup>
           <label htmlFor="adminEmail">Admin-Email</label>
           <input
-            type="email"
-            name="adminEmail"
             id="adminEmail"
+            name="adminEmail"
+            type="email"
+            value={parameterDetails.adminEmail}
             onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 adminEmail: event.target.value,
               })
             }
-            value={parameterDetails.adminEmail}
           />
         </InputGroup>
         <InputGroup>
           <label htmlFor="shiftReminderHrs">Erinnerungsvorlauf (Std)</label>
           <input
-            type="number"
-            name="shiftReminderHrs"
             id="shiftReminderHrs"
+            name="shiftReminderHrs"
+            type="number"
+            value={parameterDetails.shiftReminderHrs}
             onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 shiftReminderHrs: event.target.value,
               })
             }
-            value={parameterDetails.shiftReminderHrs}
           />
         </InputGroup>
         <InputGroup>
           <label htmlFor="presenceWindowMins">Analysegranularität (min)</label>
           <input
-            disabled //First off, only hour windows will be possible
-            type="number"
-            name="presenceWindowMins"
+            disabled //in MVP, only hour windows will be possible
             id="presenceWindowMins"
+            name="presenceWindowMins"
+            type="number"
+            value={parameterDetails.presenceWindowMins}
             onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 presenceWindowMins: event.target.value,
               })
             }
-            value={parameterDetails.presenceWindowMins}
           />
         </InputGroup>
         <InputGroup>
           <label htmlFor="shiftBufferHandoverMins">Übergabepuffer (min)</label>
           <select
-            name="shiftBufferHandoverMins"
             id="shiftBufferHandoverMins"
+            name="shiftBufferHandoverMins"
+            value={parameterDetails.shiftBufferHandoverMins}
             onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 shiftBufferHandoverMins: event.target.value,
               })
             }
-            value={parameterDetails.shiftBufferHandoverMins}
           >
             <option value="60">60</option>
             <option value="45">45</option>
@@ -100,15 +100,15 @@ export default function ParametersAdminForm({
         <InputGroup>
           <label htmlFor="shiftBufferReturnMins">Rückgabepuffer (min)</label>
           <select
-            name="shiftBufferReturnMins"
             id="shiftBufferReturnMins"
+            name="shiftBufferReturnMins"
+            value={parameterDetails.shiftBufferReturnMins}
             onInput={(event) =>
               setParameterDetails({
                 ...parameterDetails,
                 shiftBufferReturnMins: event.target.value,
               })
             }
-            value={parameterDetails.shiftBufferReturnMins}
           >
             <option value="120">120</option>
             <option value="60">60</option>
@@ -119,19 +119,19 @@ export default function ParametersAdminForm({
           <label htmlFor="presenceParallel">Parallele Fahrzeuge</label>
           <SliderGroup>
             <Slider
-              type="range"
               id="presenceParallel"
-              name="presenceParallel"
-              min="1"
               max="4"
+              min="1"
+              name="presenceParallel"
               step="1"
+              type="range"
+              value={parameterDetails.presenceParallel}
               onInput={(event) =>
                 setParameterDetails({
                   ...parameterDetails,
                   presenceParallel: event.target.value,
                 })
               }
-              value={parameterDetails.presenceParallel}
             />
             <output className="output">{parameterDetails.presenceParallel}</output>
           </SliderGroup>
@@ -140,19 +140,19 @@ export default function ParametersAdminForm({
           <label htmlFor="durationAdventurerHrs">Dauer RK Adventurer (h)</label>
           <SliderGroup>
             <Slider
-              type="range"
               id="durationAdventurerHrs"
-              name="durationAdventurerHrs"
-              min="3"
               max="6"
+              min="3"
+              name="durationAdventurerHrs"
               step="1"
+              type="range"
+              value={parameterDetails.durationAdventurerHrs}
               onInput={(event) =>
                 setParameterDetails({
                   ...parameterDetails,
                   durationAdventurerHrs: event.target.value,
                 })
               }
-              value={parameterDetails.durationAdventurerHrs}
             />
             <output className="output">{parameterDetails.durationAdventurerHrs}</output>
           </SliderGroup>
@@ -161,19 +161,19 @@ export default function ParametersAdminForm({
           <label htmlFor="durationDreamerHrs">Dauer RK Dreamer (h) </label>
           <SliderGroup>
             <Slider
-              type="range"
               id="durationDreamerHrs"
-              name="durationDreamerHrs"
-              min="3"
               max="6"
+              min="3"
+              name="durationDreamerHrs"
               step="1"
+              type="range"
+              value={parameterDetails.durationDreamerHrs}
               onInput={(event) =>
                 setParameterDetails({
                   ...parameterDetails,
                   durationDreamerHrs: event.target.value,
                 })
               }
-              value={parameterDetails.durationDreamerHrs}
             />
             <output className="output">{parameterDetails.durationDreamerHrs}</output>
           </SliderGroup>
@@ -182,19 +182,19 @@ export default function ParametersAdminForm({
           <label htmlFor="durationTravelerHrs">Dauer RK Traveler (h)</label>
           <SliderGroup>
             <Slider
-              type="range"
               id="durationTravelerHrs"
-              name="durationTravelerHrs"
-              min="3"
               max="6"
+              min="3"
+              name="durationTravelerHrs"
               step="1"
+              type="range"
+              value={parameterDetails.durationTravelerHrs}
               onInput={(event) =>
                 setParameterDetails({
                   ...parameterDetails,
                   durationTravelerHrs: event.target.value,
                 })
               }
-              value={parameterDetails.durationTravelerHrs}
             />
             <output className="output">{parameterDetails.durationTravelerHrs}</output>
           </SliderGroup>
@@ -217,16 +217,16 @@ const Error = styled.h3`
   color: var(--primary-color);
 `;
 const ParameterForm = styled.form`
+  align-items: center;
   display: ${(props) => (props.visible ? 'flex' : 'none')};
   flex-direction: column;
-  align-items: center;
   gap: min(3vh, 1em);
 `;
 const Slider = styled.input`
-  color: var(--primary-color);
-  overflow: hidden;
   -webkit-appearance: none;
   background-color: var(--secondary-bg);
+  color: var(--primary-color);
+  overflow: hidden;
   ::-webkit-slider-thumb {
     width: 10px;
     -webkit-appearance: none;
@@ -237,35 +237,35 @@ const Slider = styled.input`
 `;
 
 const SliderGroup = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: row;
   gap: 1em;
   width: 200px;
-  align-items: center;
   .output {
     font-weight: 600;
     color: var(--primary-color);
   }
 `;
 const InputGroup = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   label {
     display: block;
-    padding: 0.4em 1em;
-    text-transform: uppercase;
     font-weight: 600;
+    padding: 0.4em 1em;
     text-align: left;
+    text-transform: uppercase;
   }
   input,
   select {
+    border-radius: 2em;
+    border: 2px solid var(--primary-color);
+    box-sizing: border-box;
     font-size: var(--basic-font-size);
+    outline: none;
     padding: 0.4em 1em;
     width: 200px;
-    border-radius: 2em;
-    box-sizing: border-box;
-    outline: none;
-    border: 2px solid var(--primary-color);
   }
 `;

@@ -16,20 +16,20 @@ export default function LoginForm({ Login, loginError }) {
         <InputGroup>
           <label htmlFor="email">Email</label>
           <input
-            type="email"
-            name="email"
             id="email"
+            name="email"
             onChange={(event) => setDetails({ ...details, email: event.target.value })}
+            type="email"
             value={details.email}
           />
         </InputGroup>
         <InputGroup>
           <label htmlFor="password">Passwort</label>
           <input
-            type="password"
-            name="password"
             id="password"
+            name="password"
             onChange={(event) => setDetails({ ...details, password: event.target.value })}
+            type="password"
             value={details.password}
           />
         </InputGroup>
@@ -45,30 +45,30 @@ const Error = styled.h3`
 `;
 
 const Form = styled.form`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: min(3vh, 1em);
 `;
 
 const InputGroup = styled.div`
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   label {
     display: block;
-    padding: 0.4em 1em;
-    text-transform: uppercase;
     font-weight: 600;
+    padding: 0.4em 1em;
     text-align: left;
+    text-transform: uppercase;
   }
   input {
+    border-radius: 2em;
+    border: 2px solid var(--primary-color);
+    box-sizing: border-box;
     font-size: var(--basic-font-size);
+    outline: none;
     padding: 0.4em 1em;
     width: min(100%, 200px);
-    border-radius: 2em;
-    box-sizing: border-box;
-    outline: none;
-    border: 2px solid var(--primary-color);
   }
 `;
