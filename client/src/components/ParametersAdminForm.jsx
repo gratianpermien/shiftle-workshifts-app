@@ -24,7 +24,6 @@ export default function ParametersAdminForm({
 
   function submitHandler(event) {
     event.preventDefault();
-    console.log(parameterDetails);
     SubmitParameters(parameterDetails);
   }
 

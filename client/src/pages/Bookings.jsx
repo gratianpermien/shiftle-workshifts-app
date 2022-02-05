@@ -4,6 +4,7 @@ import shiftle_watermark from '../assets/shiftle_watermark.svg';
 import BookingCard from '../components/BookingCard';
 
 export default function Bookings({
+  admin,
   allBookings,
   allUsers,
   currentPage,
@@ -28,6 +29,7 @@ export default function Bookings({
           )
           .map((booking, index) => (
             <BookingCard
+              isAdmin={admin}
               allBookings={allBookings}
               allUsers={allUsers}
               booking={booking}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import checkParallel from '../lib/AdditionalShiftsAnalysis';
+import bookingPresenceSlices from '../lib/TimeDateCalc';
 import { CenteredButton } from './Buttons';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -30,10 +30,10 @@ export default function BookingToShiftModal({
       : Date.parse(booking.kombidatum_ende) + newParameters.shiftBufferReturnMins * 1000 * 60;
   const msPerDay = 24 * 3600 * 1000;
   const shiftTimeOnly = msPerDay - (shiftBeginTime % msPerDay);
-  //3 am the following day is limit for vehicle returns (RK role)
-  const morningTimeOnly = 3 * 3600 * 1000;
+  const morningTimeOnly = 3 * 3600 * 1000; //3 am the following day is limit for vehicle returns (RK role)
   const shiftEndTime =
     currentUserRole == 'UEK' ? shiftBeginTime + 1 * 3600 * 1000 : shiftTimeOnly + morningTimeOnly + shiftBeginTime;
+
   const filterTimeWindow = (time) => {
     const earliestDate = new Date(shiftBeginTime);
     const selectedDate = new Date(time);
@@ -45,94 +45,43 @@ export default function BookingToShiftModal({
   const [rkTimestamp, setRKTimestamp] = useState(shiftBeginTime);
   const [uekTimestamp, setUEKTimestamp] = useState(shiftBeginTime);
 
-  checkParallel(
-    allBookings,
-    booking,
-    currentUserName,
-    currentUserRole,
-    newParameters,
-    rkTimestamp,
-    setAccepted,
-    setBookingToShiftModalIsOpen,
-    setError,
-    setSaveActivated,
-    setUpdatedBooking,
-    uekTimestamp
-  );
-
-  // //Define worktime for return only
-  // let durationReturn = '';
-  // switch (booking.fahrzeug.substring(0, 3)) {
-  //   case 'DRE':
-  //     durationReturn = newParameters.durationDreamerHrs;
-  //     break;
-  //   case 'ADV':
-  //     durationReturn = newParameters.durationAdventurerHrs;
-  //     break;
-  //   case 'TRA':
-  //     durationReturn = newParameters.durationTravelerHrs;
-  //     break;
-  // }
-
-  // function checkParallel(booking, durationReturn, currentUserRole, currentUserName) {
-  //   //Calculate first and last hour and construct presence slides array
-  //   const firstHour = new Date(currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp).getHours();
-  //   const lastHour = currentUserRole == 'UEK' ? firstHour : firstHour + durationReturn - 1;
-
-  //   let presenceSlices = [];
-  //   let presenceDate = new Date(currentUserRole == 'UEK' ? uekTimestamp : rkTimestamp);
-  //   let year = presenceDate.getFullYear();
-  //   let month = presenceDate.getMonth() + 1;
-  //   let day = presenceDate.getDate();
-  //   let dayAfter = day + 1;
-  //   if (lastHour < 24) {
-  //     for (let i = firstHour; i <= lastHour; i++) {
-  //       presenceSlices = [...presenceSlices, parseInt(`${year}${month}${day}${i < 10 ? '0' + i : i}`)];
-  //     }
-  //   } else {
-  //     const lastHourNextDay = lastHour - 24;
-  //     for (let i = firstHour; i < 24; i++) {
-  //       presenceSlices = [...presenceSlices, parseInt(`${year}${month}${day}${i < 10 ? '0' + i : i}`)];
-  //     }
-  //     for (let i = 0; i <= lastHourNextDay; i++) {
-  //       presenceSlices = [...presenceSlices, parseInt(`${year}${month}${dayAfter}${i < 10 ? '0' + i : i}`)];
-  //     }
-  //   }
-  //   //Check for parallel vehicles (through array comparison) and if allowed, write to DB, otherwise stop and display error
-  //   let parallelPresence = 0;
-  //   const overlap = (element) => presenceSlices.includes(element);
-  //   allBookings.some((element) => {
-  //     let bookingpresence = element.presence_slices;
-  //     let doublePresence = bookingpresence.some(overlap);
-  //     doublePresence ? parallelPresence++ : parallelPresence;
-  //     if (parallelPresence >= newParameters.presenceParallel) {
-  //       setError(true);
-  //       return false;
-  //     } else {
-  //       setAccepted(true);
-  //       setError(false);
-  //       const staffNameStampUEK = currentUserRole == 'UEK' ? currentUserName : booking.uek;
-  //       const staffNameStampRK = currentUserRole == 'RK' ? currentUserName : booking.rk;
-  //       const totalSlices = [booking.presence_slices, ...presenceSlices];
-  //       const modifier = {
-  //         presence_slices: totalSlices.flat().sort(),
-  //         uek: staffNameStampUEK,
-  //         rk: staffNameStampRK,
-  //       };
-  //       setUpdatedBooking(Object.assign(booking, modifier));
-  //       setSaveActivated(false);
-  //       setTimeout(() => {
-  //         setBookingToShiftModalIsOpen(false);
-  //       }, 2000);
-  //       return true;
-  //     }
-  //   });
-  // }
+  function checkParallel(booking, currentUserRole, currentUserName) {
+    const presenceSlices = bookingPresenceSlices(booking, newParameters, currentUserRole, uekTimestamp, rkTimestamp);
+    //Check for parallel vehicles (through array comparison) and if allowed, write to DB, otherwise stop and display error
+    let parallelPresence = 0;
+    const overlap = (element) => presenceSlices.includes(element);
+    allBookings.some((element) => {
+      let bookingpresence = element.presence_slices;
+      let doublePresence = bookingpresence.some(overlap);
+      doublePresence ? parallelPresence++ : parallelPresence;
+      if (parallelPresence >= newParameters.presenceParallel) {
+        setError(true);
+        return false;
+      } else {
+        setAccepted(true);
+        setError(false);
+        const staffNameStampUEK = currentUserRole == 'UEK' ? currentUserName : booking.uek;
+        const staffNameStampRK = currentUserRole == 'RK' ? currentUserName : booking.rk;
+        const totalSlices = [booking.presence_slices, ...presenceSlices];
+        const modifier = {
+          presence_slices: totalSlices.flat().sort(),
+          uek: staffNameStampUEK,
+          rk: staffNameStampRK,
+        };
+        setUpdatedBooking(Object.assign(booking, modifier));
+        setSaveActivated(false);
+        setTimeout(() => {
+          setBookingToShiftModalIsOpen(false);
+        }, 2000);
+        return parallelPresence;
+      }
+    });
+  }
   //Update Booking in DB
   async function updateBooking(updatedBooking) {
     if (updatedBooking !== '') {
       const bookingId = updatedBooking._id;
-      const result = await fetch(`api/shifts/${bookingId}`, {
+      await fetch(`api/shifts/${bookingId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -148,7 +97,7 @@ export default function BookingToShiftModal({
         <InputContainer>
           <CenteredButton onClick={() => setBookingToShiftModalIsOpen(false)}>Schließen</CenteredButton>{' '}
           <Title>Startzeit?</Title>
-          <Confirm>{accepted ? <div>Schicht gespeichert.</div> : null}</Confirm>
+          <Confirm>{accepted ? <div>{checkParallel} Fahrzeuge. Gespeichert!</div> : null}</Confirm>
           <Error>{error ? <div>Kein Platz, bitte wähle eine andere Zeit.</div> : null}</Error>
           <div>Wähle bitte deine Startzeit im angezeigten Zeitraum.</div>
           <DatePicker
@@ -168,7 +117,7 @@ export default function BookingToShiftModal({
           <SaveButton
             saveActivated={saveActivated}
             onClick={() => {
-              checkParallel(durationReturn, currentUserRole, currentUserName);
+              checkParallel(booking, currentUserRole, currentUserName);
             }}
           >
             Prüfen

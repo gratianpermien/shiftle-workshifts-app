@@ -36,7 +36,6 @@ export default function ModBookingModal({
   allUsers.forEach((user) =>
     user.name !== currentUserName && user.role !== 'ADMIN' ? usersList.push(user.name) : null
   );
-
   function modifyBooking(bookingDetails) {
     setAccepted(true);
     setUpdatedBooking(bookingDetails);

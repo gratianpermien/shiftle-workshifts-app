@@ -1,16 +1,5 @@
-export default function checkParallel(
-  allBookings,
-  booking,
-  currentUserName,
-  currentUserRole,
-  rkTimestamp,
-  setAccepted,
-  setBookingToShiftModalIsOpen,
-  setError,
-  setSaveActivated,
-  setUpdatedBooking,
-  uekTimestamp
-) {
+//Calculate first and last hour and construct presence slides array
+export default function bookingPresenceSlices(booking, newParameters, currentUserRole, uekTimestamp, rkTimestamp) {
   //Define worktime for return only
   let durationReturn = '';
   switch (booking.fahrzeug.substring(0, 3)) {
@@ -46,33 +35,6 @@ export default function checkParallel(
       presenceSlices = [...presenceSlices, parseInt(`${year}${month}${dayAfter}${i < 10 ? '0' + i : i}`)];
     }
   }
-  //Check for parallel vehicles (through array comparison) and if allowed, write to DB, otherwise stop and display error
-  let parallelPresence = 0;
-  const overlap = (element) => presenceSlices.includes(element);
-  allBookings.some((element) => {
-    let bookingpresence = element.presence_slices;
-    let doublePresence = bookingpresence.some(overlap);
-    doublePresence ? parallelPresence++ : parallelPresence;
-    if (parallelPresence >= newParameters.presenceParallel) {
-      setError(true);
-      return false;
-    } else {
-      setAccepted(true);
-      setError(false);
-      const staffNameStampUEK = currentUserRole == 'UEK' ? currentUserName : booking.uek;
-      const staffNameStampRK = currentUserRole == 'RK' ? currentUserName : booking.rk;
-      let totalSlices = [booking.presence_slices, ...presenceSlices];
-      const modifier = {
-        presence_slices: totalSlices.flat().sort(),
-        uek: staffNameStampUEK,
-        rk: staffNameStampRK,
-      };
-      setUpdatedBooking(Object.assign(booking, modifier));
-      setSaveActivated(false);
-      setTimeout(() => {
-        setBookingToShiftModalIsOpen(false);
-      }, 2000);
-      return true;
-    }
-  });
+  console.log(presenceSlices);
+  return presenceSlices;
 }

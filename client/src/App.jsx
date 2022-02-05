@@ -7,6 +7,7 @@ import Admin from './pages/Admin';
 import Shifts from './pages/Shifts';
 import Bookings from './pages/Bookings';
 import AppHeader from './components/Header';
+import analyzeNotify from './lib/NotificationsAnalysis';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -54,21 +55,20 @@ function App() {
   //Read path for path-dependant theming of components (log is for "/" route)
   const pageSlug = useLocation().pathname.replace('/', '');
   const currentPage = pageSlug ? pageSlug : 'log';
-
   return (
     <View>
       <AppHeader
-        authenticated={authenticated}
-        currentUserRole={user.role}
-        currentUserName={user.name}
         admin={admin}
-        setNewParameters={setNewParameters}
-        newParameters={newParameters}
+        authenticated={authenticated}
         currentPage={currentPage}
+        currentUserName={user.name}
+        currentUserRole={user.role}
         filterDateEarliest={filterDateEarliest}
         filterDateLatest={filterDateLatest}
+        newParameters={newParameters}
         setFilterDateEarliest={setFilterDateEarliest}
         setFilterDateLatest={setFilterDateLatest}
+        setNewParameters={setNewParameters}
       />
       <Routes>
         <Route
@@ -76,13 +76,14 @@ function App() {
           path="/"
           element={
             <Log
+              allBookings={allBookings}
               allUsers={allUsers}
-              setAllUsers={setAllUsers}
-              currentUser={user}
-              setUser={setUser}
-              setAdmin={setAdmin}
               authenticated={authenticated}
+              currentUser={user}
+              setAdmin={setAdmin}
+              setAllUsers={setAllUsers}
               setAuthenticated={setAuthenticated}
+              setUser={setUser}
             />
           }
         />
@@ -95,14 +96,15 @@ function App() {
                 path="buchungen"
                 element={
                   <Bookings
+                    admin={admin}
+                    allBookings={allBookings}
                     allUsers={allUsers}
+                    currentPage={currentPage}
+                    currentUser={user}
                     filterDateEarliest={filterDateEarliest}
                     filterDateLatest={filterDateLatest}
-                    currentUser={user}
-                    currentPage={currentPage}
-                    allBookings={allBookings}
-                    setAllBookings={setAllBookings}
                     newParameters={newParameters}
+                    setAllBookings={setAllBookings}
                   />
                 }
               />
@@ -111,12 +113,13 @@ function App() {
                 path="schichten"
                 element={
                   <Shifts
+                    admin={admin}
+                    allBookings={allBookings}
                     allUsers={allUsers}
+                    currentPage={currentPage}
+                    currentUser={user}
                     filterDateEarliest={filterDateEarliest}
                     filterDateLatest={filterDateLatest}
-                    currentUser={user}
-                    currentPage={currentPage}
-                    allBookings={allBookings}
                     newParameters={newParameters}
                   />
                 }
@@ -127,12 +130,14 @@ function App() {
                 path="admin"
                 element={
                   <Admin
-                    newParameters={newParameters}
-                    setNewParameters={setNewParameters}
-                    newUser={newUser}
-                    setNewUser={setNewUser}
+                    allBookings={allBookings}
+                    allUsers={allUsers}
                     newBooking={newBooking}
+                    newParameters={newParameters}
+                    newUser={newUser}
                     setNewBooking={setNewBooking}
+                    setNewParameters={setNewParameters}
+                    setNewUser={setNewUser}
                   />
                 }
               />
@@ -142,9 +147,9 @@ function App() {
                 path="buchungen"
                 element={
                   <Bookings
+                    currentUser={user}
                     filterDateEarliest={filterDateEarliest}
                     filterDateLatest={filterDateLatest}
-                    currentUser={user}
                   />
                 }
               />
@@ -161,10 +166,10 @@ function App() {
                 path="/"
                 element={
                   <Log
-                    currentUser={user}
-                    setUser={setUser}
                     authenticated={authenticated}
+                    currentUser={user}
                     setAuthenticated={setAuthenticated}
+                    setUser={setUser}
                   />
                 }
               />

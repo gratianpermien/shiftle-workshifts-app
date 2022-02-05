@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function BookingCard({
+  isAdmin,
   allBookings,
   allUsers,
   booking,
@@ -54,12 +55,12 @@ export default function BookingCard({
 
   const bookingRK = booking.rk;
   const bookingUEK = booking.uek;
-  const isAdmin = currentUserRole == 'ADMIN';
-  const isShifts = currentPage == 'schichten' ? true : false;
   const isStaffedRK = currentUserRole == 'RK' && bookingRK != '';
   const isStaffedUEK = currentUserRole == 'UEK' && bookingUEK != '';
+  const isShifts = currentPage == 'schichten' ? true : false;
+
   return (
-    <Card deleted={deleted} key={bookingIndex}>
+    <Card deleted={deleted} key={bookingIndex.toString()}>
       <UserRibbonWrapper isAdmin={isAdmin} isStaffedRK={isStaffedRK} isStaffedUEK={isStaffedUEK}>
         <UserRibbon>{currentUserRole == 'RK' ? bookingRK : bookingUEK}</UserRibbon>
       </UserRibbonWrapper>
@@ -169,37 +170,37 @@ export default function BookingCard({
       </AddInformation>
       {bookingToShiftModalIsOpen && (
         <BookingToShiftModal
-          booking={booking}
-          currentUserRole={currentUserRole}
-          currentUserName={currentUserName}
-          bookingToShiftModalIsOpen={bookingToShiftModalIsOpen}
-          setBookingToShiftModalIsOpen={setBookingToShiftModalIsOpen}
-          newParameters={newParameters}
           allBookings={allBookings}
+          booking={booking}
+          bookingToShiftModalIsOpen={bookingToShiftModalIsOpen}
+          currentUserName={currentUserName}
+          currentUserRole={currentUserRole}
+          newParameters={newParameters}
+          setBookingToShiftModalIsOpen={setBookingToShiftModalIsOpen}
         />
       )}
       {returnModalIsOpen && (
         <ReturnModal
+          allBookings={allBookings}
           allUsers={allUsers}
           booking={booking}
-          currentUserRole={currentUserRole}
           currentUserName={currentUserName}
+          currentUserRole={currentUserRole}
+          newParameters={newParameters}
           returnModalIsOpen={returnModalIsOpen}
           setReturnModalIsOpen={setReturnModalIsOpen}
-          allBookings={allBookings}
-          newParameters={newParameters}
         />
       )}
       {modBookingModalIsOpen && (
         <ModBookingModal
+          allBookings={allBookings}
           allUsers={allUsers}
-          setAllBookings={setAllBookings}
           booking={booking}
           currentUserName={currentUserName}
           modBookingModalIsOpen={modBookingModalIsOpen}
-          setModBookingModalIsOpen={setModBookingModalIsOpen}
-          allBookings={allBookings}
           newParameters={newParameters}
+          setAllBookings={setAllBookings}
+          setModBookingModalIsOpen={setModBookingModalIsOpen}
         />
       )}
     </Card>

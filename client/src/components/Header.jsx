@@ -7,7 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStopCircle } from '@fortawesome/free-solid-svg-icons';
-
+import analyzeNotify from '../lib/NotificationsAnalysis';
 export default function AppHeader({
   admin,
   authenticated,
