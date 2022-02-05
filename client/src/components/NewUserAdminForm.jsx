@@ -22,10 +22,21 @@ export default function NewUserAdminForm({
     <>
       <UserForm onSubmit={submitHandler} visible={visible}>
         <Title>User.</Title>
-        <Confirm>{newUser ? <div>User ist angelegt.</div> : ""}</Confirm>
-        <Error>{error ? <div>{error}</div> : ""}</Error>
         <InputGroup>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="name">Name*</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            maxlength="10"
+            onChange={(event) =>
+              setUserDetails({ ...userDetails, name: event.target.value })
+            }
+            value={userDetails.name}
+          />
+        </InputGroup>
+        <InputGroup>
+          <label htmlFor="email">Email*</label>
           <input
             type="email"
             name="email"
@@ -37,7 +48,7 @@ export default function NewUserAdminForm({
           />
         </InputGroup>
         <InputGroup>
-          <label htmlFor="role">Rolle</label>
+          <label htmlFor="role">Rolle*</label>
           <select
             name="role"
             id="role"
@@ -53,7 +64,7 @@ export default function NewUserAdminForm({
           </select>
         </InputGroup>
         <InputGroup>
-          <label htmlFor="password">Passwort</label>
+          <label htmlFor="password">Passwort*</label>
           <input
             type="password"
             name="password"
@@ -64,6 +75,8 @@ export default function NewUserAdminForm({
             value={userDetails.password}
           />
         </InputGroup>
+        <Confirm>{newUser ? <div>Angelegt.</div> : ""}</Confirm>
+        <Error>{error ? <div>{error}</div> : ""}</Error>
         <InputButton type="submit" value="Anlegen" />
       </UserForm>
     </>

@@ -1,42 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import BookingToShiftModal from "./BookingToShiftModal";
+import ReturnModal from "./ReturnModal";
+import ModBookingModal from "./ModBookingAdminModal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronCircleDown,
   faPlusCircle,
+  faMinusCircle,
+  faTimesCircle,
   faCog,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function BookingCard({
   booking,
   id,
+  deleted,
+  setDeleted,
+  allUsers,
+  currentPage,
   currentUserRole,
-  setNewParameters,
+  currentUserName,
   newParameters,
+  allBookings,
+  setAllBookings,
 }) {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [bookingToShiftModalIsOpen, setBookingToShiftModalIsOpen] =
+    useState(false);
+  const [returnModalIsOpen, setReturnModalIsOpen] = useState(false);
+  const [modBookingModalIsOpen, setModBookingModalIsOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
+
   function handleToggle() {
     setToggle(!toggle);
+  }
+
+  async function deleteBooking(booking) {
+    const bookingId = booking._id;
+    const result = await fetch(`api/shifts/${bookingId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    });
+    setDeleted(true);
+    const res = await fetch("api/shifts");
+    const fetchedData = await res.json();
+    setTimeout(() => {
+      setAllBookings(fetchedData);
+      setDeleted(false);
+    }, 2000);
   }
 
   const bookingRK = booking.rk;
   const bookingUEK = booking.uek;
   const isAdmin = currentUserRole == "ADMIN";
-  const isStaffedRK = currentUserRole == "RK" && bookingRK !== "";
-  const isStaffedUEK = currentUserRole == "UE" && bookingUEK !== "";
-
+  const isShifts = currentPage == "schichten" ? true : false;
+  const isStaffedRK = currentUserRole == "RK" && bookingRK != "";
+  const isStaffedUEK = currentUserRole == "UEK" && bookingUEK != "";
   return (
-    <Card key={id}>
+    <Card deleted={deleted} key={id}>
       <UserRibbonWrapper
         isAdmin={isAdmin}
         isStaffedRK={isStaffedRK}
         isStaffedUEK={isStaffedUEK}
       >
         <UserRibbon>
-          {currentUserRole == "RK" ? booking.rk : booking.uek}
+          {currentUserRole == "RK" ? bookingRK : bookingUEK}
         </UserRibbon>
       </UserRibbonWrapper>
       <CardRow>
@@ -65,9 +97,22 @@ export default function BookingCard({
                 day: "2-digit",
                 hour: "numeric",
                 minute: "numeric",
-              }).format(Date.parse(booking.kombidatum_ende))}
+              }).format(Date.parse(booking.kombidatum_ende))}{" "}
           </p>
+
           <AdminInfo isAdmin={isAdmin}>
+            <p>
+              Schichtbeginn Aufbereitung:{" "}
+              {booking.presence_slices[0] > 0
+                ? booking.presence_slices[1] - booking.presence_slices[0] > 1
+                  ? String(booking.presence_slices[1]).substring(
+                      String(booking.presence_slices[1]).length - 2
+                    ) + ":00"
+                  : String(booking.presence_slices[0]).substring(
+                      String(booking.presence_slices[0]).length - 2
+                    ) + ":00"
+                : " noch nicht vergeben"}
+            </p>
             <p>
               Übergabe:{" "}
               {booking.uek != "" ? booking.uek : " noch nicht vergeben"}
@@ -76,34 +121,44 @@ export default function BookingCard({
               Rücknahme:{" "}
               {booking.rk != "" ? booking.rk : " noch nicht vergeben"}
             </p>
-            {/* <p>
-              Rücknahme:{" "}
-              {booking.rk && booking.timestamp_start_rk != ""
-                ? booking.rk +
-                  ", Start: " +
-                  Intl.DateTimeFormat("de-DE", {
-                    year: "2-digit",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "numeric",
-                    minute: "numeric",
-                  }).format(Date.parse(booking.timestamp_start_rk))
-                : " noch nicht vergeben"}
-            </p> */}
           </AdminInfo>
         </BasicInfo>
         <Interaction>
-          <EditButton href="#" isAdmin={isAdmin}>
+          <EditButton
+            isAdmin={isAdmin}
+            onClick={() => setModBookingModalIsOpen(true)}
+          >
             <FontAwesomeIcon icon={faCog} />
           </EditButton>
-          <BookmarkButton
-            onClick={() => setModalIsOpen(true)}
-            isStaffedUEK={isStaffedUEK}
-            isStaffedRK={isStaffedRK}
+          <DeleteButton
+            deleted={deleted}
             isAdmin={isAdmin}
+            onClick={() => deleteBooking(booking)}
           >
-            <FontAwesomeIcon icon={faPlusCircle} />
-          </BookmarkButton>
+            <FontAwesomeIcon icon={faTimesCircle} />
+          </DeleteButton>
+          {isShifts ? null : (
+            <BookmarkButton
+              onClick={() => setBookingToShiftModalIsOpen(true)}
+              isStaffedUEK={isStaffedUEK}
+              isStaffedRK={isStaffedRK}
+              isAdmin={isAdmin}
+              isShifts={isShifts}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
+            </BookmarkButton>
+          )}
+          {isShifts ? (
+            <ReturnButton
+              onClick={() => setReturnModalIsOpen(true)}
+              isStaffedUEK={isStaffedUEK}
+              isStaffedRK={isStaffedRK}
+              isAdmin={isAdmin}
+              isShifts={isShifts}
+            >
+              <FontAwesomeIcon icon={faMinusCircle} />
+            </ReturnButton>
+          ) : null}
           <InfoButton onClick={handleToggle}>
             <FontAwesomeIcon icon={faChevronCircleDown} />
           </InfoButton>
@@ -126,13 +181,38 @@ export default function BookingCard({
           {booking.zusatz_10 != "-" ? ", " + booking.zusatz_10 : ""}
         </p>
       </AddInformation>
-      {modalIsOpen && (
+      {bookingToShiftModalIsOpen && (
         <BookingToShiftModal
           booking={booking}
           currentUserRole={currentUserRole}
-          modalIsOpen={modalIsOpen}
-          setModalIsOpen={setModalIsOpen}
-          setNewParameters={setNewParameters}
+          currentUserName={currentUserName}
+          bookingToShiftModalIsOpen={bookingToShiftModalIsOpen}
+          setBookingToShiftModalIsOpen={setBookingToShiftModalIsOpen}
+          newParameters={newParameters}
+          allBookings={allBookings}
+        />
+      )}
+      {returnModalIsOpen && (
+        <ReturnModal
+          allUsers={allUsers}
+          booking={booking}
+          currentUserRole={currentUserRole}
+          currentUserName={currentUserName}
+          returnModalIsOpen={returnModalIsOpen}
+          setReturnModalIsOpen={setReturnModalIsOpen}
+          allBookings={allBookings}
+          newParameters={newParameters}
+        />
+      )}
+      {modBookingModalIsOpen && (
+        <ModBookingModal
+          allUsers={allUsers}
+          setAllBookings={setAllBookings}
+          booking={booking}
+          currentUserName={currentUserName}
+          modBookingModalIsOpen={modBookingModalIsOpen}
+          setModBookingModalIsOpen={setModBookingModalIsOpen}
+          allBookings={allBookings}
           newParameters={newParameters}
         />
       )}
@@ -166,6 +246,8 @@ const Interaction = styled.div`
 `;
 const AdminInfo = styled.div`
   display: ${(props) => (props.isAdmin ? `block` : `none`)};
+  padding-left: 0.4em;
+  border-left: 2px solid var(--headings-color);
 `;
 const AddInformation = styled.div`
   display: flex;
@@ -186,20 +268,26 @@ const AddInformation = styled.div`
 `;
 const BookmarkButton = styled.a`
   font-size: var(--icon-size);
-  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
-  display: block;
+  display: ${(props) => (props.isAdmin ? `none;` : `block;`)};
   color: ${(props) =>
     props.isStaffedRK || props.isStaffedUEK || props.isAdmin
       ? `#8f8f8f;`
       : `#44d68d;`};
   pointer-events: ${(props) =>
     props.isStaffedRK || props.isStaffedUEK || props.isAdmin ? `none` : `auto`};
-  display: block;
   cursor: pointer;
   transition: all 0.2s;
   &:hover,
   &:active {
     color: #2a8658;
+  }
+`;
+const ReturnButton = styled(BookmarkButton)`
+  color: #f1a54e;
+  pointer-events: auto;
+  &:hover,
+  &:active {
+    color: #d18c3d;
   }
 `;
 const InfoButton = styled(BookmarkButton)`
@@ -216,6 +304,15 @@ const EditButton = styled(BookmarkButton)`
   &:hover,
   &:active {
     color: #d4a744;
+  }
+`;
+const DeleteButton = styled(EditButton)`
+  display: ${(props) => (props.isAdmin ? `block` : `none`)};
+  pointer-events: ${(props) => (props.isAdmin ? `auto` : `none`)};
+  color: #f1614e;
+  &:hover,
+  &:active {
+    color: #b64738;
   }
 `;
 const UserRibbonWrapper = styled.div`

@@ -1,46 +1,50 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import shiftle_watermark from "../assets/shiftle_watermark.svg";
 import BookingCard from "../components/BookingCard";
 
-export default function Buchungen({
+export default function Bookings({
   currentUser,
-  simpleSite,
-  filterDateArrivalEarliest,
-  filterDateArrivalLatest,
-  setNewParameters,
+  currentPage,
+  allUsers,
+  filterDateEarliest,
+  filterDateLatest,
   newParameters,
+  allBookings,
+  setAllBookings,
 }) {
-  const [allBookings, setAllBookings] = useState([]);
-
-  //Get booking information from server / database (updates itself in backend) on opening the app / reloading
-  async function fetchShifts() {
-    const res = await fetch("api/shifts");
-    const fetchedData = await res.json();
-    setAllBookings(fetchedData);
-  }
-  useEffect(() => {
-    fetchShifts();
-  }, []);
+  const [deleted, setDeleted] = useState(false);
 
   return (
-    <View simpleTheming={simpleSite}>
+    <View>
       <BookingContainer>
         {allBookings
           .filter(
             (booking) =>
-              new Date(booking.kombidatum_ende) >=
-                new Date(filterDateArrivalEarliest) &&
-              new Date(booking.kombidatum_ende) <=
-                new Date(filterDateArrivalLatest)
+              new Date(
+                currentUser.role === "UEK"
+                  ? booking.kombidatum_start
+                  : booking.kombidatum_ende
+              ) >= new Date(filterDateEarliest) &&
+              new Date(
+                currentUser.role === "UEK"
+                  ? booking.kombidatum_start
+                  : booking.kombidatum_ende
+              ) <= new Date(filterDateLatest)
           )
           .map((booking) => (
             <BookingCard
-              id={booking.monday_id}
+              currentPage={currentPage}
+              id={booking._id}
+              allUsers={allUsers}
               booking={booking}
               currentUserRole={currentUser.role}
-              setNewParameters={setNewParameters}
+              currentUserName={currentUser.name}
+              deleted={deleted}
+              setDeleted={setDeleted}
               newParameters={newParameters}
+              allBookings={allBookings}
+              setAllBookings={setAllBookings}
             />
           ))}
       </BookingContainer>
@@ -61,7 +65,6 @@ const View = styled.div`
 `;
 
 const BookingContainer = styled.div`
-  /* width: 90vw; */
   max-width: 600px;
   margin: 0 auto;
   display: flex;

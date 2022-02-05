@@ -1,5 +1,3 @@
-// import { shift } from "../models/shifts.js";
-
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 dotenv.config();
@@ -49,13 +47,6 @@ export default async function fetchBookingDataFromMonday() {
   const restructuredData = flattenedData.map((booking) => {
     const bookingData = {
       id: booking.id,
-      timestamp_start_rk: "",
-      timestamp_ende_rk: "",
-      timestamp_start_uek: "",
-      timestamp_ende_uek: "",
-      presence_slices: [],
-      rk: "",
-      uek: "",
     };
     booking.column_values.forEach((column) => {
       if (keyProperties.includes(column.title)) {

@@ -24,6 +24,7 @@ export default function ParametersAdminForm({
 
   function submitHandler(event) {
     event.preventDefault();
+    console.log(parameterDetails);
     SubmitParameters(parameterDetails);
   }
 
@@ -31,8 +32,7 @@ export default function ParametersAdminForm({
     <>
       <ParameterForm onSubmit={submitHandler} visible={visible}>
         <Title>Parameter.</Title>
-        <Confirm>{parameterConf ? <div>{parameterConf}</div> : ""}</Confirm>
-        <Error>{parameterError ? <div>{parameterError}</div> : ""}</Error>
+
         <InputGroup>
           <label htmlFor="adminEmail">Admin-Email</label>
           <input
@@ -207,6 +207,8 @@ export default function ParametersAdminForm({
             </output>
           </SliderGroup>
         </InputGroup>
+        <Confirm>{parameterConf ? <div>{parameterConf}</div> : ""}</Confirm>
+        <Error>{parameterError ? <div>{parameterError}</div> : ""}</Error>
         <InputButton type="submit" value="Anpassen" />
       </ParameterForm>
     </>
@@ -223,7 +225,7 @@ const Error = styled.h3`
   color: var(--primary-color);
 `;
 const ParameterForm = styled.form`
-  display: ${(props) => (props.visible ? "none" : "flex")};
+  display: ${(props) => (props.visible ? "flex" : "none")};
   flex-direction: column;
   align-items: center;
   gap: min(3vh, 1em);

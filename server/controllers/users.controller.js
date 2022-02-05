@@ -13,6 +13,7 @@ const findUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   const newUser = new user({
+    name: req.body.name,
     password: req.body.password,
     email: req.body.email,
     role: req.body.role,

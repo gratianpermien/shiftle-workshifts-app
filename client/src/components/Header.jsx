@@ -6,20 +6,20 @@ import "react-datepicker/dist/react-datepicker.css";
 import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faCog } from "@fortawesome/free-solid-svg-icons";
+import { faStopCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function AppHeader({
   authenticated,
   admin,
   currentUserRole,
+  currentUserName,
   currentPage,
-  setNewParameters,
-  filterDateArrivalEarliest,
-  filterDateArrivalLatest,
-  setFilterDateArrivalEarliest,
-  setFilterDateArrivalLatest,
+  filterDateEarliest,
+  filterDateLatest,
+  setFilterDateEarliest,
+  setFilterDateLatest,
 }) {
-  //Refresh shift information from Monday and get admin data if admin (preload)
+  //Refresh shift information from Monday and get admin data if admin (preload sits in Header)
   async function updateShifts() {
     const response = await fetch("api/shifts", {
       method: "PUT",
@@ -27,16 +27,9 @@ export default function AppHeader({
         "Content-Type": "application/json",
       },
     });
-    const syncData = response;
-  }
-  async function fetchAdminParameters() {
-    const response = await fetch("api/admin");
-    const fetchedData = await response.json();
-    setNewParameters(fetchedData[0]);
   }
   useEffect(async () => {
     await updateShifts();
-    await fetchAdminParameters();
   }, []);
 
   const headerTheming = {
@@ -49,57 +42,40 @@ export default function AppHeader({
 
   return (
     <>
-      {/* <UserRibbonWrapper headerTheme={headerTheme}>
-        <UserRibbon>{currentUserName}</UserRibbon>
-      </UserRibbonWrapper> */}
       <HeaderWrapper headerTheme={headerTheme}>
         <Header>
           <Nav>
             <NavItem to="/buchungen">Buchungen</NavItem>
-            <NavItem to="/schichten">Schichten</NavItem>
-            <IconsWrapper>
-              {admin ? (
-                <Icon to="/admin">
-                  <FontAwesomeIcon icon={faCog} />
-                </Icon>
-              ) : null}
+            {admin ? (
+              <NavItem to="/admin">Settings</NavItem>
+            ) : (
+              <NavItem to="/schichten">Schichten</NavItem>
+            )}
+            <LogWrapper>
+              <InfoTitle>{currentUserName}.</InfoTitle>
               <Icon to="/">
-                <FontAwesomeIcon icon={faSignOutAlt} />
+                <FontAwesomeIcon icon={faStopCircle} />
               </Icon>
-            </IconsWrapper>
+            </LogWrapper>
           </Nav>
           <HeaderInteraction>
-            <div>{currentUserRole == "UEK" ? "Abfahrt " : "Ankunft "}</div>
+            <InfoTitle>
+              {currentUserRole == "UEK" ? "Abfahrt. " : "Ankunft. "}
+            </InfoTitle>
             <div>
               <DatePicker
                 dateFormat="dd/MM/yyyy"
                 wrapperClassName="date_picker--adjustedwidth"
-                selected={
-                  currentUserRole == "UEK"
-                    ? filterDateDepartureEarliest
-                    : filterDateArrivalEarliest
-                }
-                onChange={
-                  currentUserRole == "UEK"
-                    ? (date) => setFilterDateDepartureEarliest(date)
-                    : (date) => setFilterDateArrivalEarliest(date)
-                }
+                selected={filterDateEarliest}
+                onChange={(date) => setFilterDateEarliest(date)}
               />
             </div>
             <div>
               <DatePicker
                 dateFormat="dd/MM/yyyy"
                 wrapperClassName="date_picker--adjustedwidth"
-                selected={
-                  currentUserRole == "UEK"
-                    ? filterDateDepartureLatest
-                    : filterDateArrivalLatest
-                }
-                onChange={
-                  currentUserRole == "UEK"
-                    ? (date) => setFilterDateDepartureLatest(date)
-                    : (date) => setFilterDateArrivalLatest(date)
-                }
+                selected={filterDateLatest}
+                onChange={(date) => setFilterDateLatest(date)}
               />
               <DatePickerWrapperStyles />
             </div>
@@ -117,7 +93,7 @@ const HeaderWrapper = styled.footer`
   top: 0;
   width: 100%;
   background: var(--tertiary-bg);
-  padding: 5vw;
+  padding: min(5vw, 2em);
   z-index: 250;
 `;
 const Header = styled.div`
@@ -159,7 +135,7 @@ const NavItem = styled(NavLink)`
   }
 `;
 
-const IconsWrapper = styled.div`
+const LogWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-self: end;
@@ -178,10 +154,12 @@ const Icon = styled(NavLink)`
     color: var(--headings-color);
   }
 `;
-
-const HeaderInteraction = styled.div`
+const InfoTitle = styled.h3`
   font-weight: 600;
+  text-transform: uppercase;
   color: var(--primary-color);
+`;
+const HeaderInteraction = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
