@@ -20,9 +20,10 @@ export default async function fetchBookingDataFromMonday() {
 
   const data = await response.json();
   //Flatten and reconstruct API Result and store in state
-
   const flatten = (obj) => Object.values(obj).flat();
+
   const flattenedData = flatten(data)[0].boards[0].groups[0].items;
+  console.log(flattenedData);
 
   //Important info for client: do not change column titles
   const keyProperties = [

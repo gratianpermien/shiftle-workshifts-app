@@ -35,6 +35,5 @@ export default function bookingPresenceSlices(booking, newParameters, currentUse
       presenceSlices = [...presenceSlices, parseInt(`${year}${month}${dayAfter}${i < 10 ? '0' + i : i}`)];
     }
   }
-  console.log(presenceSlices);
   return presenceSlices;
 }

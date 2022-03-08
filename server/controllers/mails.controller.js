@@ -15,7 +15,7 @@ const requireSendMail = (req, res) => {
   let mailOptions = {
     from: process.env.EMAIL,
     to: req.body.mailerState.email,
-    subject: `Änderung: ${req.body.mailerState.subject}`,
+    subject: `${req.body.mailerState.subject}`,
     text: req.body.mailerState.message,
   };
   transporter.sendMail(mailOptions, function (err, data) {
@@ -23,7 +23,7 @@ const requireSendMail = (req, res) => {
       console.log("Error " + err);
     } else {
       console.log("Email sent successfully");
-      res.json({ status: "Email sent" });
+      res.json({ status: "Email sent successfully" });
     }
   });
 };

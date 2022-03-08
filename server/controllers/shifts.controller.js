@@ -18,6 +18,7 @@ const postShift = async (req, res) => {
     monday_id: req.body.id,
     modified: req.body.taken_rk,
     presence_slices: req.body.presence_slices,
+    mails_meta: req.body.mails_meta,
     client: req.body.client,
     kennzeichen: req.body.kennzeichen,
     fahrzeug: req.body.fahrzeug,
@@ -75,6 +76,7 @@ const updateShifts = async (req, res) => {
     const update = {
       monday_id: booking.id,
       client: booking.name,
+      mails_meta: booking.mails_meta,
       kennzeichen: booking.kennzeichen,
       fahrzeug: booking.fahrzeug,
       kombidatum_start: booking.kombidatum_start,

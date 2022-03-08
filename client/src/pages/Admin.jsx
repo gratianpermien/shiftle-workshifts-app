@@ -172,7 +172,7 @@ function Admin({
           <SingleRouteButton to="/api/export" target="_blank">
             CSV
           </SingleRouteButton>
-          <PrepareNotifications allBookings={allBookings} allUsers={allUsers} newParameters={newParameters} />
+          {/* <PrepareNotifications allBookings={allBookings} allUsers={allUsers} newParameters={newParameters} /> */}
         </ButtonSection>
         <FormContainer>
           <NewUserAdminForm visible={slideA} SubmitUser={SubmitUser} newUser={newUser} error={userError} />
