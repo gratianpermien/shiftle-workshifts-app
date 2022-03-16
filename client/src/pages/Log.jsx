@@ -1,27 +1,26 @@
-import React, { useState } from "react";
-import LoginForm from "../components/LoginForm";
-import styled from "styled-components";
-import shiftle_watermark from "../assets/shiftle_watermark.svg";
-import shiftle_logo from "../assets/shiftle_logo.svg";
-import { CenteredButton, SingleRouteButton } from "../components/Buttons";
+import React, { useState } from 'react';
+import LoginForm from '../components/LoginForm';
+import styled from 'styled-components';
+import shiftle_watermark from '../assets/shiftle_watermark.svg';
+import shiftle_logo from '../assets/shiftle_logo.svg';
+import { CenteredButton, SingleRouteButton } from '../components/Buttons';
 
 export default function Log({
-  currentUser,
   allUsers,
-  setAllUsers,
-  setUser,
-  setAdmin,
-  admin,
   authenticated,
+  currentUser,
+  setAdmin,
+  setAllUsers,
   setAuthenticated,
+  setUser,
 }) {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const Login = (details) => {
     allUsers.forEach((user) => {
       try {
         if (
-          details.email.split("@")[1].includes(".") &&
+          details.email.split('@')[1].includes('.') &&
           details.password.length > 0 &&
           details.email == user.email &&
           details.password == user.password
@@ -32,21 +31,21 @@ export default function Log({
             role: user.role,
           });
           setAuthenticated(true);
-          user.role == "ADMIN" ? setAdmin(true) : setAdmin(false);
+          user.role == 'ADMIN' ? setAdmin(true) : setAdmin(false);
         } else {
-          setError("Eingabe ungültig.");
+          setError('Ungültig.');
         }
       } catch (error) {
-        setError("Eingabe ungültig.");
+        setError('Ungültig.');
       }
     });
   };
 
   const Logout = () => {
     setUser({
-      name: "",
-      email: "",
-      role: "",
+      name: '',
+      email: '',
+      role: '',
     });
     setAllUsers([]);
     setAuthenticated(false);
@@ -67,9 +66,6 @@ export default function Log({
               <ButtonSection>
                 <CenteredButton onClick={Logout}>Logout</CenteredButton>
                 <SingleRouteButton to="/buchungen">Buchungen</SingleRouteButton>
-                {admin ? (
-                  <SingleRouteButton to="/admin">Settings</SingleRouteButton>
-                ) : null}
               </ButtonSection>
             </Welcome>
           ) : (
@@ -84,22 +80,22 @@ export default function Log({
 const View = styled.div`
   background: 50% 95% no-repeat url(${shiftle_watermark}),
     top left / cover no-repeat
-      url("https://www.hamburg-startups.net/wp-content/uploads/2021/06/Produkt_Aussen_Dreamer_0035-1030x687.jpg");
+      url('https://www.hamburg-startups.net/wp-content/uploads/2021/06/Produkt_Aussen_Dreamer_0035-1030x687.jpg');
   background-attachment: fixed;
   min-height: 100vh;
 `;
 
 const BaseContainer = styled.div`
-  width: min(38vw, 600px);
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
+  width: min(38vw, 600px);
 `;
 
 const Logo = styled.img`
-  width: min(64px, 10vw);
   filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.2));
   margin: 3em auto 1em;
+  width: min(64px, 10vw);
 `;
 
 const LoginContainer = styled.div`
@@ -113,22 +109,19 @@ const LoginContainer = styled.div`
 
 const ButtonSection = styled.div`
   display: flex;
-  gap: min(3vw, 0.4em);
   flex-direction: row;
   flex-wrap: wrap;
+  gap: min(3vw, 0.4em);
   justify-content: center;
 `;
 
 const Welcome = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
   gap: min(3vh, 1em);
-  h1 {
-    color: var(--secondary-bg);
-  }
+  justify-content: space-evenly;
   h3 {
-    color: var(--secondary-bg);
+    color: var(--headings-color);
   }
 `;

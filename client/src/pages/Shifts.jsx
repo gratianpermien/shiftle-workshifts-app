@@ -1,23 +1,20 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import shiftle_watermark from "../assets/shiftle_watermark.svg";
-import BookingCard from "../components/BookingCard";
+import React from 'react';
+import styled from 'styled-components';
+import shiftle_watermark from '../assets/shiftle_watermark.svg';
+import BookingCard from '../components/BookingCard';
 
 export default function Shifts({
-  currentUser,
-  currentPage,
+  admin,
+  allBookings,
   allUsers,
-  simpleSite,
+  currentPage,
+  currentUser,
   filterDateEarliest,
   filterDateLatest,
   newParameters,
-  allBookings,
+  simpleSite,
 }) {
-  const userShifts = allBookings.filter(
-    (booking) =>
-      booking.rk == currentUser.name || booking.uek == currentUser.name
-  );
-  console.log(currentUser, allBookings);
+  const userShifts = allBookings.filter((booking) => booking.rk == currentUser.name || booking.uek == currentUser.name);
 
   return (
     <View simpleTheming={simpleSite}>
@@ -25,27 +22,22 @@ export default function Shifts({
         {userShifts
           .filter(
             (booking) =>
-              new Date(
-                currentUser.role === "UEK"
-                  ? booking.kombidatum_start
-                  : booking.kombidatum_ende
-              ) >= new Date(filterDateEarliest) &&
-              new Date(
-                currentUser.role === "UEK"
-                  ? booking.kombidatum_start
-                  : booking.kombidatum_ende
-              ) <= new Date(filterDateLatest)
+              new Date(currentUser.role === 'UEK' ? booking.kombidatum_start : booking.kombidatum_ende) >=
+                new Date(filterDateEarliest) &&
+              new Date(currentUser.role === 'UEK' ? booking.kombidatum_start : booking.kombidatum_ende) <=
+                new Date(filterDateLatest)
           )
-          .map((booking) => (
+          .map((booking, index) => (
             <BookingCard
-              currentPage={currentPage}
-              id={booking._id}
-              booking={booking}
-              allUsers={allUsers}
-              currentUserRole={currentUser.role}
-              currentUserName={currentUser.name}
-              newParameters={newParameters}
+              isAdmin={admin}
               allBookings={allBookings}
+              allUsers={allUsers}
+              booking={booking}
+              bookingIndex={index}
+              currentPage={currentPage}
+              currentUserName={currentUser.name}
+              currentUserRole={currentUser.role}
+              newParameters={newParameters}
             />
           ))}
       </BookingContainer>
@@ -66,11 +58,10 @@ const View = styled.div`
 `;
 
 const BookingContainer = styled.div`
-  /* width: 90vw; */
-  max-width: 600px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  z-index: 99;
+  margin: 0 auto;
+  max-width: 600px;
+  z-index: 9;
 `;

@@ -1,28 +1,21 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { InputButton } from "./Buttons";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { DatePickerWrapperStyles } from "../shared/GlobalStyle";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { InputButton } from './Buttons';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { DatePickerWrapperStyles } from '../shared/GlobalStyle';
 
-export default function NewBookingAdminForm({
-  newBooking,
-  bookingError,
-  SubmitBooking,
-  visible,
-}) {
+export default function NewBookingAdminForm({ newBooking, bookingError, SubmitBooking, visible }) {
   const [bookingDetails, setBookingDetails] = useState({
-    client: "",
-    fahrzeug: "",
-    kennzeichen: "",
-    bemerkung: "",
-    kombidatum_start: "",
-    kombidatum_ende: "",
+    bemerkung: '',
+    client: '',
+    fahrzeug: '',
+    kennzeichen: '',
+    kombidatum_ende: '',
+    kombidatum_start: '',
   });
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(
-    new Date().setDate(new Date().getDate() + 14)
-  );
+  const [endDate, setEndDate] = useState(new Date().setDate(new Date().getDate() + 14));
 
   function submitHandler(event) {
     event.preventDefault();
@@ -37,32 +30,32 @@ export default function NewBookingAdminForm({
         <InputGroup>
           <label htmlFor="client">Kunde*</label>
           <input
-            type="text"
-            name="client"
             id="client"
+            name="client"
             required
+            type="text"
+            value={bookingDetails.client}
             onChange={(event) =>
               setBookingDetails({
                 ...bookingDetails,
                 client: event.target.value,
               })
             }
-            value={bookingDetails.client}
           />
         </InputGroup>
         <InputGroup>
           <label htmlFor="fahrzeug">Fahrzeug*</label>
           <select
-            name="fahrzeug"
             id="fahrzeug"
+            name="fahrzeug"
             required
+            value={bookingDetails.fahrzeug}
             onChange={(event) =>
               setBookingDetails({
                 ...bookingDetails,
                 fahrzeug: event.target.value,
               })
             }
-            value={bookingDetails.fahrzeug}
           >
             <option>Auswählen</option>
             <option value="ADVENTURER">Adventurer</option>
@@ -73,71 +66,69 @@ export default function NewBookingAdminForm({
         <InputGroup>
           <label htmlFor="kennzeichen">Kennzeichen*</label>
           <input
-            type="text"
-            name="kennzeichen"
             id="kennzeichen"
+            name="kennzeichen"
             placeholder="VT1234"
             required
+            type="text"
+            value={bookingDetails.kennzeichen}
             onChange={(event) =>
               setBookingDetails({
                 ...bookingDetails,
                 kennzeichen: event.target.value,
               })
             }
-            value={bookingDetails.kennzeichen}
           />
         </InputGroup>
         <InputGroup>
           <label htmlFor="bemerkung">Bemerkung</label>
           <textarea
-            name="bemerkung"
             id="bemerkung"
+            name="bemerkung"
             rows="3"
+            value={bookingDetails.bemerkung}
             onChange={(event) =>
               setBookingDetails({
                 ...bookingDetails,
                 bemerkung: event.target.value,
               })
             }
-            value={bookingDetails.bemerkung}
           />
         </InputGroup>
         <InputGroup>
           <label>Abfahrt*</label>
           <DatePicker
-            wrapperClassName="date_picker--adjustedwidthlarge"
-            selected={startDate}
+            dateFormat="dd/MM/yyyy HH:mm"
             onChange={(date) => setStartDate(date)}
+            selected={startDate}
+            showTimeSelect
+            timeCaption="Uhrzeit"
+            timeIntervals={60}
+            wrapperClassName="date_picker--adjustedwidthlarge"
             onCalendarClose={() =>
               setBookingDetails({
                 ...bookingDetails,
                 kombidatum_start: startDate,
               })
             }
-            showTimeSelect
-            timeIntervals={60}
-            timeCaption="Uhrzeit"
-            dateFormat="dd/MM/yyyy HH:mm"
           />
         </InputGroup>
         <InputGroup>
           <label>Ankunft*</label>
           <DatePicker
-            wrapperClassName="date_picker--adjustedwidthlarge"
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            onCalendarClose={() =>
-              setBookingDetails({ ...bookingDetails, kombidatum_ende: endDate })
-            }
-            showTimeSelect
-            timeIntervals={60}
-            timeCaption="Uhrzeit"
             dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date) => setEndDate(date)}
+            selected={endDate}
+            showTimeSelect
+            timeCaption="Uhrzeit"
+            timeIntervals={60}
+            wrapperClassName="date_picker--adjustedwidthlarge"
+            onCalendarClose={() => setBookingDetails({ ...bookingDetails, kombidatum_ende: endDate })}
           />
         </InputGroup>
         <DatePickerWrapperStyles />
-        <Confirm>{newBooking ? <div>Angelegt.</div> : ""}</Confirm>
-        <Error>{bookingError ? <div>{error}</div> : ""}</Error>
+        <Confirm>{newBooking ? <div>Angelegt.</div> : ''}</Confirm>
+        <Error>{bookingError ? <div>{bookingError}</div> : ''}</Error>
         <InputButton type="submit" value="Anlegen" />
       </BookingForm>
     </>
@@ -154,16 +145,16 @@ const Error = styled.h3`
   color: var(--primary-color);
 `;
 const BookingForm = styled.form`
-  display: ${(props) => (props.visible ? "flex" : "none")};
-  flex-direction: column;
   align-items: center;
+  display: ${(props) => (props.visible ? 'flex' : 'none')};
+  flex-direction: column;
   gap: min(3vh, 1em);
 `;
 
 const InputGroup = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   label {
     display: block;
     padding: 0.4em 1em;
@@ -174,13 +165,14 @@ const InputGroup = styled.div`
   input,
   select,
   textarea {
-    font-size: var(--basic-font-size);
+    border-radius: 2em;
+    border: 2px solid var(--primary-color);
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
     padding: 0.4em 1em;
     width: 200px;
-    border-radius: 2em;
-    box-sizing: border-box;
-    outline: none;
-    border: 2px solid var(--primary-color);
   }
   textarea {
     border-radius: 1em;

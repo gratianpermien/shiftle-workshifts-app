@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { CenteredButton } from "./Buttons";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { CenteredButton } from './Buttons';
 
 export default function ReturnModal({
-  booking,
   allUsers,
-  currentUserRole,
+  booking,
   currentUserName,
+  currentUserRole,
   newParameters,
   setReturnModalIsOpen,
 }) {
-  const [updatedBooking, setUpdatedBooking] = useState("");
+  const [updatedBooking, setUpdatedBooking] = useState('');
   const [saveActivated, setSaveActivated] = useState(false);
   const [accepted, setAccepted] = useState(false);
-  const [subst, setSubst] = useState("");
+  const [subst, setSubst] = useState('');
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -22,29 +22,25 @@ export default function ReturnModal({
 
   //Calculation for days to start
   const shiftBeginTime =
-    currentUserRole == "UEK"
-      ? Date.parse(booking.kombidatum_start) -
-        newParameters.shiftBufferHandoverMins * 1000 * 60
-      : Date.parse(booking.kombidatum_ende) +
-        newParameters.shiftBufferReturnMins * 1000 * 60;
+    currentUserRole == 'UEK'
+      ? Date.parse(booking.kombidatum_start) - newParameters.shiftBufferHandoverMins * 1000 * 60
+      : Date.parse(booking.kombidatum_ende) + newParameters.shiftBufferReturnMins * 1000 * 60;
   const daysToStart = (shiftBeginTime - Date.parse(new Date())) / 86400000;
 
   const usersList = [];
   allUsers.forEach((user) =>
-    user.name !== currentUserName && user.role !== "ADMIN"
-      ? usersList.push(user.name)
-      : null
+    user.name !== currentUserName && user.role !== 'ADMIN' ? usersList.push(user.name) : null
   );
 
-  const staffNameStampUEK = currentUserRole == "UEK" ? subst : booking.uek;
-  const staffNameStampRK = currentUserRole == "RK" ? subst : booking.rk;
+  const staffNameStampUEK = currentUserRole == 'UEK' ? subst : booking.uek;
+  const staffNameStampRK = currentUserRole == 'RK' ? subst : booking.rk;
   const modifier = {
     uek: staffNameStampUEK,
     rk: staffNameStampRK,
   };
   function checkTimeLeft(modifier, booking, daysToStart) {
     if (daysToStart <= 7) {
-      subst !== "" ? setAccepted(true) : setError(true);
+      subst !== '' ? setAccepted(true) : setError(true);
     } else {
       setAccepted(true);
     }
@@ -56,12 +52,12 @@ export default function ReturnModal({
   }
   //Update Admin-Parameters in DB
   async function updateBooking(updatedBooking) {
-    if (updatedBooking !== "") {
+    if (updatedBooking !== '') {
       const bookingId = updatedBooking._id;
       const result = await fetch(`api/shifts/${bookingId}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedBooking),
       });
@@ -72,14 +68,12 @@ export default function ReturnModal({
   return (
     <Modal accepted={accepted}>
       <InputContainer>
-        <CenteredButton onClick={() => setReturnModalIsOpen(false)}>
-          Schließen
-        </CenteredButton>
+        <CenteredButton onClick={() => setReturnModalIsOpen(false)}>Schließen</CenteredButton>
         <Title>Stattdessen?</Title>
         <div>
           {daysToStart <= 7
-            ? "Du kannst die Schicht nicht zurückgeben, da der Start weniger als 7 Tage in der Zukunft liegt. Bitte wähle eine Vertretung."
-            : "Du kannst die Schicht zurückgeben, da der Start mehr als 7 Tage in der Zukunft liegt. Besser ist es, wenn du dich direkt um eine Vertretung kümmerst."}
+            ? 'Du kannst die Schicht nicht zurückgeben, da der Start weniger als 7 Tage in der Zukunft liegt. Bitte wähle eine Vertretung.'
+            : 'Du kannst die Schicht zurückgeben, da der Start mehr als 7 Tage in der Zukunft liegt. Besser ist es, wenn du dich direkt um eine Vertretung kümmerst.'}
         </div>
         <InputGroup>
           <label htmlFor="subst">Vertretung</label>
@@ -93,8 +87,10 @@ export default function ReturnModal({
             value={subst}
           >
             <option value="">Auswählen</option>
-            {usersList.map((user) => (
-              <option value={user}>{user}</option>
+            {usersList.map((user, index) => (
+              <option value={user} key={index}>
+                {user}
+              </option>
             ))}
           </select>
         </InputGroup>
@@ -122,50 +118,48 @@ const Confirm = styled.h3`
 const Error = styled.h3`
   color: var(--primary-color);
 `;
-
 const Modal = styled.div`
-  background-color: ${(props) =>
-    props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`};
-  width: 100vw;
+  background-color: ${(props) => (props.accepted ? `rgba(208, 243, 225, 0.9)` : `rgba(255, 255, 255, 0.9)`)};
   height: 100vh;
-  z-index: 499;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  z-index: 49;
 `;
 const InputContainer = styled.div`
-  width: min(38vw, 600px);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: min(3vh, 1em);
   margin: 0 auto;
   padding: min(5vw, 2em);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: min(3vh, 1em);
+  width: min(38vw, 600px);
 `;
 
-const SaveButton = styled(CenteredButton)`
-  pointer-events: ${(props) => (props.saveActivated ? `auto` : `none`)};
-`;
 const InputGroup = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   label {
     display: block;
-    padding: 0.4em 1em;
-    text-transform: uppercase;
     font-weight: 600;
+    padding: 0.4em 1em;
     text-align: left;
+    text-transform: uppercase;
   }
   input,
   select {
+    border-radius: 2em;
+    border: 2px solid var(--primary-color);
+    box-sizing: border-box;
     font-size: var(--basic-font-size);
+    outline: none;
     padding: 0.4em 1em;
     width: 200px;
-    border-radius: 2em;
-    box-sizing: border-box;
-    outline: none;
-    border: 2px solid var(--primary-color);
   }
+`;
+const SaveButton = styled(CenteredButton)`
+  pointer-events: ${(props) => (props.saveActivated ? `auto` : `none`)};
 `;

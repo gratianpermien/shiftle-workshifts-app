@@ -5,7 +5,10 @@ import mongoose from "mongoose";
 import adminRoutes from "./routes/admin.routes.js";
 import shiftsRoutes from "./routes/shifts.routes.js";
 import usersRoutes from "./routes/users.routes.js";
+import mailsRoutes from "./routes/mails.routes.js";
+
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 dotenv.config();
 
 const __dirname = process.cwd();
@@ -22,7 +25,7 @@ mongoose.connect(connectionString);
 const server = express();
 server.use(cors());
 server.use(express.json());
-server.use("/api", [adminRoutes, shiftsRoutes, usersRoutes]);
+server.use("/api", [adminRoutes, shiftsRoutes, usersRoutes, mailsRoutes]);
 server.use(express.static(path.join(__dirname, "./client/dist")));
 
 //Additional Routes for test and dist delivery
@@ -31,6 +34,24 @@ server.get("/test", (req, res) => {
 });
 server.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "./client/dist", "index.html"));
+});
+
+//Mailing functionality test and credentials
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    type: "OAuth2",
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
+    clientId: process.env.OAUTH_CLIENTID,
+    clientSecret: process.env.OAUTH_CLIENT_SECRET,
+    refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+  },
+});
+transporter.verify((err, success) => {
+  err
+    ? console.log(err)
+    : console.log(`Server is ready to take messages: ${success}`);
 });
 
 server.listen(serverPort, () =>

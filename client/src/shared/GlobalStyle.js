@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
 *,
@@ -28,11 +28,11 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: clamp(1.7rem,-0.875rem + 8.333vw,3.5rem);
   color: var(--headings-color);
+  font-size: clamp(1.7rem,-0.875rem + 8.333vw,3.5rem);
+  font-weight: 900;
   margin:0;
   text-transform: uppercase;
-  font-weight: 900;
 }
 h2 {
   font-size: clamp(1.3rem, -0.875rem + 8.333vw, 2rem);
@@ -46,20 +46,20 @@ h3 {
 
 const DatePickerWrapperStyles = createGlobalStyle`
     .date_picker--adjustedwidth {
-        width: min(26vw,120px);
         margin-right: 0.2em;
+        width: min(26vw,120px);
     }
      .date_picker--adjustedwidthlarge {
         width: min(32vw,170px);
     }
     .date_picker--adjustedwidthlarge .react-datepicker__input-container > *, .date_picker--adjustedwidth .react-datepicker__input-container > *{
-        width: 100%;
-        font-size: var(--basic-font-size);
-        padding: 0.4em 1em;
         border-radius: 2em;
-        box-sizing: border-box;
-        outline: none;
         border: 2px solid var(--primary-color);
+        box-sizing: border-box;
+        font-size: var(--basic-font-size);
+        outline: none;
+        padding: 0.4em 1em;
+        width: 100%;
     }
 `;
 

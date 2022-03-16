@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import shiftle_watermark from "../assets/shiftle_watermark.svg";
-import NewUserAdminForm from "../components/NewUserAdminForm";
-import ParametersAdminForm from "../components/ParametersAdminForm";
-import NewBookingAdminForm from "../components/NewBookingAdminForm";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
-
-import { SingleRouteButton } from "../components/Buttons";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import shiftle_watermark from '../assets/shiftle_watermark.svg';
+import NewUserAdminForm from '../components/NewUserAdminForm';
+import ParametersAdminForm from '../components/ParametersAdminForm';
+import NewBookingAdminForm from '../components/NewBookingAdminForm';
+import PrepareNotifications from '../lib/NotificationsAnalysis';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { SingleRouteButton } from '../components/Buttons';
 
 function Admin({
+  allBookings,
+  allUsers,
   newParameters,
   setNewParameters,
   newUser,
@@ -17,10 +19,10 @@ function Admin({
   newBooking,
   setNewBooking,
 }) {
-  const [userError, setUserError] = useState("");
-  const [parameterError, setParameterError] = useState("");
-  const [bookingError, setBookingError] = useState("");
-  const [parameterConf, setParameterConf] = useState("");
+  const [userError, setUserError] = useState('');
+  const [parameterError, setParameterError] = useState('');
+  const [bookingError, setBookingError] = useState('');
+  const [parameterConf, setParameterConf] = useState('');
   const [slideA, setSlideA] = useState(true);
   const [slideB, setSlideB] = useState(false);
   const [slideC, setSlideC] = useState(false);
@@ -55,30 +57,30 @@ function Admin({
     //async State Update? 2x Event handling required, why?
     try {
       await setNewParameters({
-        presenceWindowMins: parameterDetails.presenceWindowMins,
-        presenceParallel: parameterDetails.presenceParallel,
-        shiftBufferHandoverMins: parameterDetails.shiftBufferHandoverMins,
-        shiftBufferReturnMins: parameterDetails.shiftBufferReturnMins,
-        shiftReminderHrs: parameterDetails.shiftReminderHrs,
         adminEmail: parameterDetails.adminEmail,
         durationAdventurerHrs: parameterDetails.durationAdventurerHrs,
         durationDreamerHrs: parameterDetails.durationDreamerHrs,
         durationTravelerHrs: parameterDetails.durationTravelerHrs,
+        presenceParallel: parameterDetails.presenceParallel,
+        presenceWindowMins: parameterDetails.presenceWindowMins,
+        shiftBufferHandoverMins: parameterDetails.shiftBufferHandoverMins,
+        shiftBufferReturnMins: parameterDetails.shiftBufferReturnMins,
+        shiftReminderHrs: parameterDetails.shiftReminderHrs,
       });
       // updateParameters(newParameters);
-      setParameterError("");
-      setParameterConf("Geändert.");
+      setParameterError('');
+      setParameterConf('Geändert.');
     } catch (error) {
-      setParameterError("Eingabe ist ungültig." + { error });
-      setParameterConf("");
+      setParameterError('Eingabe ist ungültig.' + { error });
+      setParameterConf('');
     }
   };
   //Update Admin-Parameters in DB
   async function updateParameters(newParameters) {
-    const result = await fetch("api/admin/61e146a9fbc9e947b9f19496", {
-      method: "PUT",
+    await fetch('api/admin/61e146a9fbc9e947b9f19496', {
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(newParameters),
     });
@@ -89,7 +91,7 @@ function Admin({
       if (
         userDetails.name.length > 0 &&
         userDetails.email.length > 0 &&
-        userDetails.email.split("@")[1].includes(".") &&
+        userDetails.email.split('@')[1].includes('.') &&
         userDetails.password.length > 0
       ) {
         setNewUser({
@@ -98,37 +100,34 @@ function Admin({
           email: userDetails.email,
           password: userDetails.password,
         });
-        setUserError("");
+        setUserError('');
       } else {
-        setUserError("Eingabe ist ungültig.");
+        setUserError('Eingabe ungültig.');
       }
     } catch (error) {
-      setParameterError("Eingabe ist ungültig." + { error });
+      setParameterError('Eingabe ungültig.' + { error });
     }
   };
 
   //Post new user to DB
   async function createUser(newUser) {
-    if (newUser != "") {
-      const result = await fetch("api/users", {
-        method: "POST",
+    if (newUser != '') {
+      await fetch('api/users', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(newUser),
       });
       setTimeout(() => {
-        setNewUser("");
+        setNewUser('');
       }, 2000);
     }
   }
   //Manual booking: check form data and submit
   const SubmitBooking = (bookingDetails) => {
     try {
-      if (
-        bookingDetails.client.length > 0 &&
-        bookingDetails.kennzeichen.length > 0
-      ) {
+      if (bookingDetails.client.length > 0 && bookingDetails.kennzeichen.length > 0) {
         setNewBooking({
           client: bookingDetails.client,
           fahrzeug: bookingDetails.fahrzeug,
@@ -137,27 +136,27 @@ function Admin({
           kombidatum_start: bookingDetails.kombidatum_start,
           kombidatum_ende: bookingDetails.kombidatum_ende,
         });
-        setBookingError("");
+        setBookingError('');
       } else {
-        setBookingError("Eingabe ungültig.");
+        setBookingError('Eingabe ungültig.');
       }
     } catch (error) {
-      setBookingError("Eingabe ungültig." + { error });
+      setBookingError('Eingabe ungültig.' + { error });
     }
   };
 
   //Post new booking to DB
   async function createBooking(newBooking) {
-    if (newBooking != "") {
-      const result = await fetch("api/shifts", {
-        method: "POST",
+    if (newBooking != '') {
+      await fetch('api/shifts', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(newBooking),
       });
       setTimeout(() => {
-        setNewBooking("");
+        setNewBooking('');
       }, 2000);
     }
   }
@@ -173,26 +172,22 @@ function Admin({
           <SingleRouteButton to="/api/export" target="_blank">
             CSV
           </SingleRouteButton>
+          {/* <PrepareNotifications allBookings={allBookings} allUsers={allUsers} newParameters={newParameters} /> */}
         </ButtonSection>
         <FormContainer>
-          <NewUserAdminForm
-            visible={slideA}
-            SubmitUser={SubmitUser}
-            newUser={newUser}
-            error={userError}
-          />
+          <NewUserAdminForm visible={slideA} SubmitUser={SubmitUser} newUser={newUser} error={userError} />
           <ParametersAdminForm
-            visible={slideC}
             newParameters={newParameters}
-            SubmitParameters={SubmitParameters}
-            parameterError={parameterError}
             parameterConf={parameterConf}
+            parameterError={parameterError}
+            SubmitParameters={SubmitParameters}
+            visible={slideC}
           />
           <NewBookingAdminForm
-            visible={slideB}
-            newBooking={newBooking}
             bookingError={bookingError}
+            newBooking={newBooking}
             SubmitBooking={SubmitBooking}
+            visible={slideB}
           />
         </FormContainer>
       </BaseContainer>
@@ -202,17 +197,17 @@ function Admin({
 export default Admin;
 
 const View = styled.div`
-  background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   background-attachment: fixed;
+  background: 50% 95% no-repeat url(${shiftle_watermark}), var(--primary-bg);
   min-height: 100vh;
   padding: min(5vw, 2em) 0 25vh;
 `;
 const BaseContainer = styled.div`
-  width: min(38vw, 600px);
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin: 0 auto;
+  width: min(38vw, 600px);
 `;
 const FormContainer = styled.div`
   display: flex;
@@ -223,23 +218,22 @@ const FormContainer = styled.div`
 `;
 const ButtonSection = styled.div`
   display: flex;
-  gap: min(3vw, 1em);
   flex-direction: row;
   flex-wrap: wrap;
+  gap: min(3vw, 1em);
   justify-content: center;
 `;
 const SlideButton = styled.a`
-  position: fixed;
-  display: block;
-  z-index: 200;
-  font-size: var(--icon-size);
-  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
-  display: block;
-  right: 1em;
-  top: 50vh;
   color: #8f8f8f;
   cursor: pointer;
+  display: block;
+  display: block;
+  font-size: var(--icon-size);
+  position: fixed;
+  right: 1em;
+  top: 50vh;
   transition: all 0.2s;
+  z-index: 19;
   &:hover,
   &:active {
     color: #444444;
